@@ -1,7 +1,15 @@
 /* src/pages/ProfilePage.css */
 
+/* Wrapper ensures fixed navbar/logo stays anchored */
+.profile-page-wrapper {
+  position: relative;
+  min-height: 120vh;
+  padding-top: 0; /* ensures content doesn’t push the fixed navbar/logo */
+  box-sizing: border-box;
+}
+
 .profile-page-container {
-  /* Main container for the profile page */
+  /* Main container for the profile page content */
   padding: 2rem;
   max-width: 800px;
   margin: 2rem auto;
@@ -78,4 +86,12 @@
 .profile-button:hover {
   background-color: #c0392b;
 }
+
+.profile-page .logo-container {
+  position: fixed;
+  top: 20px;       
+  left: 20px;      
+  transform: none; 
+}
+
 

@@ -1,6 +1,8 @@
 /* src/components/Navbar.css */
 
-.rainbow-container {
+/* Ribbon / background containers */
+.ribbon-container,
+.green-container {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -8,31 +10,37 @@
   overflow: hidden;
   z-index: 50;
   top: 0;
+}
+
+.ribbon-container {
   height: 250px;
-  background-color: transparent;
-  transition: all 0.3s ease-in-out;
 }
 
-.rainbow-container.scrolled {
-  height: 200px;
-  width: 100%;
+.green-container {
+  height: 120px;
+  top: 80px;
 }
 
+/* SVG arches */
 .svg-arch {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
   transition: all 0.3s ease-in-out;
 }
 
+.svg-arch path {
+  transition: d 0.3s ease-in-out;
+}
+
+/* Logo container */
 .logo-container {
   position: fixed;
-  top: 10px;
-  left: 50%;
+  top: 10px;           /* always fixed distance from top */
+  left: 50%;           /* horizontally center */
   transform: translateX(-50%);
   width: 200px;
   height: 200px;
@@ -43,12 +51,12 @@
   align-items: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   z-index: 1001;
-  transition: all 0.3s ease-in-out;
+  transition: top 0.3s ease, transform 0.3s ease;
 }
 
 .logo-container.scrolled {
-  top: 0;
-  transform: translateX(-50%) scale(1);
+  top: 10px;           /* keeps same top when scrolled */
+  transform: translateX(-50%) scale(1); 
 }
 
 .inner-circle {
@@ -67,32 +75,26 @@
   align-self: center;
 }
 
+/* Nav links */
 .nav-links {
   position: fixed;
-  top: 110px;
+  top: 110px;           /* base Y position of links */
   left: 0;
   width: 100%;
-  height: 0; /* we now absolutely position links along the path */
-  display: block;
   z-index: 1002;
   font-size: 1.25rem;
   font-weight: 500;
-  transition: all 0.3s ease-in-out;
-}
-
-.nav-links.scrolled {
-  top: 60px;
-  font-size: 1rem;
+  pointer-events: none; /* container itself doesn't block clicks */
 }
 
 .nav-link {
   text-decoration: none;
   color: black;
   cursor: pointer;
-  transition: color 0.2s, transform 0.3s ease-in-out;
   white-space: nowrap;
-  transform-origin: center;
-  position: absolute;
+  pointer-events: auto; /* individual links clickable */
+  transition: color 0.2s, transform 0.3s ease-in-out, top 0.6s ease, left 0.6s ease;
+  position: absolute; /* allows JS to place along curve */
 }
 
 .nav-link:hover {

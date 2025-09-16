@@ -1,9 +1,9 @@
-const express = require("express");
+// backend/routes/authRoutes.js
+const express = require('express');
 const router = express.Router();
-const userController = require("../controllers/userController");
+const authController = require('../controllers/authController');
 
-// Optional: duplicate routes for clarity
-router.post("/signup", userController.createUser);
-router.post("/login", userController.loginUser);
+// Firebase login route
+router.post('/login-firebase', authController.loginFirebase);
 
 module.exports = router;

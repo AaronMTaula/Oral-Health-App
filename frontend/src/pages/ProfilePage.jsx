@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css'; 
 
 const ProfilePage = () => {
-  const { currentUser, loading: authLoading, token } = useAuth(); // token from auth context
+  const { currentUser, loading: authLoading, token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [apiLoading, setApiLoading] = useState(true);
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const ProfilePage = () => {
       setApiLoading(true);
       try {
         const response = await fetch(`/api/users/me`, {
-          headers: { Authorization: `Bearer ${token}` } // send JWT
+          headers: { Authorization: `Bearer ${token}` }
         });
         if (!response.ok) {
           throw new Error('User not found or network error.');
@@ -38,7 +38,7 @@ const ProfilePage = () => {
     };
 
     fetchUserProfile();
-  }, [currentUser, authLoading, token]); 
+  }, [currentUser, authLoading, token]);
 
   if (authLoading || apiLoading) {
     return (
@@ -59,8 +59,6 @@ const ProfilePage = () => {
   const ProfileContent = () => (
     <div className="min-h-screen p-8 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <main className="max-w-4xl mx-auto space-y-8">
-        
-        {/* Profile Info Section */}
         <section className="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border-t-4 border-blue-500">
           <div className="flex items-center space-x-4 mb-4">
             <User className="w-8 h-8 text-blue-500" />
@@ -90,7 +88,6 @@ const ProfilePage = () => {
             </button>
           </div>
         </section>
-        
       </main>
     </div>
   );

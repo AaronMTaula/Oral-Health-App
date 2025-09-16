@@ -1,48 +1,52 @@
-// src/context/useAuth.jsx
-
+// frontend/src/context/useAuth.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth'; 
-import { auth } from '../../config/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../../config/firebase'; 
+import { loginUser as backendLogin } from '../services/authService';
 
-// 1. Create a context for authentication state.
 export const AuthContext = createContext(null);
 
-// 2. The AuthProvider component.
 export const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
-    // This function handles the logout logic using Firebase's signOut method.
-    const logout = () => {
-        return signOut(auth);
-    };
+  const logout = async () => {
+    await signOut(auth);
+    setToken(null);
+    setCurrentUser(null);
+  };
 
-    // Set up an effect to listen for changes in the Firebase auth state.
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
-            setLoading(false);
-        });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
+      if (user) {
+        setCurrentUser(user);
 
-        return unsubscribe;
-    }, []);
+        try {
+          // Fetch JWT from backend using Firebase ID token
+          const idToken = await user.getIdToken();
+          const response = await backendLogin(idToken);
+          setToken(response.token);
+        } catch (err) {
+          console.error('Error fetching backend JWT:', err);
+          setToken(null);
+        }
+      } else {
+        setCurrentUser(null);
+        setToken(null);
+      }
+      setLoading(false);
+    });
 
-    // 3. The value provided by the context.
-    // We now include the logout function in this value object.
-    const value = {
-        currentUser,
-        loading,
-        logout, // <--- This line was missing, causing the error.
-    };
+    return unsubscribe;
+  }, []);
 
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ currentUser, loading, token, logout }}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
 
-// 4. A custom hook to easily access the auth context.
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
+import AtaataLogoImg from '../Logo/Ataata.svg'; // <-- external SVG
 import '../index.css';
 
 const Navbar = () => {
@@ -21,29 +22,23 @@ const Navbar = () => {
       const leftLinks = navRefs.current.filter((_, i) => i <= 1); // Home + Profile
       const rightLinks = navRefs.current.filter((_, i) => i > 1); // Logout/Login + Settings
 
-      // Quadratic Bézier points for Y-axis (transparent green curve)
       const P0 = { x: 0, y: 250 };
       const P1 = { x: 500, y: 30 };
       const P2 = { x: 1000, y: 250 };
       const verticalOffset = 10;
 
-      // Logo container
       const logo = document.querySelector('.logo-container');
       const logoWidth = logo?.offsetWidth || 200;
-      const logoX = window.innerWidth / 2 - logoWidth / 2; // left edge
-      const logoRightX = logoX + logoWidth; // right edge
+      const logoX = window.innerWidth / 2 - logoWidth / 2;
+      const logoRightX = logoX + logoWidth;
+      const gap = 160;
 
-      const gap = 160; // gap from logo edge
-
-      // Left links positions
-      const profileX = logoX - gap; // profile left of logo
-      const homeX = profileX - gap;  // home left of profile
+      const profileX = logoX - gap;
+      const homeX = profileX - gap;
 
       leftLinks.forEach((el, i) => {
         if (!el) return;
         const x = i === 0 ? homeX : profileX;
-
-        // Compute t along curve based on x
         const t = x / window.innerWidth;
         const yCurve = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
 
@@ -54,15 +49,12 @@ const Navbar = () => {
         el.style.transition = 'top 0.6s ease, left 0.6s ease';
       });
 
-      // Right links positions (mirrored using logo right edge)
-      const logoutX = logoRightX + gap -100;       // first right link
-      const settingsX = logoutX + gap;        // second right link
+      const logoutX = logoRightX + gap - 100;
+      const settingsX = logoutX + gap;
 
       rightLinks.forEach((el, i) => {
         if (!el) return;
         const x = i === 0 ? logoutX : settingsX;
-
-        // Compute t along curve
         const t = x / window.innerWidth;
         const yCurve = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
 
@@ -88,12 +80,6 @@ const Navbar = () => {
     }
   };
 
-  const AtaataLogo = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 966.62 1045.63" className="logo-svg">
-      {/* SVG paths omitted for brevity */}
-    </svg>
-  );
-
   return (
     <>
       <style>{`
@@ -111,12 +97,33 @@ const Navbar = () => {
         .svg-arch { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: all 0.3s ease-in-out; }
         .svg-arch path { transition: d 0.3s ease-in-out; }
         .logo-container {
-          position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-          width: 200px; height: 200px; background-color: #00539b; border-radius: 50%;
-          display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25); z-index: 1001;
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1005;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+          background-color: #00539b;
         }
-        .inner-circle { width: 150px; height: 150px; background-color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
-        .logo-svg { height: 0px; width: auto; fill: black; }
+        .inner-circle {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          background-color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .logo-svg {
+          height: 120px; /* <-- adjust this to resize logo */
+          width: auto;
+        }
         .nav-links { position: fixed; left: 0; top: 0; width: 100%; z-index: 1002; pointer-events: none; }
         .nav-link { text-decoration: none; color: white; cursor: pointer; white-space: nowrap; pointer-events: auto; font-size: 1.25rem; font-weight: 500; transition: color 0.2s, top 0.6s ease, left 0.6s ease; }
         .nav-link:hover { color: #ffd700; }
@@ -151,7 +158,9 @@ const Navbar = () => {
 
       {/* Logo */}
       <div className="logo-container">
-        <div className="inner-circle"><AtaataLogo /></div>
+        <div className="inner-circle">
+          <img src={AtaataLogoImg} alt="Ataata Logo" className="logo-svg" />
+        </div>
       </div>
     </>
   );

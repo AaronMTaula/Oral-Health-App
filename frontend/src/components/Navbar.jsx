@@ -114,8 +114,8 @@ const Navbar = () => {
           top: 30px; 
           left: 50%; 
           transform: translateX(-50%);
-          width: 200px;  
-          height: 200px;
+          width: 200px;  /* this is for the outer circle */
+          height: 200px; /* this is for the outer circle */
           border-radius: 50%;
           display: flex; 
           justify-content: center; 
@@ -134,9 +134,9 @@ const Navbar = () => {
           align-items: center;
         }
         .logo-svg {
-          height: 500px; 
+          height: 250px; 
           width: auto;
-          transform: translateY(45px);
+          transform: translateY(10px);
         }
         .nav-links { position: fixed; left: 0; top: 0; width: 100%; z-index: 1002; pointer-events: none; }
         .nav-link { text-decoration: none; color: white; cursor: pointer; white-space: nowrap; pointer-events: auto; font-size: 1.25rem; font-weight: 500; transition: color 0.2s, top 0.6s ease, left 0.6s ease; }

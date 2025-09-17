@@ -101,6 +101,8 @@ const Navbar = () => {
         .green-container { height: 120px; top: 80px; }
         .svg-arch { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: all 0.3s ease-in-out; }
         .svg-arch path { transition: d 0.3s ease-in-out; }
+        
+        /* 🔹 Logo grow/shrink when scrolling */
         .logo-container {
           position: fixed; 
           top: 30px; 
@@ -115,6 +117,12 @@ const Navbar = () => {
           z-index: 1005;
           box-shadow: 0 4px 12px rgba(0,0,0,0.25);
           background-color: #00539b;
+          transition: all 0.4s ease-in-out; /* smooth scaling */
+        }
+        .logo-container.scrolled {
+          width: 250px;   /* bigger when scrolled */
+          height: 250px;
+          top: 20px;      /* move slightly up */
         }
         .inner-circle {
           width: 150px; 
@@ -124,12 +132,22 @@ const Navbar = () => {
           display: flex;
           justify-content: center;
           align-items: center;
+          transition: all 0.4s ease-in-out;
+        }
+        .logo-container.scrolled .inner-circle {
+          width: 180px;   /* inner circle grows too */
+          height: 180px;
         }
         .logo-svg {
           height: 250px; 
           width: auto;
           transform: translateY(10px);
+          transition: all 0.4s ease-in-out;
         }
+        .logo-container.scrolled .logo-svg {
+          height: 300px;  /* logo svg grows */
+        }
+        
         .nav-links { position: fixed; left: 0; top: 0; width: 100%; z-index: 1002; pointer-events: none; }
         .nav-link { text-decoration: none; color: white; cursor: pointer; white-space: nowrap; pointer-events: auto; font-size: 1.25rem; font-weight: 500; transition: color 0.2s, top 0.6s ease, left 0.6s ease; }
         .nav-link:hover { color: #ffd700; }
@@ -163,10 +181,9 @@ const Navbar = () => {
       </div>
 
       {/* Logo */}
-      <div className="logo-container">
+      <div className={`logo-container ${isScrolled ? 'scrolled' : ''}`}>
         <div className="inner-circle">
           <img src={AtaataLogoImg} alt="Ataata Logo" className="logo-svg" />
-          
         </div>
       </div>
     </>

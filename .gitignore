@@ -1,50 +1,38 @@
-# -----------------------
-# Node.js dependencies
-# -----------------------
+# ========================
+# General Node ignores
+# ========================
 node_modules/
 npm-debug.log*
-yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+yarn-debug.log*
 
-# -----------------------
-# Build outputs
-# -----------------------
-dist/
-dist-ssr/
-build/
+# ========================
+# Backend
+# ========================
+/backend/node_modules/
+# Env file with secrets
+/backend/.env
+# Firebase service account key (if you ever use a JSON file)
+#/backend/config/serviceAccountKey.json
+/backend/dist/
+#/backend/build/
 
-# -----------------------
-# Environment files
-# -----------------------
-.env
-.env.*
-frontend/.env
-backend/.env
-backend/serviceAccountKey.json
+# ========================
+# Frontend
+# ========================
+/frontend/node_modules/
+# Build output
+/frontend/dist/
+/frontend/.env
+/frontend/.cache/
 
-# -----------------------
-# Logs
-# -----------------------
-logs
-*.log
+# ========================
+# VSCode
+# ========================
+.vscode/
 
-# -----------------------
-# OS / Editor files
-# -----------------------
+# ========================
+# System files
+# ========================
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/*
-!.vscode/extensions.json
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# -----------------------
-# TypeScript configs (local only)
-# -----------------------
-tsconfig.app.json

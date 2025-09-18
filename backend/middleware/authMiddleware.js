@@ -1,15 +1,19 @@
-const jwt = require("jsonwebtoken");
+const admin = require("../utils/firebase");
 
-module.exports = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
+module.exports = async (req, res, next) => {
+  const authHeader = req.header("Authorization");
+  const token = authHeader && authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
 
   if (!token) return res.status(401).json({ error: "No token, authorization denied" });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, email }
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = { uid: decodedToken.uid, email: decodedToken.email };
     next();
   } catch (err) {
+    console.error("Firebase token verification failed:", err);
     res.status(401).json({ error: "Token is not valid" });
   }
 };

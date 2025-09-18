@@ -14,7 +14,12 @@
 
 .ribbon-container {
   height: 250px;
+  transition: background-color 0.3s ease-in-out;
 }
+
+/* Dynamic classes for per-page color */
+.ribbon-container.navbar-home { background-color: #e08fff; }
+.ribbon-container.navbar-default { background-color: #00539b; }
 
 .green-container {
   height: 120px;
@@ -39,62 +44,64 @@
 /* Logo container */
 .logo-container {
   position: fixed;
-  top: 10px;           /* always fixed distance from top */
-  left: 50%;           /* horizontally center */
+  top: 30px;
+  left: 50%;
   transform: translateX(-50%);
   width: 200px;
   height: 200px;
-  background-color: #00539b;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  z-index: 1001;
-  transition: top 0.3s ease, transform 0.3s ease;
+  z-index: 1005;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  background-color: #e08fff; /* default Home color */
+  transition: all 0.4s ease-in-out;
 }
 
 .logo-container.scrolled {
-  top: 10px;           /* keeps same top when scrolled */
-  transform: translateX(-50%) scale(1); 
+  width: 250px;
+  height: 250px;
+  top: 10px;
 }
 
 .inner-circle {
   width: 150px;
   height: 150px;
-  background-color: white;
   border-radius: 50%;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.4s ease-in-out;
 }
 
 .logo-svg {
   height: 100px;
   width: auto;
-  align-self: center;
+  transition: all 0.4s ease-in-out;
 }
 
 /* Nav links */
 .nav-links {
   position: fixed;
-  top: 110px;           /* base Y position of links */
+  top: 110px;
   left: 0;
   width: 100%;
   z-index: 1002;
   font-size: 1.25rem;
   font-weight: 500;
-  pointer-events: none; /* container itself doesn't block clicks */
+  pointer-events: none;
 }
 
 .nav-link {
   text-decoration: none;
-  color: black;
+  color: white;
   cursor: pointer;
   white-space: nowrap;
-  pointer-events: auto; /* individual links clickable */
+  pointer-events: auto;
   transition: color 0.2s, transform 0.3s ease-in-out, top 0.6s ease, left 0.6s ease;
-  position: absolute; /* allows JS to place along curve */
+  position: absolute;
 }
 
 .nav-link:hover {

@@ -1,14 +1,15 @@
-// src/pages/ProfilePage.jsx
+// frontend/src/pages/ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/useAuth';
 import { User, Mail, Smartphone, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import './ProfilePage.css'; 
+import './ProfilePage.css';
 
 const ProfilePage = () => {
   const { currentUser, loading: authLoading } = useAuth();
   const [userData, setUserData] = useState(null);
   const [apiLoading, setApiLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,22 +22,33 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
       setApiLoading(true);
       try {
-        const response = await fetch(`/api/users/${currentUser.uid}`);
+        // Always fetch fresh Firebase token
+        const token = await currentUser.getIdToken();
+        localStorage.setItem('token', token);
+
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         if (!response.ok) {
           throw new Error('User not found or network error.');
         }
+
         const data = await response.json();
         setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data from backend:', error);
+      } catch (err) {
+        console.error('Error fetching user data from backend:', err);
         setUserData(null);
+        setError(err.message);
       } finally {
         setApiLoading(false);
       }
     };
 
     fetchUserProfile();
-  }, [currentUser, authLoading]); 
+  }, [currentUser, authLoading]);
 
   if (authLoading || apiLoading) {
     return (
@@ -54,12 +66,19 @@ const ProfilePage = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
   const ProfileContent = () => (
     <div className="profile-page">
       <div className="profile-page-wrapper">
         <div className="min-h-screen p-8 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
           <main className="max-w-4xl mx-auto space-y-8">
-            {/* Profile Info Section */}
             <section className="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border-t-4 border-blue-500">
               <div className="flex items-center space-x-4 mb-4">
                 <User className="w-8 h-8 text-blue-500" />
@@ -100,7 +119,7 @@ const ProfilePage = () => {
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <div className="text-center mt-12">
           <p className="text-xl">No profile data found.</p>
-          <p className="text-md mt-4">This could mean a document for your user ID has not been created in MongoDB yet.</p>
+          <p className="text-md mt-4">This could mean your account exists but no profile document has been created in MongoDB yet.</p>
         </div>
       </div>
     </div>

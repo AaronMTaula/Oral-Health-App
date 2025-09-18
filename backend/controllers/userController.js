@@ -5,10 +5,12 @@ const User = require("../models/User");
 // Create User (Signup)
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, firebaseUid } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashedPassword });
+
+    const user = new User({ name, email, password: hashedPassword, firebaseUid });
     await user.save();
+
     res.status(201).json({ message: "User created", user });
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -44,11 +46,14 @@ exports.loginUser = async (req, res) => {
 // Get current user profile
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    // Use email from Firebase token to fetch user
+    const user = await User.findOne({ email: req.user.email }).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
+
     res.json(user);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 

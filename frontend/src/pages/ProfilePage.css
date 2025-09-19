@@ -1,15 +1,21 @@
-/* src/pages/ProfilePage.css */
+/* =========================
+   Profile Page Styles
+   ========================= */
+
+/* Fallback navbar color for Profile page */
+:root {
+  --navbar-bg: #6db1ff; /* Default color for Profile page */
+}
 
 /* Wrapper ensures fixed navbar/logo stays anchored */
 .profile-page-wrapper {
   position: relative;
   min-height: 120vh;
-  padding-top: 0; /* ensures content doesn’t push the fixed navbar/logo */
+  padding-top: 0;
   box-sizing: border-box;
 }
 
 .profile-page-container {
-  /* Main container for the profile page content */
   padding: 2rem;
   max-width: 800px;
   margin: 2rem auto;
@@ -19,7 +25,6 @@
 }
 
 .profile-header {
-  /* Header for the user profile section */
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
@@ -28,7 +33,6 @@
 }
 
 .profile-avatar {
-  /* Styles for the user's profile picture */
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -42,7 +46,6 @@
 }
 
 .profile-info {
-  /* Container for the user's name and email */
   font-family: 'Inter', sans-serif;
 }
 
@@ -59,7 +62,6 @@
 }
 
 .profile-section {
-  /* Styles for individual sections within the profile */
   margin-bottom: 1.5rem;
 }
 
@@ -72,7 +74,6 @@
 }
 
 .profile-button {
-  /* Styles for a button on the profile page */
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 5px;
@@ -87,11 +88,10 @@
   background-color: #c0392b;
 }
 
+/* Logo container specific for profile page adjustments */
 .profile-page .logo-container {
   position: fixed;
   top: 20px;       
   left: 20px;      
   transform: none; 
 }
-
-

@@ -1,26 +1,107 @@
-// home.jsx
-import React from 'react';
-import { Mail } from 'lucide-react';
-import { useAuth } from '../context/useAuth';
-import './Home.css';
+import React from "react";
+import "./Home.css";
+import { treatments } from "../data/treatments";
+import { caseStudies } from "../data/case-studies";
 
-// The Home component displays the user's ID and a button to go to the profile page.
-const Home = ({ userId, onNavigateToProfile }) => {
+const Home = () => {
   return (
-    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg text-center border-t-4 border-blue-500">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Welcome</h1>
-      <p className="text-gray-600 mb-6">Your unique user ID is:</p>
-      <div className="bg-gray-100 text-gray-700 p-3 rounded-lg font-mono break-all mb-8">
-        {userId}
-      </div>
-      <button
-        onClick={onNavigateToProfile}
-        className="flex items-center justify-center w-full px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
-      >
-        <Mail className="h-5 w-5 mr-2" />
-        View and Edit Profile
-      </button>
-    </div>
+    <main>
+      <section id="treatments">
+        <h2>Treatments</h2>
+        <ul className="treatments-list">
+          {treatments.map((treatment, idx) => (
+            <li key={idx} className="treatment-item">
+              <img
+                src={treatment.img}
+                alt={treatment.name}
+                width={40}
+                height={40}
+                style={{ marginRight: "1rem", verticalAlign: "middle" }}
+              />
+              {treatment.name}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 👇 Everything else here belongs to Home only */}
+      <section id="who-we-are">
+        <h2>Who We Are</h2>
+        <p>
+          Welcome to Oral Health App. We provide exceptional dental care with a
+          friendly team and state-of-the-art equipment.
+        </p>
+      </section>
+
+      <section id="offers">
+        <h2>Offers & Promotions</h2>
+        <ul>
+          <li>18 Months Interest Free With Q Card</li>
+          <li>ACC Dentists</li>
+          <li>Afterpay</li>
+          <li>Corporate Offers</li>
+          <li>SuperGold Card</li>
+        </ul>
+      </section>
+
+      <section id="team">
+        <h2>Meet Our Team</h2>
+        <p>
+          Our warm and friendly team of highly-trained dentists, hygienists, and
+          support staff are here to help you achieve the best for your oral
+          health.
+        </p>
+      </section>
+
+      <section id="payment">
+        <h2>Payment Options</h2>
+        <ul>
+          <li>Afterpay</li>
+          <li>Q Mastercard & Q Card</li>
+          <li>Credit Card</li>
+          <li>Eftpos / Cash</li>
+        </ul>
+      </section>
+
+      <section id="case-studies">
+        <h2>Case Studies</h2>
+        <div className="case-studies-grid">
+          {caseStudies.map((study, idx) => (
+            <div key={idx} className="case-study">
+              <h3>{study.title}</h3>
+              <div className="case-images">
+                <div>
+                  <img src={study.before} alt={study.title + " before"} width={200} />
+                  <p>Before</p>
+                </div>
+                <div>
+                  <img src={study.after} alt={study.title + " after"} width={200} />
+                  <p>After</p>
+                </div>
+              </div>
+              <p>{study.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="reviews">
+        <h2>Patient Reviews</h2>
+        <blockquote>
+          <p>
+            "Had an appointment today to get a wire retainer put in and some
+            fillings. The dentist did a great job - thank you!"
+          </p>
+          <footer>- Grateful patient</footer>
+        </blockquote>
+      </section>
+
+      <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Phone: generic phone number</p>
+        <p>Insert location here</p>
+      </section>
+    </main>
   );
 };
 

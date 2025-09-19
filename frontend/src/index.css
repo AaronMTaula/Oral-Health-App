@@ -1,9 +1,10 @@
-/*
- * This file contains all global styles for the app.
- */
+/* =========================
+   Global Styles
+   ========================= */
 
 :root {
-  --color-primary: #54C45E;
+  --navbar-bg: #e08fff; 
+  --navbar-offset: 250px;
 }
 
 body {
@@ -11,6 +12,7 @@ body {
   background: #f8f8f8;
   margin: 0;
   padding: 0;
+  transition: margin-top 0.4s ease;
 }
 
 main {
@@ -51,4 +53,14 @@ footer {
   padding: 1rem 0;
   margin-top: 2rem;
   border-radius: 0 0 10px 10px;
+}
+
+/* =========================
+   Navbar & logo defaults
+   ========================= */
+.ribbon-container,
+.green-container,
+.nav-links,
+.logo-container {
+  z-index: 1000;
 }

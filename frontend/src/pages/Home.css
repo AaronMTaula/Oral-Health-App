@@ -1,9 +1,11 @@
-/* src/pages/Home.css */
+/* =========================
+   Home Page Styles
+   ========================= */
 
-/*
-  * This file contains styles that were previously in the main App.css
-  * but belong specifically to the Home page or its child components.
-  */
+/* Fallback navbar color for Home page */
+:root {
+  --navbar-bg: #e08fff; /* Default color for Home page */
+}
 
 .treatments-list {
   list-style: none;

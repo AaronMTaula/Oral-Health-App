@@ -48,29 +48,29 @@ const Navbar = () => {
     }
   };
 
-  // Update positions along the green curve
   useEffect(() => {
     const updatePositions = () => {
       const P0 = { x: 0, y: 250 };
-      const P1 = { x: 500, y: 30 };
+      const P1 = { x: 500, y: 100 }; // flatter curve
       const P2 = { x: 1000, y: 250 };
       const verticalOffset = 10;
       const rotationFactor = 0.4;
-      const leftGap = 160;
-
+      const uniformYOffset = 30; // raise all navlinks by 30px
       const logo = document.querySelector('.logo-container');
       const logoWidth = logo?.offsetWidth || 200;
       const logoX = window.innerWidth / 2 - logoWidth / 2;
       const logoRightX = logoX + logoWidth;
+      const middleGapFactor = 0.75;
 
-      // Left links
+      // LEFT LINKS
+      const leftRange = logoX * middleGapFactor;
       leftLinks.forEach((text, i) => {
         const el = navRefs.current[i];
         if (!el) return;
 
-        const x = logoX - leftGap * (leftLinks.length - i);
+        const spacing = leftRange / leftLinks.length;
+        const x = logoX - spacing * (leftLinks.length - i);
         const t = x / window.innerWidth;
-        // y along the green curve
         const yCurve = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
 
         const dx = 2 * (1 - t) * (P1.x - P0.x) + 2 * t * (P2.x - P1.x);
@@ -79,17 +79,19 @@ const Navbar = () => {
 
         el.style.position = 'absolute';
         el.style.left = `${x}px`;
-        el.style.top = `${isScrolled ? 60 : yCurve - (el.offsetHeight || 24) - verticalOffset}px`;
+        el.style.top = `${isScrolled ? 60 : yCurve - (el.offsetHeight || 24) - verticalOffset - uniformYOffset}px`;
         el.style.transform = isScrolled ? 'rotate(0rad)' : `rotate(${angle}rad)`;
         el.style.transition = 'top 0.6s ease, left 0.6s ease, transform 0.6s ease';
       });
 
-      // Right links
+      // RIGHT LINKS
+      const rightRange = (window.innerWidth - logoRightX) * middleGapFactor;
       rightLinks.forEach((text, i) => {
         const el = navRefs.current[i + leftLinks.length];
         if (!el) return;
 
-        const x = logoRightX + leftGap * (i + 1);
+        const spacing = rightRange / rightLinks.length;
+        const x = logoRightX + spacing * (i + 1);
         const t = x / window.innerWidth;
         const yCurve = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
 
@@ -99,7 +101,7 @@ const Navbar = () => {
 
         el.style.position = 'absolute';
         el.style.left = `${x}px`;
-        el.style.top = `${isScrolled ? 60 : yCurve - (el.offsetHeight || 24) - verticalOffset}px`;
+        el.style.top = `${isScrolled ? 60 : yCurve - (el.offsetHeight || 24) - verticalOffset - uniformYOffset}px`;
         el.style.transform = isScrolled ? 'rotate(0rad)' : `rotate(${angle}rad)`;
         el.style.transition = 'top 0.6s ease, left 0.6s ease, transform 0.6s ease';
       });
@@ -201,7 +203,7 @@ const Navbar = () => {
 
       <div className="green-container">
         <svg className="svg-arch" viewBox="0 0 1000 250" preserveAspectRatio="none">
-          <path fill="transparent" d="M0,250 Q500,30 1000,250 L1000,250 L0,250 Z" />
+          <path fill="transparent" d="M0,250 Q500,100 1000,250 L1000,250 L0,250 Z" />
         </svg>
       </div>
 

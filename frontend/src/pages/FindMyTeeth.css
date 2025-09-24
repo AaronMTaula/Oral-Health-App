@@ -1,0 +1,103 @@
+/* src/pages/FindMyTeeth.css */
+
+.fmt-container {
+  padding: 2rem;
+  text-align: center;
+}
+
+.fmt-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.fmt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.fmt-card {
+  width: 220px;
+  height: 300px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.fmt-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.fmt-card.flipped .fmt-card-inner {
+  transform: rotateY(180deg);
+}
+
+.fmt-card-front,
+.fmt-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.fmt-card-front {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fmt-card-front img {
+  width: 80%;
+  height: auto;
+}
+
+.fmt-card-back {
+  background: #fdfdfd;
+  padding: 1rem;
+  text-align: left;
+  transform: rotateY(180deg);
+}
+
+.fmt-card-back h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.fmt-card-back span {
+  font-size: 1rem;
+  color: #666;
+}
+
+.fmt-card-back p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.fmt-readmore {
+  background-color: #e08fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.85rem;
+  transition: background 0.3s;
+}
+
+.fmt-readmore:hover {
+  background-color: #c06ad1;
+}
+
+.fmt-treatment {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}

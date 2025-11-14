@@ -6,13 +6,21 @@ import "./FindMyTeeth.css";
 const FindMyTeeth = () => {
   const [flippedCard, setFlippedCard] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [blurredCard, setBlurredCard] = useState(null);
 
-  const handleFlip = (id) => {
-    setFlippedCard(flippedCard === id ? null : id);
-    setExpandedCard(null); // reset expanded when flipping
+  const handleCardClick = (id) => {
+    if (blurredCard !== id) {
+      // First click: remove blur
+      setBlurredCard(id);
+    } else {
+      // Second click: flip card
+      setFlippedCard(flippedCard === id ? null : id);
+      setExpandedCard(null); 
+    }
   };
 
-  const handleExpand = (id) => {
+  const handleExpand = (id, e) => {
+    e.stopPropagation();
     setExpandedCard(expandedCard === id ? null : id);
   };
 
@@ -23,28 +31,32 @@ const FindMyTeeth = () => {
         {diagnosesData.map((diag) => (
           <div
             key={diag.id}
-            className={`fmt-card ${flippedCard === diag.id ? "flipped" : ""}`}
-            onClick={() => handleFlip(diag.id)}
+            className={`fmt-card ${
+              blurredCard === diag.id ? "front-unblurred" : ""
+            } ${flippedCard === diag.id ? "flipped" : ""}`}
+            onClick={() => handleCardClick(diag.id)}
           >
             <div className="fmt-card-inner">
               {/* Front Side */}
               <div className="fmt-card-front">
-                <img src={diag.image} alt={diag.colloquialName} />
+                <img src={diag.image} alt={diag.colloquialName} 
+                style={{
+                  objectPosition: diag.objectPosition || "center center",
+                  width: diag.width || "100%",
+                  height: diag.height || "100%",
+                  objectFit: diag.objectFit || "cover",}}/>
+                
               </div>
 
               {/* Back Side */}
               <div className="fmt-card-back">
                 <h2>
-                  {diag.scientificName}{" "}
-                  <span>({diag.colloquialName})</span>
+                  {diag.scientificName} <span>({diag.colloquialName})</span>
                 </h2>
                 <p>{diag.description}</p>
                 <button
                   className="fmt-readmore"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleExpand(diag.id);
-                  }}
+                  onClick={(e) => handleExpand(diag.id, e)}
                 >
                   {expandedCard === diag.id ? "Hide" : "Read More"}
                 </button>

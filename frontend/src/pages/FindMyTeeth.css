@@ -1,5 +1,14 @@
 /* src/pages/FindMyTeeth.css */
 
+/* Global adjustable image controls */
+:root {
+  --img-width: 100%;
+  --img-height: 100%;
+  --img-object-fit: cover;
+  --img-object-position: center center;
+}
+
+/* --- Container & Title --- */
 .fmt-container {
   padding: 2rem;
   text-align: center;
@@ -8,28 +17,39 @@
 .fmt-title {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #333;
+  color: #2a2a2a;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
+/* --- Grid Layout --- */
 .fmt-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2rem;
-  justify-items: center;
+  grid-template-columns: repeat(3, 220px);
+  column-gap: 2rem; 
+  row-gap: 2rem;       
+  justify-content: center; 
 }
 
+/* --- Card Wrapper --- */
 .fmt-card {
   width: 220px;
   height: 300px;
   perspective: 1000px;
   cursor: pointer;
+  transition: transform 0.25s ease;
 }
 
+.fmt-card:hover {
+  transform: scale(1.03);
+}
+
+/* --- Inner Rotating Layer --- */
 .fmt-card-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  transition: transform 0.8s;
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
   transform-style: preserve-3d;
 }
 
@@ -37,67 +57,100 @@
   transform: rotateY(180deg);
 }
 
+/* --- Card Faces --- */
 .fmt-card-front,
 .fmt-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 14px;
   backface-visibility: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
   overflow: hidden;
 }
 
+/* --- Front of Card (Image) --- */
 .fmt-card-front {
-  background: #fff;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 .fmt-card-front img {
-  width: 80%;
-  height: auto;
+  width: var(--img-width);
+  height: var(--img-height);
+  object-fit: var(--img-object-fit);
+  object-position: var(--img-object-position);
+  border-radius: 8px;
+  border: 5px solid #ffffff;
+  box-sizing: border-box;
+  filter: blur(5px);
+  transition: filter 0.45s ease;
 }
 
+/* --- Remove blur when first clicked --- */
+.fmt-card.front-unblurred .fmt-card-front img {
+  filter: blur(0);
+}
+
+/* --- Back of Card --- */
 .fmt-card-back {
-  background: #fdfdfd;
+  background: #fafafa;
   padding: 1rem;
   text-align: left;
   transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .fmt-card-back h2 {
   font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
+  color: #333;
+  font-weight: 600;
 }
 
 .fmt-card-back span {
-  font-size: 1rem;
-  color: #666;
+  font-size: 0.95rem;
+  color: #777;
 }
 
 .fmt-card-back p {
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.35;
+  color: #444;
 }
 
+/* --- Read More Button --- */
 .fmt-readmore {
-  background-color: #e08fff;
+  background-color: #8c4bff;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   color: #fff;
   font-size: 0.85rem;
-  transition: background 0.3s;
+  transition: background 0.3s ease, transform 0.2s ease;
+  align-self: flex-start;
+  margin-bottom: 0.3rem;
 }
 
 .fmt-readmore:hover {
-  background-color: #c06ad1;
+  background-color: #7436d0;
+  transform: scale(1.05);
 }
 
+/* --- Treatment Section --- */
 .fmt-treatment {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
+  color: #333;
 }

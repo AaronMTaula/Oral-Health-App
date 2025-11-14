@@ -10,7 +10,7 @@
 
 /* --- Container & Title --- */
 .fmt-container {
-  padding: 2rem;
+  padding: 6rem 2rem 2rem 2rem; /* Increased top padding to avoid navbar overlap */
   text-align: center;
 }
 
@@ -26,9 +26,9 @@
 .fmt-grid {
   display: grid;
   grid-template-columns: repeat(3, 220px);
-  column-gap: 2rem; 
-  row-gap: 2rem;       
-  justify-content: center; 
+  column-gap: 2rem;
+  row-gap: 2rem;
+  justify-content: center;
 }
 
 /* --- Card Wrapper --- */
@@ -37,11 +37,32 @@
   height: 300px;
   perspective: 1000px;
   cursor: pointer;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, width 0.4s ease, height 0.4s ease;
+  position: relative;
 }
 
 .fmt-card:hover {
   transform: scale(1.03);
+}
+
+/* --- EXPANDED CARD --- */
+.fmt-card.expanded {
+  grid-column: span 3;
+  width: 100% !important;
+  height: 450px !important;
+  cursor: default;
+  z-index: 5;
+  transform: none !important;
+  margin-top: 5rem;
+}
+
+.fmt-card.expanded .fmt-card-inner {
+  height: 100%;
+}
+
+.fmt-card.expanded .fmt-card-back {
+  font-size: 1rem;
+  padding: 1.5rem;
 }
 
 /* --- Inner Rotating Layer --- */

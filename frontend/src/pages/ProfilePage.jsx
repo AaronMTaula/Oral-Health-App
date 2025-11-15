@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
-  const { currentUser, loading: authLoading } = useAuth();
+  const { currentUser, loading: authLoading, token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [apiLoading, setApiLoading] = useState(true);
   const [error, setError] = useState(null);

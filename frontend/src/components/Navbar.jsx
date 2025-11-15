@@ -258,6 +258,9 @@ const Navbar = () => {
           <img src={AtaataLogoImg} alt="Ataata Logo" className="logo-svg" />
         </div>
       </div>
+
+      {/* Spacer pushes content down */}
+      <div className="spacer"></div>
     </>
   );
 };

@@ -1,7 +1,8 @@
 // src/context/useAuth.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth'; 
-import { auth } from '../../config/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../../config/firebase'; 
+import { loginUser as backendLogin } from '../services/authService';
 
 export const AuthContext = createContext(null);
 

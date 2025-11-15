@@ -23,20 +23,18 @@ mongoose
   .then(() => console.log("✅ MongoDB connected successfully!"))
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
-    process.exit(1); // Exit if DB connection fails
+    process.exit(1);
   });
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 
-// Health check route
+// Health check
 app.get("/", (req, res) => {
   res.json({ message: "Oral Health App backend is running 🚀" });
 });
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

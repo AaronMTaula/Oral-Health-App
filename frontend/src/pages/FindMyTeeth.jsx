@@ -19,9 +19,8 @@ const FindMyTeeth = () => {
       const clickedCard = e.target.closest(".fmt-card");
       const clickedNav = e.target.closest("nav");
 
-      if (clickedCard || clickedNav) return; // ignore
+      if (clickedCard || clickedNav) return;
 
-      // FULL RESET
       setExpandedCard(null);
       setFlippedCard(null);
       setBlurredCard(null);
@@ -35,7 +34,6 @@ const FindMyTeeth = () => {
         HANDLE CARD CLICK (UNBLUR + FLIP)
   ---------------------------------------- */
   const handleCardClick = (id) => {
-    // First click → unblur ONLY this card
     if (blurredCard !== id) {
       setBlurredCard(id);
       setFlippedCard(null);
@@ -43,10 +41,8 @@ const FindMyTeeth = () => {
       return;
     }
 
-    // Don't flip if expanded
     if (expandedCard === id) return;
 
-    // Second click → flip
     setFlippedCard(flippedCard === id ? null : id);
   };
 
@@ -77,17 +73,50 @@ const FindMyTeeth = () => {
     : diagnosesData;
 
   /* ----------------------------------------
-         CENTER ACTIVE CARD ON SCREEN
+        CENTER ACTIVE CARD (NO OVERSHOOT)
   ---------------------------------------- */
   useEffect(() => {
     const activeId = expandedCard || blurredCard;
+    if (!activeId || !cardRefs.current[activeId]) return;
 
-    if (activeId && cardRefs.current[activeId]) {
-      cardRefs.current[activeId].scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
+    const el = cardRefs.current[activeId];
+    const rect = el.getBoundingClientRect();
+
+    // 🔒 If the card is already fully visible, do NOT scroll
+    const isFullyVisible =
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth;
+
+    if (isFullyVisible) return;
+
+    const desiredCenterY = window.scrollY + rect.top + rect.height / 2;
+    const desiredCenterX = window.scrollX + rect.left + rect.width / 2;
+
+    let targetTop = Math.round(desiredCenterY - window.innerHeight / 2);
+    let targetLeft = Math.round(desiredCenterX - window.innerWidth / 2);
+
+    const docHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    const docWidth = Math.max(
+      document.documentElement.scrollWidth,
+      document.body.scrollWidth
+    );
+
+    const maxTop = Math.max(0, docHeight - window.innerHeight);
+    const maxLeft = Math.max(0, docWidth - window.innerWidth);
+
+    targetTop = Math.max(0, Math.min(targetTop, maxTop));
+    targetLeft = Math.max(0, Math.min(targetLeft, maxLeft));
+
+    window.scrollTo({
+      top: targetTop,
+      left: targetLeft,
+      behavior: "smooth",
+    });
   }, [expandedCard, blurredCard]);
 
   /* ----------------------------------------
@@ -130,14 +159,15 @@ const FindMyTeeth = () => {
                 {/* BACK */}
                 <div className="fmt-card-back">
                   <h2>
-                    {diag.scientificName} <span>({diag.colloquialName})</span>
+                    {diag.scientificName}{" "}
+                    <span>({diag.colloquialName})</span>
                   </h2>
 
                   <p>{diag.description}</p>
 
                   <button
                     className="fmt-readmore"
-                    style={{ width: '185px', height: '50px' }}
+                    style={{ width: "185px", height: "50px" }}
                     onClick={(e) => handleExpand(diag.id, e)}
                   >
                     {isExpanded ? "Hide" : "Read More"}

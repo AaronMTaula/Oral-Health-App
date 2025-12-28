@@ -55,6 +55,7 @@
   z-index: 5;
   transform: none !important;
   margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 
 .fmt-card.expanded .fmt-card-inner {
@@ -130,6 +131,7 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  padding-bottom: 4rem; /* leave space so button doesn't cover content */
 }
 
 .fmt-card-back h2 {
@@ -154,6 +156,9 @@
 /* --- Read More Button --- */
 .fmt-readmore {
   background-color: #8c4bff;
+  position: absolute; /* anchored to the card/back container */
+  right: 1rem;
+  bottom: 1rem;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 10px;
@@ -161,8 +166,7 @@
   color: #fff;
   font-size: 0.85rem;
   transition: background 0.3s ease, transform 0.2s ease;
-  align-self: flex-start;
-  margin-bottom: 0.3rem;
+  z-index: 10;
 }
 
 .fmt-readmore:hover {

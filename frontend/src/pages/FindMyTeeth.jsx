@@ -77,7 +77,7 @@ const FindMyTeeth = () => {
     : diagnosesData;
 
   /* ----------------------------------------
-        ⭐ CENTER ACTIVE CARD ON SCREEN
+         CENTER ACTIVE CARD ON SCREEN
   ---------------------------------------- */
   useEffect(() => {
     const activeId = expandedCard || blurredCard;
@@ -137,6 +137,7 @@ const FindMyTeeth = () => {
 
                   <button
                     className="fmt-readmore"
+                    style={{ width: '185px', height: '50px' }}
                     onClick={(e) => handleExpand(diag.id, e)}
                   >
                     {isExpanded ? "Hide" : "Read More"}

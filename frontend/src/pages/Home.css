@@ -1,55 +1,243 @@
-/* =========================
-   Home Page Styles
-   ========================= */
-
-/* Fallback navbar color for Home page */
 :root {
-  --navbar-bg: #e08fff; /* Default color for Home page */
+  --navbar-bg: #e08fff;
 }
 
-.treatments-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
+/* =========================
+   Announcement Banner
+========================= */
+.announcement-banner {
+  background: #f6f0ff;
+  padding: 3rem 1.5rem;
 }
 
-.treatment-item {
-  display: flex;
-  align-items: center;
-  background: #f4f8fc;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 1px 4px rgba(0,83,155,0.05);
-  min-width: 220px;
-}
-
-.case-studies-grid {
+.announcement-content {
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  grid-template-columns: 1fr 2fr 1fr;
   gap: 2rem;
-  margin-top: 2rem;
+  align-items: center;
 }
 
-.case-study {
-  background: #f4f8fc;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,83,155,0.05);
+.announcement-image {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
 }
 
-.case-images {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  align-items: flex-start;
+.announcement-text {
+  text-align: center;
+}
+
+.announcement-title {
+  font-size: 2.2rem;
+  color: #4b0082;
   margin-bottom: 1rem;
 }
 
-.case-images img {
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,83,155,0.10);
-  background: #fff;
+/* =========================
+   Reveal Cards
+========================= */
+.reveal-section {
+  padding: 3rem 1.5rem;
+}
+
+.reveal-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .reveal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reveal-card {
+  position: relative;
+  overflow: hidden;
+  background: #f4f8fc;
+  border-radius: 14px;
+  min-height: 380px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  perspective: 1000px; /* needed for 3D page-turn */
+}
+
+/* Cover with minimal 3D page-turn effect */
+.reveal-cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #6a0dad, #9b5de5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.6s ease;
+  transform-origin: top left; /* start from inner top corner */
+  transform-style: preserve-3d;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Minimal page-turn left */
+.reveal-card.open .reveal-cover.left {
+  transform: rotateY(-35deg) translateZ(3px);
+  transform-origin: top left;
+}
+
+/* Minimal page-turn right */
+.reveal-card.open .reveal-cover.right {
+  transform: rotateY(35deg) translateZ(3px);
+  transform-origin: top right;
+}
+
+/* =========================
+   Arrow Circle — inside → outside animation
+========================= */
+.reveal-close-circle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #6a0dad, #9b5de5);
+  color: white;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  z-index: 3;
+  transition: left 0.6s ease, right 0.6s ease, opacity 0.3s ease;
+}
+
+/* Left card arrows */
+.reveal-close-circle.left.open-arrow {
+  right: 12px; /* start inside */
+}
+.reveal-card.open .reveal-close-circle.left.open-arrow {
+  right: -28px; /* animate outside */
+}
+.reveal-close-circle.left.close-arrow {
+  right: -28px; /* appears outside after open */
+}
+
+/* Right card arrows */
+.reveal-close-circle.right.open-arrow {
+  left: 12px; /* start inside */
+}
+.reveal-card.open .reveal-close-circle.right.open-arrow {
+  left: -28px; /* animate outside */
+}
+.reveal-close-circle.right.close-arrow {
+  left: -28px; /* appears outside after open */
+}
+
+/* Hide inactive arrows */
+.reveal-close-circle.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   Reveal Content
+========================= */
+.reveal-content {
+  position: relative;
+  padding: 2.5rem;
+  line-height: 1.6;
+  backface-visibility: hidden; /* ensures content not visible during page-turn */
+}
+
+/* =========================
+   Social Media Rolodex
+========================= */
+.social-section {
+  padding: 3rem 1.5rem;
+  background: #fff8f0;
+}
+
+.social-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.social-text {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.social-rolodex {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rolodex-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  flex: 1;
+  scrollbar-width: none; /* Firefox */
+}
+.rolodex-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.rolodex-post {
+  min-width: 250px;
+  background: #f4f8fc;
+  border-radius: 12px;
+  padding: 1rem;
+  flex: 0 0 auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.rolodex-post img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.rolodex-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #6a0dad;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: absolute;
+  z-index: 5;
+}
+
+.rolodex-arrow.left {
+  left: -20px;
+}
+
+.rolodex-arrow.right {
+  right: -20px;
+}
+
+@media (max-width: 900px) {
+  .rolodex-container {
+    justify-content: center;
+  }
+  .rolodex-arrow.left, .rolodex-arrow.right {
+    display: none;
+  }
 }

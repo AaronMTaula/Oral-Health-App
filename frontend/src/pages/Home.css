@@ -50,43 +50,74 @@
   perspective: 1400px;
 }
 
-/* Panel Base */
-.broche-panel {
+.broche-wrapper {
+  position: relative;
   width: 250px;
   height: 350px;
-  position: relative;
-  cursor: grab;
-  transform-style: preserve-3d;
-  transition: transform 0.35s ease-out;
-  --curl: 0;
-}
-
-/* Drag cursor */
-.broche-panel:active {
-  cursor: grabbing;
-}
-
-/* Left panel (hinge on left edge) */
-.broche-panel.left {
-  transform-origin: left center;
-}
-
-/* Right panel (hinge on right edge) */
-.broche-panel.right {
-  transform-origin: right center;
 }
 
 /* =========================
-   Cover (Front Face)
+   BACK CARD
 ========================= */
+.broche-back {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  overflow-y: auto; /* MAKE IT SCROLLABLE */
+}
+
+.broche-back::-webkit-scrollbar {
+  width: 6px;
+}
+
+.broche-back::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+.broche-back h3 {
+  margin-bottom: 0.75rem;
+  color: #6a38d6;
+}
+
+.broche-back p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+/* =========================
+   FRONT CARD
+========================= */
+.broche-panel {
+  width: 250px;
+  height: 350px;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+  --curl: 0;
+  z-index: 2;
+}
+
+/* Flip directions */
+.broche-panel.left { transform-origin: left center; }
+.broche-panel.right { transform-origin: right center; }
+
+/* Cover */
 .broche-cover {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    #7d4ae3 0%,
-    #6a38d6 100%
-  );
+  background: linear-gradient(135deg, #7d4ae3 0%, #6a38d6 100%);
   color: white;
   font-size: 1.5rem;
   display: flex;
@@ -94,86 +125,44 @@
   align-items: center;
   border-radius: 6px;
   backface-visibility: hidden;
-
-  /* Curl shading */
   box-shadow:
     inset calc(var(--curl) * -25px) 0 30px rgba(0,0,0,0.25),
     0 15px 30px rgba(0,0,0,0.25);
-}
-
-/* =========================
-   Content (Back Face)
-========================= */
-.broche-content {
-  position: absolute;
-  inset: 0;
-  background: #ffffff;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
-  padding: 1rem;
-  border-radius: 6px;
-  transform: rotateY(180deg);
-  backface-visibility: hidden;
-
-  box-shadow:
-    inset calc(var(--curl) * 25px) 0 30px rgba(0,0,0,0.15);
+  padding: 0 1rem;
+  overflow-wrap: break-word; /* wrap words */
 }
 
 /* =========================
-   Page Curl Effect
+   Single Arrow Toggle
 ========================= */
-
-/* Page thickness illusion */
-.broche-panel::before {
-  content: "";
+.broche-panel .drag-hint {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  background: linear-gradient(
-    to right,
-    rgba(0,0,0,0.25),
-    rgba(255,255,255,0.8)
-  );
-  transform: translateZ(1px);
-  opacity: var(--curl);
-}
-
-/* Left edge thickness */
-.broche-panel.left::before {
-  left: 0;
-}
-
-/* Right edge thickness */
-.broche-panel.right::before {
-  right: 0;
-}
-
-/* Curl highlight (peeling edge shine) */
-.broche-panel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 6px;
+  bottom: 12px;
+  right: 12px;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.9);
   pointer-events: none;
-  background: linear-gradient(
-    to right,
-    rgba(255,255,255,0.35),
-    transparent 40%
-  );
-  opacity: calc(var(--curl) * 0.8);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: hintPulse 1.6s infinite;
 }
 
-/* Flip direction adjustment */
-.broche-panel.right::after {
-  background: linear-gradient(
-    to left,
-    rgba(255,255,255,0.35),
-    transparent 40%
-  );
+.broche-panel.right .drag-hint {
+  left: 12px;
+  right: auto;
+}
+
+.drag-hint .arrow {
+  font-size: 1.4rem;
+}
+
+/* Pulse animation */
+@keyframes hintPulse {
+  0% { transform: translateX(0); opacity: 0.4; }
+  50% { transform: translateX(6px); opacity: 0.85; }
+  100% { transform: translateX(0); opacity: 0.4; }
 }
 
 /* =========================
@@ -246,25 +235,14 @@
   z-index: 5;
 }
 
-.rolodex-arrow.left {
-  left: -20px;
-}
-
-.rolodex-arrow.right {
-  right: -20px;
-}
+.rolodex-arrow.left { left: -20px; }
+.rolodex-arrow.right { right: -20px; }
 
 /* =========================
    Responsive
 ========================= */
 @media (max-width: 900px) {
   .rolodex-arrow.left,
-  .rolodex-arrow.right {
-    display: none;
-  }
-
-  .broche-container {
-    flex-direction: column;
-    gap: 2rem;
-  }
+  .rolodex-arrow.right { display: none; }
+  .broche-container { flex-direction: column; gap: 2rem; }
 }

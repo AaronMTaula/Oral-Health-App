@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "./Home.css";
 
 /* =========================
@@ -23,47 +23,13 @@ const scrollPosts = (direction) => {
    Home Page
 ========================= */
 const Home = () => {
-  const [leftAngle, setLeftAngle] = useState(0);
-  const [rightAngle, setRightAngle] = useState(0);
+  // toggle angles for click behavior
+  const [leftFlipped, setLeftFlipped] = useState(false);
+  const [rightFlipped, setRightFlipped] = useState(false);
 
-  const dragging = useRef(null);
-  const startX = useRef(0);
-
-  const startDrag = (side, e) => {
-    dragging.current = side;
-    startX.current = e.clientX;
-    window.addEventListener("mousemove", onDrag);
-    window.addEventListener("mouseup", endDrag);
-  };
-
-  const onDrag = (e) => {
-    if (!dragging.current) return;
-
-    const delta = e.clientX - startX.current;
-
-    if (dragging.current === "left") {
-      const angle = Math.max(-180, Math.min(0, delta * -0.7));
-      setLeftAngle(angle);
-    }
-
-    if (dragging.current === "right") {
-      const angle = Math.min(180, Math.max(0, delta * 0.7));
-      setRightAngle(angle);
-    }
-  };
-
-  const endDrag = () => {
-    if (dragging.current === "left") {
-      setLeftAngle((a) => (Math.abs(a) > 90 ? -180 : 0));
-    }
-    if (dragging.current === "right") {
-      setRightAngle((a) => (Math.abs(a) > 90 ? 180 : 0));
-    }
-
-    dragging.current = null;
-    window.removeEventListener("mousemove", onDrag);
-    window.removeEventListener("mouseup", endDrag);
-  };
+  // angles: LEFT card rotates negative to flip left, RIGHT rotates positive to flip right
+  const leftAngle = leftFlipped ? -180 : 0;
+  const rightAngle = rightFlipped ? 180 : 0;
 
   return (
     <main>
@@ -82,35 +48,94 @@ const Home = () => {
       {/* Broche Flip */}
       <section className="broche-section">
         <div className="broche-container">
-          {/* Left Panel */}
-          <div
-            className="broche-panel left"
-            style={{
-              transform: `rotateY(${leftAngle}deg) translateZ(12px)`,
-              "--curl": `${Math.abs(leftAngle) / 180}`
-            }}
-            onMouseDown={(e) => startDrag("left", e)}
-          >
-            <div className="broche-cover">For Parents</div>
-            <div className="broche-content">
-              Parents guide and support healthy smiles.
+
+          {/* ===== PARENTS CARD ===== */}
+          <div className="broche-wrapper">
+            {/* BACK CARD */}
+            <div className="broche-back">
+              <h3>For Parents</h3>
+              <p>Hello parents!</p>
+              <p>
+                It’s a team effort keeping your kiddies’ teeth happy and healthy —
+                and you are the captain of the ship. Use our website and app to
+                explore oral health topics, common tooth situations, and treatment options.
+              </p>
+              <p>
+                Create a family group, track progress, earn points together, and set
+                the example for lifelong healthy habits.
+              </p>
+              <p>
+                Find your local provider or message one of our dentists anytime.
+              </p>
+            </div>
+
+            {/* FRONT CARD */}
+            <div
+              className="broche-panel left"
+              style={{
+                transform: `rotateY(${leftAngle}deg) translateZ(12px)`,
+                "--curl": `${leftFlipped ? 1 : 0}`,
+                opacity: leftFlipped ? 0 : 1
+              }}
+              onClick={() => setLeftFlipped(!leftFlipped)}
+            >
+              <div className="broche-cover">
+                For Parents
+                <div className="drag-hint">
+                  {leftFlipped ? (
+                    <span className="arrow">↪ Flip</span>
+                  ) : (
+                    <span className="arrow">↩ Flip</span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Right Panel */}
-          <div
-            className="broche-panel right"
-            style={{
-              transform: `rotateY(${rightAngle}deg) translateZ(12px)`,
-              "--curl": `${Math.abs(rightAngle) / 180}`
-            }}
-            onMouseDown={(e) => startDrag("right", e)}
-          >
-            <div className="broche-cover">For Kiddies</div>
-            <div className="broche-content">
-              Learn how EASY it is to keep your teeth clean.
+          {/* ===== KIDDIES CARD ===== */}
+          <div className="broche-wrapper">
+            {/* BACK CARD */}
+            <div className="broche-back">
+              <h3>For Kiddies</h3>
+              <p>Hello kiddies!</p>
+              <p>
+                Ata'ata makes keeping your teeth healthy and happy EASY. On our
+                website and app you can find almost everything you need to know about teeth.
+              </p>
+              <p>
+                Wonder if your teeth are normal? Find your teeth, add them to your profile, and learn how to keep them clean.
+              </p>
+              <p>
+                Get to know your dentist so it’s not awkward when you meet them, and flick questions through anytime.
+              </p>
+              <p>
+                Sign up and log in to get your teeth on the right track!
+              </p>
+            </div>
+
+            {/* FRONT CARD */}
+            <div
+              className="broche-panel right"
+              style={{
+                transform: `rotateY(${rightAngle}deg) translateZ(12px)`,
+                "--curl": `${rightFlipped ? 1 : 0}`,
+                opacity: rightFlipped ? 0 : 1
+              }}
+              onClick={() => setRightFlipped(!rightFlipped)}
+            >
+              <div className="broche-cover">
+                For Kiddies
+                <div className="drag-hint">
+                  {rightFlipped ? (
+                    <span className="arrow">↩ Flip</span>
+                  ) : (
+                    <span className="arrow">↪ Flip</span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
       </section>
 

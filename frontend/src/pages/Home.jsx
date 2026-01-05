@@ -47,7 +47,7 @@ const Home = () => {
       <section className="broche-section">
         <div className="broche-container">
 
-          {/* ===== PARENTS CARD ===== */}
+          {/* ===== PARENTS BOOK (normal) ===== */}
           <div className="broche-wrapper">
             <HTMLFlipBook
               width={300}
@@ -58,9 +58,10 @@ const Home = () => {
               maxHeight={500}
               className="broche-flipbook parents-flip"
               ref={parentsBook}
-              flipOnClick={true}
+              flipOnClick
             >
               <div className="broche-cover">For Parents</div>
+
               <div className="broche-back">
                 <h3>Hello Parents!</h3>
                 <p>It’s a team effort keeping your kiddies’ teeth happy and healthy — you are the captain of the ship!</p>
@@ -71,8 +72,8 @@ const Home = () => {
             </HTMLFlipBook>
           </div>
 
-          {/* ===== KIDDIES CARD ===== */}
-          <div className="broche-wrapper">
+          {/* ===== KIDDIES BOOK (manga-style mirrored) ===== */}
+          <div className="broche-wrapper mirrored-book">
             <HTMLFlipBook
               width={300}
               height={400}
@@ -82,16 +83,21 @@ const Home = () => {
               maxHeight={500}
               className="broche-flipbook kiddies-flip"
               ref={kiddiesBook}
-              flipOnClick={true}
-              flipDirection="horizontal" /* change direction */
+              flipOnClick
+              drawShadow={false}
+              startPage={1}   // start "open" on the right page
             >
-              <div className="broche-cover">For Kiddies</div>
-              <div className="broche-back">
+              {/* PAGE 1 (visible first – right side) */}
+              <div className="broche-back mirrored-page">
+                <p>Get to know your dentist so it’s not awkward when you meet them, and flick questions through anytime.</p>
+                <p>Sign up and log in to get your teeth on the right track!</p>
+              </div>
+
+              {/* PAGE 0 (revealed when flipping back) */}
+              <div className="broche-back mirrored-page">
                 <h3>Hello Kiddies!</h3>
                 <p>Ata'ata makes keeping your teeth healthy and happy EASY. On our website and app you can find almost everything you need to know about teeth.</p>
                 <p>Wonder if your teeth are normal? Find your teeth, add them to your profile, and learn how to keep them clean.</p>
-                <p>Get to know your dentist so it’s not awkward when you meet them, and flick questions through anytime.</p>
-                <p>Sign up and log in to get your teeth on the right track!</p>
               </div>
             </HTMLFlipBook>
           </div>
@@ -108,6 +114,7 @@ const Home = () => {
 
           <div className="social-rolodex">
             <button className="rolodex-arrow left" onClick={() => scrollPosts("left")}>←</button>
+
             <div className="rolodex-container" id="rolodexContainer">
               {socialPosts.map((p, i) => (
                 <div key={i} className="rolodex-post">
@@ -117,6 +124,7 @@ const Home = () => {
                 </div>
               ))}
             </div>
+
             <button className="rolodex-arrow right" onClick={() => scrollPosts("right")}>→</button>
           </div>
         </div>

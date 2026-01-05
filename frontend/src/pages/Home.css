@@ -42,7 +42,7 @@
   display: flex;
   justify-content: center;
   margin: 3rem 0;
-  gap: 2rem; /* gap between cards */
+  gap: 2rem;
 }
 
 .broche-container {
@@ -56,29 +56,48 @@
   height: 400px;
 }
 
-/* Flipbook styling */
+/* Flipbook base styling */
 .broche-flipbook {
   border-radius: 12px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.15);
   overflow: hidden;
 }
 
-/* PARENTS book: normal flip */
+/* =========================
+   Parents Flipbook (normal)
+========================= */
 .parents-flip .react-flip-page {
   transform-origin: right center !important;
 }
 
-/* KIDDIES book: reversed flip */
-.kiddies-flip .react-flip-page {
-  transform-origin: right center !important; /* flip right-to-left */
+/* =========================
+   Kiddies Flipbook (MANGA STYLE)
+========================= */
+
+/* Mirror the entire book */
+.mirrored-book {
+  transform: scaleX(-1);
 }
 
-/* Hide ghost page shadow for cleaner look */
-.react-flip-page-back {
-  box-shadow: none !important;
+/* Un-mirror the content so text is readable */
+.mirrored-page {
+  transform: scaleX(-1);
 }
 
-/* Front & Back covers */
+/* Remove heavy shadows for cleaner kid-friendly look */
+.kiddies-flip .react-flip-page-shadow {
+  display: none !important;
+}
+
+/* Keep rounded corners & scrolling */
+.kiddies-flip {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* =========================
+   Front & Back Pages
+========================= */
 .broche-cover {
   background: linear-gradient(135deg, #7d4ae3 0%, #6a38d6 100%);
   color: #fff;
@@ -177,6 +196,12 @@
 ========================= */
 @media (max-width: 900px) {
   .rolodex-arrow.left,
-  .rolodex-arrow.right { display: none; }
-  .broche-container { flex-direction: column; gap: 2rem; }
+  .rolodex-arrow.right {
+    display: none;
+  }
+
+  .broche-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
 }

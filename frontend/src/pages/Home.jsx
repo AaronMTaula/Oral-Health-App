@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
 import HTMLFlipBook from "react-pageflip";
+import { TiArrowForward } from "react-icons/ti";
 import "./Home.css";
 
-/* =========================
-   Social posts
-========================= */
+/* Social posts */
 const socialPosts = [
   { title: "Healthy Smiles Tip", description: "Remember to brush twice a day!", img: "/images/post1.png" },
   { title: "Dental Fun", description: "Check out our latest fun dental activity.", img: "/images/post2.png" },
@@ -20,12 +19,18 @@ const scrollPosts = (direction) => {
   });
 };
 
-/* =========================
-   Home Page
-========================= */
 const Home = () => {
-  const parentsBook = useRef();
-  const kiddiesBook = useRef();
+  const parentsBook = useRef(null);
+  const kiddiesBook = useRef(null);
+
+  /** Flip the kiddies book to next page */
+  const flipKiddiesPage = () => {
+    const book = kiddiesBook.current;
+    if (!book) return;
+    const pageFlip = book.pageFlip();
+    if (!pageFlip) return;
+    pageFlip.flipNext();
+  };
 
   return (
     <main>
@@ -41,67 +46,63 @@ const Home = () => {
         </div>
       </section>
 
-      {/* =========================
-         Two Side-by-Side Flipbooks
-      ========================== */}
+      {/* Flipbooks */}
       <section className="broche-section">
         <div className="broche-container">
 
-          {/* ===== PARENTS BOOK (normal) ===== */}
+          {/* Parents Flipbook */}
           <div className="broche-wrapper">
             <HTMLFlipBook
               width={300}
               height={400}
-              minWidth={250}
-              minHeight={350}
-              maxWidth={400}
-              maxHeight={500}
               className="broche-flipbook parents-flip"
               ref={parentsBook}
               flipOnClick
             >
               <div className="broche-cover">For Parents</div>
-
               <div className="broche-back">
                 <h3>Hello Parents!</h3>
                 <p>It’s a team effort keeping your kiddies’ teeth happy and healthy — you are the captain of the ship!</p>
-                <p>Use our website and app to explore oral health topics, common tooth situations, and treatment options.</p>
-                <p>Create a family group, track progress, earn points together, and set the example for lifelong healthy habits.</p>
-                <p>Find your local provider or message one of our dentists anytime.</p>
+                <p>Explore oral health topics, common tooth situations, and treatment options.</p>
+                <p>Create a family group, track progress, and earn points together.</p>
               </div>
             </HTMLFlipBook>
           </div>
 
-          {/* ===== KIDDIES BOOK (manga-style mirrored) ===== */}
+          {/* Kiddies Flipbook */}
           <div className="broche-wrapper mirrored-book">
             <HTMLFlipBook
               width={300}
               height={400}
-              minWidth={250}
-              minHeight={350}
-              maxWidth={400}
-              maxHeight={500}
               className="broche-flipbook kiddies-flip"
               ref={kiddiesBook}
-              flipOnClick
+              flipOnClick={false}
               drawShadow={false}
-              startPage={1}   // start "open" on the right page
+              startPage={0}
             >
-              {/* PAGE 1 (visible first – right side) */}
-              <div className="broche-back mirrored-page">
-                <p>Get to know your dentist so it’s not awkward when you meet them, and flick questions through anytime.</p>
-                <p>Sign up and log in to get your teeth on the right track!</p>
-              </div>
+              <div className="broche-cover kiddies-cover">For Children</div>
 
-              {/* PAGE 0 (revealed when flipping back) */}
               <div className="broche-back mirrored-page">
                 <h3>Hello Kiddies!</h3>
-                <p>Ata'ata makes keeping your teeth healthy and happy EASY. On our website and app you can find almost everything you need to know about teeth.</p>
-                <p>Wonder if your teeth are normal? Find your teeth, add them to your profile, and learn how to keep them clean.</p>
+                <p>Ata'ata makes keeping your teeth healthy and happy EASY.</p>
+                <p>Find your teeth, add them to your profile, and learn how to keep them clean.</p>
+              </div>
+
+              <div className="broche-back mirrored-page">
+                <p>Get to know your dentist so it’s not awkward when you meet them.</p>
+                <p>Ask questions anytime and track your smile journey!</p>
               </div>
             </HTMLFlipBook>
-          </div>
 
+            {/* Kiddies Page Turn Button (Overlay on top of card) */}
+            <button
+              className="kiddies-page-button"
+              onClick={flipKiddiesPage}
+              aria-label="Next page"
+            >
+              <TiArrowForward />
+            </button>
+          </div>
         </div>
       </section>
 

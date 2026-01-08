@@ -2,9 +2,7 @@
   --navbar-bg: #e08fff;
 }
 
-/* =========================
-   Announcement Banner
-========================= */
+/* Announcement */
 .announcement-banner {
   background: #f6f0ff;
   padding: 3rem 1.5rem;
@@ -35,14 +33,11 @@
   margin-bottom: 1rem;
 }
 
-/* =========================
-   Broche-style Flip Panels
-========================= */
+/* Flipbooks */
 .broche-section {
   display: flex;
   justify-content: center;
   margin: 3rem 0;
-  gap: 2rem;
 }
 
 .broche-container {
@@ -54,60 +49,52 @@
 .broche-wrapper {
   width: 300px;
   height: 400px;
+  position: relative; 
 }
 
-/* Flipbook base styling */
 .broche-flipbook {
   border-radius: 12px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
-/* =========================
-   Parents Flipbook (normal)
-========================= */
+/* Parents Flipbook */
 .parents-flip .react-flip-page {
   transform-origin: right center !important;
 }
 
-/* =========================
-   Kiddies Flipbook (MANGA STYLE)
-========================= */
+.parents-flip .react-flip-page-shadow {
+  display: none !important;
+}
 
-/* Mirror the entire book */
+/* Kiddies Flipbook */
 .mirrored-book {
   transform: scaleX(-1);
 }
 
-/* Un-mirror the content so text is readable */
 .mirrored-page {
   transform: scaleX(-1);
 }
 
-/* Remove heavy shadows for cleaner kid-friendly look */
-.kiddies-flip .react-flip-page-shadow {
-  display: none !important;
+.kiddies-flip .react-flip-page {
+  transform-origin: left center !important;
 }
 
-/* Keep rounded corners & scrolling */
-.kiddies-flip {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* =========================
-   Front & Back Pages
-========================= */
+/* Pages */
 .broche-cover {
-  background: linear-gradient(135deg, #7d4ae3 0%, #6a38d6 100%);
+  background: linear-gradient(135deg, #7d4ae3 0%, #7d4ae3 100%);
   color: #fff;
   font-size: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
   height: 100%;
   text-align: center;
+}
+
+.kiddies-cover {
+  transform: scaleX(-1);
+  z-index: 10;
 }
 
 .broche-back {
@@ -118,9 +105,34 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   Social Media Rolodex
-========================= */
+/* Kiddies Page Button (Overlay on top of card) */
+.kiddies-page-button {
+  position: absolute;
+  bottom: 14px;
+  left: 14px; /* bottom-left corner */
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(125, 74, 227, 0.15);
+  color: #d8a5d8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  transform: scaleX(-1); /* flip arrow for mirrored book */
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 999; 
+  pointer-events: all;
+}
+
+.kiddies-page-button:hover {
+  background: rgba(0, 74, 227, 0.25);
+  transform: scaleX(-1) scale(1.1);
+}
+
+/* Social */
 .social-section {
   padding: 3rem 1.5rem;
   background: #fff8f0;
@@ -129,14 +141,6 @@
 .social-grid {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-.social-text {
-  text-align: left;
-  margin-bottom: 1rem;
 }
 
 .social-rolodex {
@@ -148,10 +152,7 @@
 .rolodex-container {
   display: flex;
   overflow-x: auto;
-  scroll-behavior: smooth;
   gap: 1rem;
-  padding-bottom: 1rem;
-  flex: 1;
   scrollbar-width: none;
 }
 
@@ -164,8 +165,7 @@
   background: #f4f8fc;
   border-radius: 12px;
   padding: 1rem;
-  flex: 0 0 auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
 
@@ -176,32 +176,33 @@
 }
 
 .rolodex-arrow {
+  position: absolute;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: none;
   background: #6a0dad;
-  color: white;
+  color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
-  position: absolute;
-  z-index: 5;
 }
 
-.rolodex-arrow.left { left: -20px; }
-.rolodex-arrow.right { right: -20px; }
+.rolodex-arrow.left {
+  left: -20px;
+}
 
-/* =========================
-   Responsive
-========================= */
+.rolodex-arrow.right {
+  right: -20px;
+}
+
+/* Responsive */
 @media (max-width: 900px) {
-  .rolodex-arrow.left,
-  .rolodex-arrow.right {
-    display: none;
-  }
-
   .broche-container {
     flex-direction: column;
     gap: 2rem;
+  }
+
+  .rolodex-arrow {
+    display: none;
   }
 }

@@ -75,33 +75,60 @@ const Home = () => {
       {/* Flipbooks */}
       <section className="broche-section">
         <div className="broche-container">
+          {/* Parents Flipbook */}
           <div className="broche-wrapper">
-            <HTMLFlipBook width={300} height={400} ref={parentsBook}>
-              <div className="broche-cover">For Parents</div>
-              <div className="broche-back">
+            <HTMLFlipBook
+              width={300}
+              height={400}
+              className="broche-flipbook parents-flip"
+              ref={parentsBook}
+              flipOnClick
+            >
+              <div className="broche-cover modern-card">For Parents</div>
+              <div className="broche-back modern-card">
                 <h3>Hello Parents!</h3>
-                <p>You’re the captain of your family’s oral health journey.</p>
+                <p>It’s a team effort keeping your kiddies’ teeth happy and healthy — you are the captain of the ship!</p>
+                <p>Explore oral health topics, common tooth situations, and treatment options.</p>
+                <p>Create a family group, track progress, and earn points together.</p>
               </div>
             </HTMLFlipBook>
-            <button className="flipbook-page-button parents-page-prev" onClick={flipParentsPrev}><TiArrowForward /></button>
-            <button className="flipbook-page-button parents-page-next" onClick={flipParentsNext}><TiArrowForward /></button>
+
+            <button className="flipbook-page-button parents-page-prev" onClick={flipParentsNext}><TiArrowForward /></button>
+            <button className="flipbook-page-button parents-page-next" onClick={flipParentsPrev}><TiArrowForward /></button>
           </div>
 
+          {/* Kiddies Flipbook */}
           <div className="broche-wrapper mirrored-book">
-            <HTMLFlipBook width={300} height={400} ref={kiddiesBook}>
-              <div className="broche-cover kiddies-cover">For Children</div>
-              <div className="broche-back mirrored-page">
+            <HTMLFlipBook
+              width={300}
+              height={400}
+              className="broche-flipbook kiddies-flip"
+              ref={kiddiesBook}
+              flipOnClick={false}
+              drawShadow={false}
+              startPage={0}
+            >
+              <div className="broche-cover kiddies-cover modern-card">For Children</div>
+
+              <div className="broche-back mirrored-page modern-card">
                 <h3>Hello Kiddies!</h3>
-                <p>Let’s keep your smile shiny ✨</p>
+                <p>Ata'ata makes keeping your teeth healthy and happy EASY.</p>
+                <p>Find your teeth, add them to your profile, and learn how to keep them clean.</p>
+              </div>
+
+              <div className="broche-back mirrored-page modern-card">
+                <p>Get to know your dentist so it’s not awkward when you meet them.</p>
+                <p>Ask questions anytime and track your smile journey!</p>
               </div>
             </HTMLFlipBook>
-            <button className="flipbook-page-button kiddies-page-prev" onClick={flipKiddiesPrev}><TiArrowForward /></button>
+
             <button className="flipbook-page-button kiddies-page-next" onClick={flipKiddiesNext}><TiArrowForward /></button>
+            <button className="flipbook-page-button kiddies-page-prev" onClick={flipKiddiesPrev}><TiArrowForward /></button>
           </div>
         </div>
       </section>
 
-      {/* Social */}
+      {/* Social Section */}
       <section className="social-section">
         <div className="social-description">
           <h2>{socialPosts[index].title}</h2>

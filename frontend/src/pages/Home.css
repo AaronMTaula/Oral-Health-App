@@ -2,7 +2,9 @@
   --navbar-bg: #e08fff;
 }
 
-/* Announcement */
+/* =========================
+   Announcement
+========================= */
 .announcement-banner {
   background: #f6f0ff;
   padding: 3rem 1.5rem;
@@ -33,7 +35,9 @@
   margin-bottom: 1rem;
 }
 
-/* Flipbooks */
+/* =========================
+   Flipbooks
+========================= */
 .broche-section {
   display: flex;
   justify-content: center;
@@ -67,7 +71,7 @@
   display: none !important;
 }
 
-/* Kiddies Flipbook */
+/* Kiddies Flipbook (mirrored book) */
 .mirrored-book {
   transform: scaleX(-1);
 }
@@ -105,9 +109,9 @@
   box-sizing: border-box;
 }
 
-/* =====================================================
-   Flipbook Page Buttons (shared base)
-===================================================== */
+/* =========================
+   Flipbook Page Buttons
+========================= */
 .flipbook-page-button {
   position: absolute;
   bottom: 14px;
@@ -127,7 +131,6 @@
   pointer-events: all;
 }
 
-/* Hover – background only (NO transform override) */
 .flipbook-page-button:hover {
   background: rgba(125, 74, 227, 0.25);
 }
@@ -143,7 +146,6 @@
   transform: scaleX(1);
 }
 
-/* Kiddies Hover (preserve direction) */
 .kiddies-page-next:hover {
   transform: scaleX(-1) scale(1.1);
 }
@@ -162,7 +164,6 @@
   transform: scaleX(-1);
 }
 
-/* Parents Hover (preserve direction) */
 .parents-page-next:hover {
   transform: scale(1.1);
 }
@@ -172,9 +173,8 @@
 }
 
 /* =========================
-   SOCIAL SECTION
+   Social Section
 ========================= */
-
 .social-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -196,9 +196,8 @@
 }
 
 /* =========================
-   CAROUSEL
+   Carousel
 ========================= */
-
 .social-rolodex {
   position: relative;
   perspective: 1600px;
@@ -206,7 +205,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
 
 .rolodex-stage {
@@ -214,15 +212,14 @@
   width: 520px;
   height: 240px;
   margin: 0 auto;
-  margin-bottom: 1.6rem; 
+  margin-bottom: 1.6rem;
   transform-style: preserve-3d;
-  transform: translateX(-20%);
+  transform: translateX(-27%);
 }
 
 /* =========================
-   POSTCARD CARDS
+   Postcard Cards
 ========================= */
-
 .rolodex-card {
   position: absolute;
   left: 50%;
@@ -239,7 +236,6 @@
     filter 0.4s ease;
   filter: blur(1.6px);
   cursor: pointer;
-  
 }
 
 .rolodex-card.active {
@@ -255,9 +251,8 @@
 }
 
 /* =========================
-   ARROWS
+   Arrows
 ========================= */
-
 .rolodex-arrow {
   position: absolute;
   top: 45%;
@@ -269,13 +264,11 @@
 }
 
 .rolodex-arrow.left { left: -2px; }
-
 .rolodex-arrow.right { right: -2px; }
 
 /* =========================
-   DOTS (locked below cards)
+   Dots
 ========================= */
-
 .rolodex-dots {
   display: flex;
   justify-content: center;
@@ -295,9 +288,8 @@
 }
 
 /* =========================
-   RESPONSIVE
+   Responsive
 ========================= */
-
 @media (max-width: 900px) {
   .social-section {
     grid-template-columns: 1fr;

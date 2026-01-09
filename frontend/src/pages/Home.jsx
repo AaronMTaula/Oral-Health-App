@@ -5,73 +5,57 @@ import "./Home.css";
 
 /* Social posts */
 const socialPosts = [
-  {
-    title: "Healthy Smiles Tip",
-    description: "Remember to brush twice a day!",
-    img: "/images/post1.png",
-  },
-  {
-    title: "Dental Fun",
-    description: "Check out our latest fun dental activity.",
-    img: "/images/post2.png",
-  },
-  {
-    title: "Community Event",
-    description: "We participated in a local health fair.",
-    img: "/images/post3.png",
-  },
+  { title: "Healthy Smiles Tip", description: "Remember to brush twice a day!", img: "/images/post1.png" },
+  { title: "Dental Fun", description: "Check out our latest fun dental activity.", img: "/images/post2.png" },
+  { title: "Community Event", description: "We participated in a local health fair.", img: "/images/post3.png" }
 ];
 
 const Home = () => {
   const parentsBook = useRef(null);
   const kiddiesBook = useRef(null);
-  const dragStartX = useRef(0);
-  const dragging = useRef(false);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  /* Carousel state */
+  const [index, setIndex] = useState(0);
+  const startX = useRef(0);
+  const startTime = useRef(0);
 
-  /* ---------- Flipbooks ---------- */
-  const flipKiddiesNext = () => kiddiesBook.current?.pageFlip()?.flipNext();
-  const flipKiddiesPrev = () => kiddiesBook.current?.pageFlip()?.flipPrev();
+  /* Flipbooks */
   const flipParentsNext = () => parentsBook.current?.pageFlip()?.flipNext();
   const flipParentsPrev = () => parentsBook.current?.pageFlip()?.flipPrev();
+  const flipKiddiesNext = () => kiddiesBook.current?.pageFlip()?.flipNext();
+  const flipKiddiesPrev = () => kiddiesBook.current?.pageFlip()?.flipPrev();
 
-  /* ---------- Carousel rotation ---------- */
-  const rotate = (dir) => {
-    setCurrentIndex((prev) =>
-      dir === "left"
-        ? (prev - 1 + socialPosts.length) % socialPosts.length
-        : (prev + 1) % socialPosts.length
-    );
+  /* Carousel helpers */
+  const rotate = (step) => {
+    setIndex((prev) => (prev + step + socialPosts.length) % socialPosts.length);
   };
 
-  const getOffset = (i) => {
+  const offsetFromCenter = (i) => {
+    let diff = i - index;
     const total = socialPosts.length;
-    let diff = i - currentIndex;
     if (diff > total / 2) diff -= total;
     if (diff < -total / 2) diff += total;
     return diff;
   };
 
-  /* ---------- Drag / Swipe ---------- */
-  const onDragStart = (e) => {
-    dragging.current = true;
-    dragStartX.current = e.touches ? e.touches[0].clientX : e.clientX;
+  /* Drag + momentum */
+  const onStart = (x) => {
+    startX.current = x;
+    startTime.current = Date.now();
   };
 
-  const onDragEnd = (e) => {
-    if (!dragging.current) return;
-    dragging.current = false;
+  const onEnd = (x) => {
+    const dx = x - startX.current;
+    const dt = Date.now() - startTime.current;
+    const velocity = Math.abs(dx / dt);
 
-    const endX = e.changedTouches
-      ? e.changedTouches[0].clientX
-      : e.clientX;
+    if (Math.abs(dx) < 40) return;
 
-    const delta = endX - dragStartX.current;
+    let steps = 1;
+    if (velocity > 1.2) steps = 3;
+    else if (velocity > 0.8) steps = 2;
 
-    if (Math.abs(delta) > 50) {
-      rotate(delta > 0 ? "left" : "right");
-    }
+    rotate(dx > 0 ? -steps : steps);
   };
 
   return (
@@ -81,7 +65,7 @@ const Home = () => {
         <div className="announcement-content">
           <img src="/images/announcement-left.png" className="announcement-image" />
           <div className="announcement-text">
-            <h2>Welcome</h2>
+            <h2 className="announcement-title">Welcome</h2>
             <p>Welcome to the Ata'ata oral health programme.</p>
           </div>
           <img src="/images/announcement-right.png" className="announcement-image" />
@@ -96,7 +80,7 @@ const Home = () => {
               <div className="broche-cover">For Parents</div>
               <div className="broche-back">
                 <h3>Hello Parents!</h3>
-                <p>You’re the captain of the oral-health ship 🚢</p>
+                <p>You’re the captain of your family’s oral health journey.</p>
               </div>
             </HTMLFlipBook>
             <button className="flipbook-page-button parents-page-prev" onClick={flipParentsPrev}><TiArrowForward /></button>
@@ -108,7 +92,7 @@ const Home = () => {
               <div className="broche-cover kiddies-cover">For Children</div>
               <div className="broche-back mirrored-page">
                 <h3>Hello Kiddies!</h3>
-                <p>Let’s keep your teeth shiny ✨</p>
+                <p>Let’s keep your smile shiny ✨</p>
               </div>
             </HTMLFlipBook>
             <button className="flipbook-page-button kiddies-page-prev" onClick={flipKiddiesPrev}><TiArrowForward /></button>
@@ -117,49 +101,51 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Social Section */}
+      {/* Social */}
       <section className="social-section">
         <div className="social-description">
-          <h2>{socialPosts[currentIndex].title}</h2>
-          <p>{socialPosts[currentIndex].description}</p>
+          <h2>{socialPosts[index].title}</h2>
+          <p>{socialPosts[index].description}</p>
         </div>
 
         <div
           className="social-rolodex"
-          onMouseDown={onDragStart}
-          onMouseUp={onDragEnd}
-          onTouchStart={onDragStart}
-          onTouchEnd={onDragEnd}
+          onMouseDown={(e) => onStart(e.clientX)}
+          onMouseUp={(e) => onEnd(e.clientX)}
+          onTouchStart={(e) => onStart(e.touches[0].clientX)}
+          onTouchEnd={(e) => onEnd(e.changedTouches[0].clientX)}
         >
-          <button className="rolodex-arrow left" onClick={() => rotate("left")}>‹</button>
+          <button className="rolodex-arrow left" onClick={() => rotate(-1)}>‹</button>
 
           <div className="rolodex-stage">
-            {socialPosts.map((post, i) => {
-              const offset = getOffset(i);
+            {socialPosts.map((p, i) => {
+              const offset = offsetFromCenter(i);
               return (
                 <div
                   key={i}
                   className={`rolodex-card ${offset === 0 ? "active" : ""}`}
+                  onClick={() => offset !== 0 && rotate(offset)}
                   style={{
                     transform: `
                       translateX(${offset * 140}px)
+                      translateZ(${-Math.abs(offset) * 110}px)
                       rotateY(${offset * -30}deg)
                       scale(${offset === 0 ? 1 : 0.9})
                     `,
-                    zIndex: offset === 0 ? 5 : 1,
+                    zIndex: 10 - Math.abs(offset)
                   }}
                 >
-                  <img src={post.img} alt={post.title} />
+                  <img src={p.img} alt={p.title} />
                 </div>
               );
             })}
           </div>
 
-          <button className="rolodex-arrow right" onClick={() => rotate("right")}>›</button>
+          <button className="rolodex-arrow right" onClick={() => rotate(1)}>›</button>
 
           <div className="rolodex-dots">
             {socialPosts.map((_, i) => (
-              <span key={i} className={i === currentIndex ? "active" : ""} />
+              <span key={i} className={i === index ? "active" : ""} />
             ))}
           </div>
         </div>

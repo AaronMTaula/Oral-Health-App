@@ -177,6 +177,51 @@ const Home = () => {
           </div>
         </div>
       </section>
+            {/* App Banner */}
+      <section className="app-banner">
+        <div className="app-banner-inner">
+
+          {/* Square Word Logo */}
+          <div className="app-wordmark">
+            <span>A T A</span>
+            <span>A T A</span>
+            <span>O H P</span>
+          </div>
+
+          {/* App Links */}
+          <div className="app-links">
+            <ul>
+              <li>FIND MY TEETH</li>
+              <li>MY PROVIDERS</li>
+            </ul>
+            <ul>
+              <li>LET’S TALK</li>
+              <li>HEALTH</li>
+            </ul>
+          </div>
+
+          {/* QR Code */}
+          <div className="app-qr">
+            <img src="/images/app-qr.png" alt="Download Ata'ata App" />
+            <p>Download the App</p>
+          </div>
+
+          {/* App Logo */}
+          <div className="app-logo">
+            <img src="/images/app-logo.png" alt="Ata'ata Logo" />
+          </div>
+
+          {/* Contact */}
+          <div className="app-contact">
+            <h4>CONTACT US</h4>
+            <a href="mailto:hello@ataata.nz">EMAIL</a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">INSTA</a>
+            <a href="https://tiktok.com" target="_blank" rel="noreferrer">TIKTOK</a>
+          </div>
+
+        </div>
+      </section>
+
     </main>
   );
 };

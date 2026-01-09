@@ -23,13 +23,30 @@ const Home = () => {
   const parentsBook = useRef(null);
   const kiddiesBook = useRef(null);
 
-  /** Flip the kiddies book to next page */
-  const flipKiddiesPage = () => {
+  /** Kiddies flip functions */
+  const flipKiddiesNext = () => {
     const book = kiddiesBook.current;
     if (!book) return;
-    const pageFlip = book.pageFlip();
-    if (!pageFlip) return;
-    pageFlip.flipNext();
+    book.pageFlip()?.flipNext();
+  };
+
+  const flipKiddiesPrev = () => {
+    const book = kiddiesBook.current;
+    if (!book) return;
+    book.pageFlip()?.flipPrev();
+  };
+
+  /** Parents flip functions */
+  const flipParentsNext = () => {
+    const book = parentsBook.current;
+    if (!book) return;
+    book.pageFlip()?.flipNext();
+  };
+
+  const flipParentsPrev = () => {
+    const book = parentsBook.current;
+    if (!book) return;
+    book.pageFlip()?.flipPrev();
   };
 
   return (
@@ -67,6 +84,25 @@ const Home = () => {
                 <p>Create a family group, track progress, and earn points together.</p>
               </div>
             </HTMLFlipBook>
+
+            {/* ✅ Parents buttons — FUNCTIONS SWAPPED */}
+            {/* LEFT button → NEXT */}
+            <button
+              className="flipbook-page-button parents-page-prev"
+              onClick={flipParentsNext}
+              aria-label="Next page"
+            >
+              <TiArrowForward />
+            </button>
+
+            {/* RIGHT button → PREVIOUS */}
+            <button
+              className="flipbook-page-button parents-page-next"
+              onClick={flipParentsPrev}
+              aria-label="Previous page"
+            >
+              <TiArrowForward />
+            </button>
           </div>
 
           {/* Kiddies Flipbook */}
@@ -94,15 +130,24 @@ const Home = () => {
               </div>
             </HTMLFlipBook>
 
-            {/* Kiddies Page Turn Button (Overlay on top of card) */}
+            {/* Kiddies Page Buttons (unchanged) */}
             <button
-              className="kiddies-page-button"
-              onClick={flipKiddiesPage}
+              className="flipbook-page-button kiddies-page-next"
+              onClick={flipKiddiesNext}
               aria-label="Next page"
             >
               <TiArrowForward />
             </button>
+
+            <button
+              className="flipbook-page-button kiddies-page-prev"
+              onClick={flipKiddiesPrev}
+              aria-label="Previous page"
+            >
+              <TiArrowForward />
+            </button>
           </div>
+
         </div>
       </section>
 

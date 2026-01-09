@@ -49,7 +49,7 @@
 .broche-wrapper {
   width: 300px;
   height: 400px;
-  position: relative; 
+  position: relative;
 }
 
 .broche-flipbook {
@@ -105,11 +105,12 @@
   box-sizing: border-box;
 }
 
-/* Kiddies Page Button (Overlay on top of card) */
-.kiddies-page-button {
+/* =====================================================
+   Flipbook Page Buttons (shared base)
+===================================================== */
+.flipbook-page-button {
   position: absolute;
   bottom: 14px;
-  left: 14px; /* bottom-left corner */
   width: 44px;
   height: 44px;
   border-radius: 14px;
@@ -121,14 +122,52 @@
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
-  transform: scaleX(-1); /* flip arrow for mirrored book */
   transition: background 0.2s ease, transform 0.2s ease;
-  z-index: 999; 
+  z-index: 999;
   pointer-events: all;
 }
 
-.kiddies-page-button:hover {
-  background: rgba(0, 74, 227, 0.25);
+/* Hover – background only (NO transform override) */
+.flipbook-page-button:hover {
+  background: rgba(125, 74, 227, 0.25);
+}
+
+/* Kiddies Buttons */
+.kiddies-page-next {
+  left: 14px;
+  transform: scaleX(-1);
+}
+
+.kiddies-page-prev {
+  right: 14px;
+  transform: scaleX(1);
+}
+
+/* Kiddies Hover (preserve direction) */
+.kiddies-page-next:hover {
+  transform: scaleX(-1) scale(1.1);
+}
+
+.kiddies-page-prev:hover {
+  transform: scaleX(1) scale(1.1);
+}
+
+/* Parents Buttons */
+.parents-page-next {
+  right: 14px;
+}
+
+.parents-page-prev {
+  left: 14px;
+  transform: scaleX(-1);
+}
+
+/* Parents Hover (preserve direction) */
+.parents-page-next:hover {
+  transform: scale(1.1);
+}
+
+.parents-page-prev:hover {
   transform: scaleX(-1) scale(1.1);
 }
 

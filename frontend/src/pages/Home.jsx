@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { TiArrowForward } from "react-icons/ti";
 import "./Home.css";
@@ -10,18 +10,19 @@ const socialPosts = [
   { title: "Community Event", description: "We participated in a local health fair.", img: "/images/post3.png" }
 ];
 
-const scrollPosts = (direction) => {
-  const container = document.getElementById("rolodexContainer");
-  if (!container) return;
-  container.scrollBy({
-    left: direction === "left" ? -300 : 300,
-    behavior: "smooth"
-  });
+/** Scroll carousel (rotates cards in place) */
+const scrollPosts = (direction, setIndex, length, currentIndex) => {
+  if (direction === "left") {
+    setIndex(currentIndex === 0 ? length - 1 : currentIndex - 1);
+  } else {
+    setIndex(currentIndex === length - 1 ? 0 : currentIndex + 1);
+  }
 };
 
 const Home = () => {
   const parentsBook = useRef(null);
   const kiddiesBook = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   /** Kiddies flip functions */
   const flipKiddiesNext = () => {
@@ -48,6 +49,25 @@ const Home = () => {
     if (!book) return;
     book.pageFlip()?.flipPrev();
   };
+
+  /** Social rotation helpers */
+  const getRotation = (i) => {
+    const total = socialPosts.length;
+    const angle = 360 / total;
+    let diff = i - currentIndex;
+    if (diff < 0) diff += total; // wrap around
+    return diff * angle;
+  };
+
+  const getTranslate = (i) => {
+    const radius = 250; // distance from center
+    const angle = (getRotation(i) * Math.PI) / 180;
+    const x = radius * Math.sin(angle);
+    const z = radius * (1 - Math.cos(angle)); // front card closer
+    return `translateX(${x}px) translateZ(${-z}px) rotateY(${getRotation(i)}deg)`;
+  };
+
+  const getZIndex = (i) => (i === currentIndex ? 10 : 1);
 
   return (
     <main>
@@ -84,25 +104,8 @@ const Home = () => {
                 <p>Create a family group, track progress, and earn points together.</p>
               </div>
             </HTMLFlipBook>
-
-            {/* ✅ Parents buttons — FUNCTIONS SWAPPED */}
-            {/* LEFT button → NEXT */}
-            <button
-              className="flipbook-page-button parents-page-prev"
-              onClick={flipParentsNext}
-              aria-label="Next page"
-            >
-              <TiArrowForward />
-            </button>
-
-            {/* RIGHT button → PREVIOUS */}
-            <button
-              className="flipbook-page-button parents-page-next"
-              onClick={flipParentsPrev}
-              aria-label="Previous page"
-            >
-              <TiArrowForward />
-            </button>
+            <button className="flipbook-page-button parents-page-prev" onClick={flipParentsNext}><TiArrowForward /></button>
+            <button className="flipbook-page-button parents-page-next" onClick={flipParentsPrev}><TiArrowForward /></button>
           </div>
 
           {/* Kiddies Flipbook */}
@@ -117,35 +120,18 @@ const Home = () => {
               startPage={0}
             >
               <div className="broche-cover kiddies-cover">For Children</div>
-
               <div className="broche-back mirrored-page">
                 <h3>Hello Kiddies!</h3>
                 <p>Ata'ata makes keeping your teeth healthy and happy EASY.</p>
                 <p>Find your teeth, add them to your profile, and learn how to keep them clean.</p>
               </div>
-
               <div className="broche-back mirrored-page">
                 <p>Get to know your dentist so it’s not awkward when you meet them.</p>
                 <p>Ask questions anytime and track your smile journey!</p>
               </div>
             </HTMLFlipBook>
-
-            {/* Kiddies Page Buttons (unchanged) */}
-            <button
-              className="flipbook-page-button kiddies-page-next"
-              onClick={flipKiddiesNext}
-              aria-label="Next page"
-            >
-              <TiArrowForward />
-            </button>
-
-            <button
-              className="flipbook-page-button kiddies-page-prev"
-              onClick={flipKiddiesPrev}
-              aria-label="Previous page"
-            >
-              <TiArrowForward />
-            </button>
+            <button className="flipbook-page-button kiddies-page-next" onClick={flipKiddiesNext}><TiArrowForward /></button>
+            <button className="flipbook-page-button kiddies-page-prev" onClick={flipKiddiesPrev}><TiArrowForward /></button>
           </div>
 
         </div>
@@ -153,25 +139,35 @@ const Home = () => {
 
       {/* Social */}
       <section className="social-section">
-        <div className="social-grid">
-          <div className="social-text">
-            <h2>Social Media Updates</h2>
+        <div className="social-description">
+          <h2>{socialPosts[currentIndex].title}</h2>
+          <p>{socialPosts[currentIndex].description}</p>
+        </div>
+
+        <div className="social-rolodex">
+          <button className="rolodex-arrow left" onClick={() => scrollPosts("left", setCurrentIndex, socialPosts.length, currentIndex)}>←</button>
+
+          <div className="rolodex-container">
+            {socialPosts.map((p, i) => (
+              <div
+                key={i}
+                className="rolodex-post"
+                style={{
+                  transform: getTranslate(i),
+                  zIndex: getZIndex(i)
+                }}
+              >
+                <img src={p.img} alt={p.title} />
+                <h4>{p.title}</h4>
+                <p>{p.description}</p>
+              </div>
+            ))}
           </div>
 
-          <div className="social-rolodex">
-            <button className="rolodex-arrow left" onClick={() => scrollPosts("left")}>←</button>
+          <button className="rolodex-arrow right" onClick={() => scrollPosts("right", setCurrentIndex, socialPosts.length, currentIndex)}>→</button>
 
-            <div className="rolodex-container" id="rolodexContainer">
-              {socialPosts.map((p, i) => (
-                <div key={i} className="rolodex-post">
-                  <img src={p.img} />
-                  <h4>{p.title}</h4>
-                  <p>{p.description}</p>
-                </div>
-              ))}
-            </div>
-
-            <button className="rolodex-arrow right" onClick={() => scrollPosts("right")}>→</button>
+          <div className="rolodex-dots">
+            {socialPosts.map((_, i) => <span key={i} className={i===currentIndex ? "active" : ""}></span>)}
           </div>
         </div>
       </section>

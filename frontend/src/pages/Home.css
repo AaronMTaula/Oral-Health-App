@@ -171,129 +171,118 @@
   transform: scaleX(-1) scale(1.1);
 }
 
-/* =====================================================
-   Social Section – Rotating Merry-Go-Round Carousel
-===================================================== */
+/* =========================
+   Social Section
+========================= */
 
 .social-section {
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding: 4rem 2rem;
   align-items: center;
-  padding: 3rem 1.5rem;
-  background: #fff8f0;
-  gap: 2rem;
-}
-
-.social-description {
-  flex: 1;
-  max-width: 35%;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .social-description h2 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: #4b0082;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
 .social-description p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.6;
-  color: #333;
 }
+
+/* =========================
+   Rolodex Carousel
+========================= */
 
 .social-rolodex {
-  flex: 1;
-  max-width: 60%;
   position: relative;
-  perspective: 1200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  perspective: 1400px;
+  user-select: none;
+  cursor: grab;
 }
 
-.rolodex-container {
-  width: 100%;
-  height: 360px;
+.social-rolodex:active {
+  cursor: grabbing;
+}
+
+.rolodex-stage {
   position: relative;
+  width: 360px;
+  height: 260px;
+  margin: 0 auto;
   transform-style: preserve-3d;
 }
 
-.rolodex-post {
+.rolodex-card {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
-  width: 200px;
-  height: 300px;
-  margin: -150px 0 0 -100px; /* center cards */
-  background: #f4f8fc;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  text-align: center;
-  transition: transform 0.6s ease, z-index 0.6s ease;
-  backface-visibility: hidden;
+  width: 180px;
+  height: 250px;
+  border-radius: 14px;
+  background: #fff;
+  transform-origin: center;
+  transition:
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s ease;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.2);
+  filter: blur(1.5px);
 }
 
-.rolodex-post img {
+.rolodex-card.active {
+  filter: blur(0);
+}
+
+.rolodex-card img {
   width: 100%;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
 }
 
-/* Dots below carousel */
-.rolodex-dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  width: 100%;
-}
+/* =========================
+   Arrows
+========================= */
 
-.rolodex-dots span {
-  display: block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #d8a5d8;
-  transition: background 0.3s ease;
-}
-
-.rolodex-dots span.active {
-  background: #6a0dad;
-}
-
-/* Carousel arrows */
 .rolodex-arrow {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  top: 45%;
+  background: none;
   border: none;
-  background: #6a0dad;
-  color: #fff;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   cursor: pointer;
-  top: 50%;
-  transform: translateY(-50%);
   z-index: 10;
 }
 
-.rolodex-arrow.left { left: -20px; }
-.rolodex-arrow.right { right: -20px; }
+.rolodex-arrow.left {
+  left: -40px;
+}
 
-/* Responsive */
-@media (max-width: 900px) {
-  .social-section {
-    flex-direction: column-reverse;
-    gap: 2rem;
-  }
+.rolodex-arrow.right {
+  right: -40px;
+}
 
-  .social-description,
-  .social-rolodex { max-width: 100%; }
+/* =========================
+   Dots
+========================= */
 
-  .rolodex-arrow { display: none; }
+.rolodex-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.6rem;
+}
+
+.rolodex-dots span {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+.rolodex-dots span.active {
+  background: #333;
 }

@@ -1,4 +1,4 @@
-// src/context/useAuth.jsx
+// frontend/src/context/useAuth.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase'; 
@@ -9,22 +9,32 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    return signOut(auth);
+  const logout = async () => {
+    await signOut(auth);
+    setToken(null);
+    setCurrentUser(null);
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       if (user) {
-        // Always refresh Firebase ID token
-        const token = await user.getIdToken();
-        localStorage.setItem("token", token);
         setCurrentUser(user);
+
+        try {
+          // Fetch JWT from backend using Firebase ID token
+          const idToken = await user.getIdToken();
+          const response = await backendLogin(idToken);
+          setToken(response.token);
+        } catch (err) {
+          console.error('Error fetching backend JWT:', err);
+          setToken(null);
+        }
       } else {
-        localStorage.removeItem("token");
         setCurrentUser(null);
+        setToken(null);
       }
       setLoading(false);
     });
@@ -32,15 +42,11 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const value = { currentUser, loading, logout };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ currentUser, loading, token, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

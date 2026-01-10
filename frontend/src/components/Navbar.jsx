@@ -58,9 +58,14 @@ const Navbar = () => {
       const uniformYOffset = 30; // raise all navlinks by 30px
       const logo = document.querySelector('.logo-container');
       const logoWidth = logo?.offsetWidth || 200;
-      const logoX = window.innerWidth / 2 - logoWidth / 2;
-      const logoRightX = logoX + logoWidth;
-      const middleGapFactor = 0.75;
+      const logoX = window.innerWidth / 2 - logoWidth / 2; // left edge
+      const logoRightX = logoX + logoWidth; // right edge
+
+      const gap = 160; // gap from logo edge
+
+      // Left links
+      const profileX = logoX - gap;
+      const homeX = profileX - gap;
 
       // LEFT LINKS
       const leftRange = logoX * middleGapFactor;
@@ -84,10 +89,11 @@ const Navbar = () => {
         el.style.transition = 'top 0.6s ease, left 0.6s ease, transform 0.6s ease';
       });
 
-      // RIGHT LINKS
-      const rightRange = (window.innerWidth - logoRightX) * middleGapFactor;
-      rightLinks.forEach((text, i) => {
-        const el = navRefs.current[i + leftLinks.length];
+      // Right links
+      const logoutX = logoRightX + gap - 100;
+      const settingsX = logoutX + gap;
+
+      rightLinks.forEach((el, i) => {
         if (!el) return;
 
         const spacing = rightRange / rightLinks.length;
@@ -115,21 +121,35 @@ const Navbar = () => {
   return (
     <>
       <style>{`
-        :root { --navbar-offset: 250px; }
-        body { margin-top: var(--navbar-offset); transition: margin-top 0.4s ease; }
-        .ribbon-container, .green-container, .nav-links, .logo-container { z-index: 1000; }
-        .ribbon-container { position: fixed; left: 50%; transform: translateX(-50%); width: 100vw; height: 250px; overflow: hidden; top: 0; }
-        .green-container { position: fixed; left: 50%; transform: translateX(-50%); width: 100vw; height: 120px; top: 80px; overflow: hidden; }
-        .svg-arch { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: all 0.3s ease-in-out; }
+        .navbar-wrapper {
+          position: relative;
+          z-index: 1000;
+        }
+        .spacer {
+          height: 300px; /* space equal to navbar height */
+          width: 100%;
+        }
+        .ribbon-container, .green-container {
+          position: fixed;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100vw;
+          overflow: hidden;
+          z-index: 50;
+          top: 0;
+        }
+        .ribbon-container { height: 250px; }
+        .green-container { height: 120px; top: 80px; }
+        .svg-arch { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; transition: all 0.3s ease-in-out; }
         .svg-arch path { transition: d 0.3s ease-in-out; }
 
         .logo-container {
-          position: fixed;
-          top: 30px;
-          left: 50%;
-          transform: translate(-50%, 0);
-          width: 250px;
-          height: 250px;
+          position: fixed; 
+          top: 30px; 
+          left: 50%; 
+          transform: translateX(-50%);
+          width: 200px;  /* this is for the outer circle */
+          height: 200px; /* this is for the outer circle */
           border-radius: 50%;
           display: flex;
           justify-content: center;
@@ -190,72 +210,39 @@ const Navbar = () => {
         .nav-link:hover { color: #ffd700; }
       `}</style>
 
-      <div className="ribbon-container">
-        <svg className="svg-arch" viewBox="0 0 1000 650" preserveAspectRatio="none">
-          <path
-            fill={navbarColor}
-            d={isScrolled
-              ? 'M 0 0 Q 500 0 1000 0 L 1000 350 Q 500 300 0 350 Z'
-              : 'M 0 400 Q 500 0 1100 450 L 1100 700 Q 500 200 0 650 Z'}
-          />
-        </svg>
-      </div>
+      <div className="navbar-wrapper">
+        {/* Blue ribbon */}
+        <div className="ribbon-container">
+          <svg className="svg-arch" viewBox="0 0 1000 650" preserveAspectRatio="none">
+            <path
+              fill="#00539b"
+              d={isScrolled
+                ? 'M 0 0 Q 500 0 1000 0 L 1000 350 Q 500 300 0 350 Z'
+                : 'M 0 400 Q 500 0 1100 450 L 1100 700 Q 500 200 0 650 Z'}
+            />
+          </svg>
+        </div>
 
-      <div className="green-container">
-        <svg className="svg-arch" viewBox="0 0 1000 250" preserveAspectRatio="none">
-          <path fill="transparent" d="M0,250 Q500,100 1000,250 L1000,250 L0,250 Z" />
-        </svg>
-      </div>
+        {/* Green ribbon */}
+        <div className="green-container">
+          <svg className="svg-arch" viewBox="0 0 1000 250" preserveAspectRatio="none">
+            <path fill="transparent" d="M0,250 Q500,30 1000,250 L1000,250 L0,250 Z" />
+          </svg>
+        </div>
 
-      <div className="nav-links">
-        {leftLinks.map((text, i) => (
-          <a
-            key={text}
-            ref={(el) => (navRefs.current[i] = el)}
-            onClick={() => {
-              if (text === 'Home') navigate('/');
-              else if (text === 'Profile') navigate('/profile');
-              else if (text === 'My Providers') navigate('/my-providers');
-              else if (text === 'FMT') navigate('/find-my-teeth');
-            }}
-            className={`nav-link ${
-              (text === 'Home' && location.pathname === '/') ||
-              (text === 'Profile' && location.pathname === '/profile') ||
-              (text === 'My Providers' && location.pathname === '/my-providers') ||
-              (text === 'FMT' && location.pathname === '/find-my-teeth')
-                ? 'active'
-                : ''
-            }`}
-          >
-            {text}
-          </a>
-        ))}
-        {rightLinks.map((text, i) => (
-          <a
-            key={text}
-            ref={(el) => (navRefs.current[i + leftLinks.length] = el)}
-            onClick={() => {
-              if (text === "Let's Talk") navigate('/lets-talk');
-              else if (text === 'Settings') navigate('/settings');
-              else if (text === 'Schedule') navigate('/schedule');
-              else if (text === 'Logout') handleLogout();
-            }}
-            className={`nav-link ${
-              (text === "Let's Talk" && location.pathname === '/lets-talk') ||
-              (text === 'Settings' && location.pathname === '/settings') ||
-              (text === 'Schedule' && location.pathname === '/schedule')
-                ? 'active'
-                : ''
-            }`}
-          >
-            {text}
-          </a>
-        ))}
-      </div>
+        {/* Navlinks */}
+        <div className="nav-links">
+          <a ref={(el) => (navRefs.current[0] = el)} onClick={() => navigate('/')} className="nav-link">Home</a>
+          {currentUser && <a ref={(el) => (navRefs.current[1] = el)} onClick={() => navigate('/profile')} className="nav-link">Profile</a>}
+          <a ref={(el) => (navRefs.current[2] = el)} onClick={currentUser ? handleLogout : () => navigate('/auth')} className="nav-link">{currentUser ? 'Logout' : 'Login'}</a>
+          <a ref={(el) => (navRefs.current[3] = el)} className="nav-link">Settings</a>
+        </div>
 
-      <div className={`logo-container ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="inner-circle">
-          <img src={AtaataLogoImg} alt="Ataata Logo" className="logo-svg" />
+        {/* Logo */}
+        <div className="logo-container">
+          <div className="inner-circle">
+            <img src={AtaataLogoImg} alt="Ataata Logo" className="logo-svg" />
+          </div>
         </div>
       </div>
 

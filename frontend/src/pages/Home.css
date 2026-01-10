@@ -46,20 +46,29 @@
 
 .broche-container {
   display: flex;
-  gap: 1.5rem;
+  gap: 20rem;
   perspective: 1400px;
+  width: 100%;
+  max-width: none;
+  justify-content: center;
 }
 
 .broche-wrapper {
-  width: 300px;
-  height: 400px;
   position: relative;
+  flex: 1; /* allows each flipbook to expand */
+  display: flex;
+  justify-content: center;
+  min-width: 250px; /* optional: prevents too small */
+  max-width: 600px; /* optional: prevents too large */
+  height: auto; /* height controlled by flipbook */
 }
 
 .broche-flipbook {
   border-radius: 12px;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  width: 100% !important; /* fill the wrapper */
+  height: auto !important;
 }
 
 /* Parents Flipbook */
@@ -108,6 +117,7 @@
   overflow-y: auto;
   box-sizing: border-box;
 }
+
 
 /* =========================
    Flipbook Page Buttons

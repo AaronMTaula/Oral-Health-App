@@ -1,19 +1,22 @@
-const admin = require("../utils/firebase");
+// backend/middleware/authMiddleware.js
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 
-module.exports = async (req, res, next) => {
-  const authHeader = req.header("Authorization");
-  const token = authHeader && authHeader.startsWith("Bearer ")
-    ? authHeader.split(" ")[1]
+module.exports = (req, res, next) => {
+  const authHeader = req.header('Authorization');
+  const token = authHeader && authHeader.startsWith('Bearer ')
+    ? authHeader.split(' ')[1]
     : null;
 
-  if (!token) return res.status(401).json({ error: "No token, authorization denied" });
+  if (!token) return res.status(401).json({ error: 'No token, authorization denied' });
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    req.user = { uid: decodedToken.uid, email: decodedToken.email };
+    // Verify backend JWT (not Firebase token)
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // { uid, email }
     next();
   } catch (err) {
-    console.error("Firebase token verification failed:", err);
-    res.status(401).json({ error: "Token is not valid" });
+    console.error('Backend JWT verification failed:', err);
+    res.status(401).json({ error: 'Token is not valid' });
   }
 };

@@ -6,11 +6,12 @@ export const loginUser = async (firebaseIdToken) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ idToken: firebaseIdToken }),
+    body: JSON.stringify({ idToken: firebaseIdToken }), // Send Firebase ID token
   });
 
   if (!response.ok) {
-    throw new Error('Failed to login with backend');
+    const errMsg = await response.text();
+    throw new Error(`Failed to login with backend: ${errMsg}`);
   }
 
   return response.json(); // returns { token, user }

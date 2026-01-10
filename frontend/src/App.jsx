@@ -10,6 +10,7 @@ import SecuritySettings from "./pages/SecuritySettings";
 import Home from "./pages/Home";
 import { AuthProvider, useAuth } from "./context/useAuth";
 
+// Protect routes for logged-in users
 const ProtectedRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
 

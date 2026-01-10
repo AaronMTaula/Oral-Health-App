@@ -1,7 +1,7 @@
 // frontend/src/context/useAuth.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../../config/firebase'; 
+import { auth } from '../../config/firebase';
 import { loginUser as backendLogin } from '../services/authService';
 
 export const AuthContext = createContext(null);
@@ -13,8 +13,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await signOut(auth);
-    setToken(null);
     setCurrentUser(null);
+    setToken(null);
   };
 
   useEffect(() => {
@@ -24,10 +24,12 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(user);
 
         try {
-          // Fetch JWT from backend using Firebase ID token
-          const idToken = await user.getIdToken();
+          // Get Firebase ID token
+          const idToken = await user.getIdToken(true);
+
+          // Send to backend to get backend JWT
           const response = await backendLogin(idToken);
-          setToken(response.token);
+          setToken(response.token); // store backend JWT
         } catch (err) {
           console.error('Error fetching backend JWT:', err);
           setToken(null);

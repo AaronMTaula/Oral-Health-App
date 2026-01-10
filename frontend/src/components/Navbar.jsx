@@ -9,9 +9,10 @@ const routeColors = {
   '/': '#e08fff',
   '/profile': '#6db1ff',
   '/my-providers': '#ff80df',
-  '/find-my-teeth': '#e08fff',
+  '/find-my-teeth': '#ff5b71ff',
   '/lets-talk': '#fe7070',
   '/auth': '#e08fff',
+  '/health': '#e696d2ff'
 };
 
 const Navbar = () => {
@@ -23,7 +24,7 @@ const Navbar = () => {
   const navRefs = useRef([]);
 
   const leftLinks = ['Home', 'Profile', 'My Providers', 'FMT'];
-  const rightLinks = ["Let's Talk", 'Settings', 'Schedule', 'Logout'];
+  const rightLinks = ["Let's Talk", 'Settings', 'Health', 'Logout'];
 
   useEffect(() => {
     setNavbarColor(routeColors[location.pathname] || '#e08fff');
@@ -237,13 +238,13 @@ const Navbar = () => {
             onClick={() => {
               if (text === "Let's Talk") navigate('/lets-talk');
               else if (text === 'Settings') navigate('/settings');
-              else if (text === 'Schedule') navigate('/schedule');
+              else if (text === 'Health') navigate('/health');
               else if (text === 'Logout') handleLogout();
             }}
             className={`nav-link ${
               (text === "Let's Talk" && location.pathname === '/lets-talk') ||
               (text === 'Settings' && location.pathname === '/settings') ||
-              (text === 'Schedule' && location.pathname === '/schedule')
+              (text === 'Health' && location.pathname === '/health')
                 ? 'active'
                 : ''
             }`}

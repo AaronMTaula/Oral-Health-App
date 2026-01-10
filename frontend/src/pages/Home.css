@@ -34,7 +34,6 @@
   color: #4b0082;
   margin-bottom: 1rem;
 }
-
 /* =========================
    Flipbooks
 ========================= */
@@ -46,28 +45,28 @@
 
 .broche-container {
   display: flex;
-  gap: 20rem;
+  gap: 18rem;               /* controlled spacing between flipbooks */
   perspective: 1400px;
   width: 100%;
-  max-width: none;
-  justify-content: center;
+  max-width: none;          /* allow full horizontal stretch */
+  justify-content: center;  /* center flipbooks */
 }
 
 .broche-wrapper {
   position: relative;
-  flex: 1; /* allows each flipbook to expand */
+  flex: 1;                  /* allows each flipbook to expand */
   display: flex;
   justify-content: center;
-  min-width: 250px; /* optional: prevents too small */
-  max-width: 600px; /* optional: prevents too large */
-  height: auto; /* height controlled by flipbook */
+  min-width: 250px;          /* prevents too small */
+  max-width: 700px;          /* optional: prevents overly large on wide screens */
+  height: auto;              /* height controlled by flipbook */
 }
 
 .broche-flipbook {
   border-radius: 12px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 18px rgba(126, 49, 165, 0.15);
   overflow: hidden;
-  width: 100% !important; /* fill the wrapper */
+  width: 100% !important;   
   height: auto !important;
 }
 
@@ -76,9 +75,6 @@
   transform-origin: right center !important;
 }
 
-.parents-flip .react-flip-page-shadow {
-  display: none !important;
-}
 
 /* Kiddies Flipbook */
 .mirrored-book {
@@ -93,9 +89,18 @@
   transform-origin: left center !important;
 }
 
+/* Kiddies Flipbook */
+.kiddies-flip .react-flip-page-shadow {
+  display: block !important;            /* ensure shadow layer exists */
+  background: #3c1f76 !important;       /* dark purple color for page turn */
+  box-shadow: none !important;          /* remove default black 3D shadow */
+  opacity: 0.8;                         /* optional: adjust intensity */
+}
+
+
 /* Pages */
 .broche-cover {
-  background: linear-gradient(135deg, #7d4ae3 0%, #7d4ae3 100%);
+  background: #7d4ae3;
   color: #fff;
   font-size: 1.5rem;
   display: flex;
@@ -117,7 +122,6 @@
   overflow-y: auto;
   box-sizing: border-box;
 }
-
 
 /* =========================
    Flipbook Page Buttons

@@ -1,0 +1,159 @@
+/* src/pages/Health.css */
+.health-page {
+  font-family: Arial, sans-serif;
+  color: #4a148c;
+  padding-bottom: 3rem;
+}
+
+/* Intro Section */
+.health-intro {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.health-intro h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.health-intro p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Health Venn Diagram */
+.health-ven {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin: 3rem 0;
+  height: 100%;
+}
+
+/* Base side */
+.ven-side {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.8s ease;
+  overflow: visible;
+  padding: 0.5rem;
+}
+
+/* Selected side expands ~2/3 */
+.ven-side.selected {
+  flex: 2 2 66%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+/* Collapsed side stays small circle */
+.ven-side.collapsed {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Sun / Moon backgrounds */
+.ven-side.sun {
+  background: #fff3e0;
+}
+
+.ven-side.moon {
+  background: #e1f5fe;
+}
+
+/* Icon Circle */
+.icon-wrapper {
+  border-radius: 50%;
+  background-color: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.6s ease;
+}
+
+/* Message */
+.ven-message {
+  font-size: 1rem;
+  max-width: 400px;
+}
+
+/* Flex direction for sides */
+.ven-side.sun.selected {
+  flex-direction: row-reverse;
+}
+
+.ven-side.moon.selected {
+  flex-direction: row;
+}
+
+/* Video Grid */
+.health-videos {
+  padding: 2rem;
+  text-align: center;
+}
+
+.health-videos h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.video-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-card video {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 30% / 30%; /* squircle shape */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.video-card p {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #6a1b9a;
+}
+
+/* Reuse Home page banner style */
+.announcement-banner {
+  background: #f6f0ff;
+  padding: 3rem 1.5rem;
+  margin-top: 3rem;
+}
+
+.announcement-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.announcement-content h2 {
+  font-size: 2rem;
+  color: #4a148c;
+  margin-bottom: 0.5rem;
+}
+
+.announcement-content p {
+  font-size: 1.2rem;
+  color: #6a1b9a;
+}

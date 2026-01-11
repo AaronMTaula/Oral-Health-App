@@ -32,7 +32,6 @@
   margin: 4rem 0;
 }
 
-/* Base side */
 .ven-side {
   flex: 1 1 0;
   min-height: 520px;
@@ -42,29 +41,18 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-
   transition: flex 0.9s cubic-bezier(0.4, 0, 0.2, 1),
               border-radius 0.9s ease;
 }
 
-/* Selected ~2/3 width */
-.ven-side.selected {
-  flex: 2 2 66%;
-}
+.ven-side.selected { flex: 2 2 66%; }
+.ven-side.collapsed { flex: 0 0 520px; height: 520px; border-radius: 50%; }
 
-/* Collapsed circle */
-.ven-side.collapsed {
-  flex: 0 0 520px;
-  height: 520px;
-  border-radius: 50%;
-}
-
-/* Colors */
 .ven-side.sun { background: #ffec8b; }
 .ven-side.moon { background: #5c96b1; }
 
 /* =========================
-   Icon wrapper
+   Icon Wrapper
 ========================= */
 .icon-wrapper {
   width: 220px;
@@ -74,14 +62,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+
+  /* Lock icon so messages don't push it */
+  position: absolute;
+
+  /* Animate horizontal movement only */
+  transition: transform 1s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* Inner icon — 3-position smooth movement */
 .icon-inner {
   font-size: 12rem;
-  transition: transform 0.9s cubic-bezier(0.4,0,0.2,1);
-  transform: translateX(var(--icon-x, 0px));
+  transition: transform 1s cubic-bezier(0.4,0,0.2,1);
 }
 
 /* =========================
@@ -91,9 +82,12 @@
   max-width: 420px;
   font-size: 1.1rem;
   line-height: 1.6;
+  position: relative;
+
   opacity: 0;
   transform: translateX(-20px);
   pointer-events: none;
+
   transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4,0,0.2,1);
 }
 

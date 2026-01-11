@@ -1,13 +1,29 @@
 // src/pages/Health.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Health.css";
 
 const Health = () => {
   const [activeSide, setActiveSide] = useState(null); // "sun" | "moon" | null
+  const [sunX, setSunX] = useState(400); // Sun initial non-selected
+  const [moonX, setMoonX] = useState(0);  // Moon initial non-selected
 
   const toggleSide = (side) => {
     setActiveSide(activeSide === side ? null : side);
   };
+
+  // Update positions whenever activeSide changes
+  useEffect(() => {
+    if (activeSide === "sun") {
+      setSunX(450);   // Sun selected
+      setMoonX(0);  // Moon collapsed
+    } else if (activeSide === "moon") {
+      setSunX(0);   // Sun collapsed
+      setMoonX(-410); // Moon selected
+    } else {
+      setSunX(200);   // Sun non-selected
+      setMoonX(-220);    // Moon non-selected
+    }
+  }, [activeSide]);
 
   return (
     <div className="health-page">
@@ -33,17 +49,10 @@ const Health = () => {
           }`}
           onClick={() => toggleSide("sun")}
         >
-          <div className="icon-wrapper sun-icon-wrapper">
+          <div className="icon-wrapper">
             <span
               className="icon-inner"
-              style={{
-                "--icon-x":
-                  activeSide === "sun"
-                    ? "160px" // selected position
-                    : activeSide === "moon"
-                    ? "150px" // collapsed position
-                    : "400px", // center non-selected
-              }}
+              style={{ transform: `translateX(${sunX}px)` }}
             >
               ☀️
             </span>
@@ -72,17 +81,10 @@ const Health = () => {
           }`}
           onClick={() => toggleSide("moon")}
         >
-          <div className="icon-wrapper moon-icon-wrapper">
+          <div className="icon-wrapper">
             <span
               className="icon-inner"
-              style={{
-                "--icon-x":
-                  activeSide === "moon"
-                    ? "-180px" // selected position
-                    : activeSide === "sun"
-                    ? "130px" // collapsed position
-                    : "0px", // center non-selected
-              }}
+              style={{ transform: `translateX(${moonX}px)` }}
             >
               🌙
             </span>

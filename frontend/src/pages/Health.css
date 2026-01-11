@@ -51,6 +51,27 @@
 .ven-side.sun { background: #ffec8b; }
 .ven-side.moon { background: #5c96b1; }
 
+
+/* =========================
+   Neutral (non-selected) semi-circle curve toward icon
+========================= */
+
+/* Sun — icon on RIGHT → curve right side */
+.ven-side.sun:not(.selected):not(.collapsed) {
+  border-top-right-radius: 260px;
+  border-bottom-right-radius: 260px;
+  border-top-left-radius: 32px;
+  border-bottom-left-radius: 32px;
+}
+
+/* Moon — icon on LEFT → curve left side */
+.ven-side.moon:not(.selected):not(.collapsed) {
+  border-top-left-radius: 260px;
+  border-bottom-left-radius: 260px;
+  border-top-right-radius: 32px;
+  border-bottom-right-radius: 32px;
+}
+
 /* =========================
    Icon Wrapper
 ========================= */

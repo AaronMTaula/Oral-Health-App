@@ -1,29 +1,35 @@
 // src/pages/Health.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Health.css";
 
 const Health = () => {
   const [activeSide, setActiveSide] = useState(null); // 'sun' or 'moon'
-  const [venHeight, setVenHeight] = useState(500);
-
-  useEffect(() => {
-    const broche = document.querySelector(".broche-container");
-    if (broche) setVenHeight(broche.offsetHeight);
-
-    const handleResize = () => {
-      if (broche) setVenHeight(broche.offsetHeight);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const sunRef = useRef(null);
+  const moonRef = useRef(null);
 
   const handleClick = (side) => {
     setActiveSide(side === activeSide ? null : side);
   };
 
+  // Dynamically set --icon-radius to match icon circle
+  useEffect(() => {
+    if (sunRef.current) {
+      sunRef.current.style.setProperty(
+        "--icon-radius",
+        `${sunRef.current.offsetWidth / 2}px`
+      );
+    }
+    if (moonRef.current) {
+      moonRef.current.style.setProperty(
+        "--icon-radius",
+        `${moonRef.current.offsetWidth / 2}px`
+      );
+    }
+  }, [activeSide]);
+
   return (
     <div className="health-page">
-      {/* Intro Section */}
+      {/* Intro */}
       <section className="health-intro">
         <h1>What's the big secret to a healthy smile?</h1>
         <p>
@@ -32,46 +38,42 @@ const Health = () => {
         </p>
       </section>
 
-      {/* Venn Diagram Section */}
-      <section className="health-ven" style={{ height: `${venHeight}px` }}>
-        {/* Sun (left) */}
+      {/* Venn Diagram */}
+      <section className="health-ven">
+        {/* Sun */}
         <div
+          ref={sunRef}
           className={`ven-side sun ${activeSide === "sun" ? "selected" : activeSide === "moon" ? "collapsed" : ""}`}
           onClick={() => handleClick("sun")}
-          style={{ height: `${venHeight}px` }}
         >
           <div className="icon-wrapper">
-            <span className="icon-inner">☀️</span>
+            <div className="icon-inner">☀️</div>
           </div>
           {activeSide === "sun" && (
             <div className="message-wrapper sun-message">
-              <p>
-                Teeth need to be cleaned every morning! No one wants to get a whiff of that morning breath. Brush for two minutes and you'll be good to go! Mouthwash as well if you like.
-              </p>
+              Teeth need to be cleaned every morning! No one wants to get a whiff of that morning breath. Brush for two minutes and you'll be good to go! Mouthwash as well if you like.
             </div>
           )}
         </div>
 
-        {/* Moon (right) */}
+        {/* Moon */}
         <div
+          ref={moonRef}
           className={`ven-side moon ${activeSide === "moon" ? "selected" : activeSide === "sun" ? "collapsed" : ""}`}
           onClick={() => handleClick("moon")}
-          style={{ height: `${venHeight}px` }}
         >
+          <div className="icon-wrapper">
+            <div className="icon-inner">🌙</div>
+          </div>
           {activeSide === "moon" && (
             <div className="message-wrapper moon-message">
-              <p>
-                Teeth have had a long day and need a good scrub so that left over food doesn't hang around overnight. Get the floss moving at night before or after brushing, finish off with some mouthwash if you like.
-              </p>
+              Teeth have had a long day and need a good scrub so that left over food doesn't hang around overnight. Get the floss moving at night before or after brushing, finish off with some mouthwash if you like.
             </div>
           )}
-          <div className="icon-wrapper">
-            <span className="icon-inner">🌙</span>
-          </div>
         </div>
       </section>
 
-      {/* Video Instruction Grid */}
+      {/* Video Grid */}
       <section className="health-videos">
         <h2>Learn to Use Your Dental Tools</h2>
         <div className="video-grid">
@@ -94,7 +96,7 @@ const Health = () => {
         </div>
       </section>
 
-      {/* Home Page Banner */}
+      {/* Banner */}
       <section className="announcement-banner">
         <div className="announcement-content">
           <h2>Keep Your Smile Bright!</h2>

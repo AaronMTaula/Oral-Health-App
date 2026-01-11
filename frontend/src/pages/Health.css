@@ -21,6 +21,7 @@
   margin: 0 auto;
   line-height: 1.6;
 }
+
 /* =========================
    Health Venn Diagram Section
 ========================= */
@@ -53,8 +54,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 20rem; /* adjust space between icon & message */
-  min-height: 500px; /* adjust selected section height */
+  gap: 20rem; /* space between icon & message */
+  min-height: 500px; 
 }
 
 /* Collapsed side stays as circle */
@@ -63,9 +64,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 500px;  
-  height: 500px; 
-  border-radius: 50%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%; 
   overflow: hidden;
   transition: all 0.8s ease-in-out;
 }
@@ -88,28 +89,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: inherit; /* inherits background from section */
+  background-color: inherit;
   transition: all 0.8s ease-in-out;
 }
 
 /* Inner icon */
 .icon-inner {
-  font-size: 12rem; /* adjust icon size */
+  font-size: 12rem;
   transition: transform 0.8s ease-in-out;
 }
 
 /* Horizontal icon movement inside wrapper */
 .ven-side.sun.selected .icon-inner {
-  transform: translateX(-150px); /* adjust for Sun */
+  transform: translateX(-150px);
 }
 
 .ven-side.moon.selected .icon-inner {
-  transform: translateX(-100px); /* adjust for Moon */
+  transform: translateX(150px);
 }
 
 .ven-side.sun:not(.selected) .icon-inner,
 .ven-side.moon:not(.selected) .icon-inner {
-  transform: translateX(0); 
+  transform: translateX(0);
 }
 
 /* =========================
@@ -122,34 +123,30 @@
   transition: all 0.8s ease-in-out;
 }
 
-/* Sun message specific adjustments */
 .sun-message {
-  margin-left: 2rem;   /* adjust horizontal position */
-  /* You can also use relative positioning: */
-  /* position: relative; left: 20px; top: 0px; */
+  margin-left: 2rem;
 }
 
-/* Moon message specific adjustments */
 .moon-message {
-  margin-right: 2rem;  /* adjust horizontal position */
-  transform: translateX(-200px); /* adjust horizontal position */
+  margin-right: 2rem;
 }
 
 /* =========================
-   Flex direction + semi-circle/pill shape
+   Flex direction + dynamic corner radius
+   The corners near the icon will match the icon circle
 ========================= */
 .ven-side.sun.selected {
   flex-direction: row-reverse; /* icon on right of text */
-  border-top-right-radius: 50% / 50%;
-  border-bottom-right-radius: 50% / 50%;
+  border-top-right-radius: var(--icon-radius, 50%);
+  border-bottom-right-radius: var(--icon-radius, 50%);
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
 
 .ven-side.moon.selected {
-  flex-direction: row-reverse; /* icon on right of text */
-  border-top-left-radius: 50% / 50%;
-  border-bottom-left-radius: 50% / 50%;
+  flex-direction: row; /* icon on right of text */
+  border-top-left-radius: var(--icon-radius, 50%);
+  border-bottom-left-radius: var(--icon-radius, 50%);
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }

@@ -4,7 +4,7 @@
   padding-bottom: 3rem;
 }
 
-/* Intro Section */
+/* Intro */
 .health-intro {
   text-align: center;
   padding: 3rem 2rem;
@@ -19,196 +19,153 @@
   font-size: 1.2rem;
   max-width: 800px;
   margin: 0 auto;
-  line-height: 1.6;
 }
 
 /* =========================
-   Health Venn Diagram Section
+   Venn Diagram Layout
 ========================= */
 .health-ven {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2rem;
-  margin: 3rem 0;
-  height: 100%;
+  margin: 4rem 0;
 }
 
 /* Base side */
 .ven-side {
   flex: 1 1 0;
+  min-height: 520px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   cursor: pointer;
   overflow: hidden;
-  padding: 0.5rem;
-  position: relative;
-  transition: all 0.8s ease-in-out;
-  min-height: 500px; /* base height */
+
+  transition:
+    flex 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.9s ease;
 }
 
-/* Selected side expands ~2/3 width */
+/* Selected = ~2/3 width */
 .ven-side.selected {
   flex: 2 2 66%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 20rem; /* space between icon & message */
-  min-height: 500px; 
 }
 
-/* Collapsed side stays as circle */
+/* Collapsed = circle */
 .ven-side.collapsed {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%; 
-  overflow: hidden;
-  transition: all 0.8s ease-in-out;
+  flex: 0 0 520px;
+  height: 520px;
+  border-radius: 50%;
 }
 
-/* Sun / Moon colors */
-.ven-side.sun { background: #ffec8b; }
-.ven-side.moon { background: #5c96b1; }
+/* Colors */
+.ven-side.sun {
+  background: #ffec8b;
+}
 
-/* Collapsed circle colors */
-.ven-side.sun.collapsed { background-color: #ffec8b; }
-.ven-side.moon.collapsed { background-color: #5c96b1; }
+.ven-side.moon {
+  background: #5c96b1;
+}
 
 /* =========================
-   Icon wrapper
+   Icon Wrapper
 ========================= */
 .icon-wrapper {
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
+  background: inherit;
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: inherit;
-  transition: all 0.8s ease-in-out;
+  justify-content: center;
+
+  /* lock vertical position */
+  position: relative;
+
+  /* IMPORTANT: only transform animates */
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Inner icon */
 .icon-inner {
   font-size: 12rem;
-  transition: transform 0.8s ease-in-out;
+
+  /* Only horizontal movement */
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Horizontal icon movement inside wrapper */
+/* =========================
+   Horizontal Icon Motion
+========================= */
 .ven-side.sun.selected .icon-inner {
-  transform: translateX(-150px);
+  transform: translateX(160px);
 }
 
 .ven-side.moon.selected .icon-inner {
-  transform: translateX(150px);
+  transform: translateX(-160px);
 }
 
-.ven-side.sun:not(.selected) .icon-inner,
-.ven-side.moon:not(.selected) .icon-inner {
+.ven-side:not(.selected) .icon-inner {
   transform: translateX(0);
 }
 
 /* =========================
-   Message wrappers: independent positioning
+   Message Positioning
+========================= */
+/* =========================
+   Message enter / exit smoothing
 ========================= */
 .message-wrapper {
-  display: flex;
-  align-items: center;
-  max-width: 400px;
-  transition: all 0.8s ease-in-out;
+  max-width: 420px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+
+  opacity: 0;
+  transform: translateX(-20px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Visible when selected */
+.message-wrapper.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Sun message — independent control */
 .sun-message {
-  margin-left: 2rem;
+  margin-right: 3rem;
 }
 
+/* Moon message — independent control */
 .moon-message {
-  margin-right: 2rem;
+  margin-left: 3rem;
 }
 
 /* =========================
-   Flex direction + dynamic corner radius
-   The corners near the icon will match the icon circle
+   Selected Shape (Tablet Curve)
 ========================= */
 .ven-side.sun.selected {
-  flex-direction: row-reverse; /* icon on right of text */
-  border-top-right-radius: var(--icon-radius, 50%);
-  border-bottom-right-radius: var(--icon-radius, 50%);
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  flex-direction: row-reverse;
+
+  border-top-right-radius: 260px;
+  border-bottom-right-radius: 260px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
 }
 
 .ven-side.moon.selected {
-  flex-direction: row; /* icon on right of text */
-  border-top-left-radius: var(--icon-radius, 50%);
-  border-bottom-left-radius: var(--icon-radius, 50%);
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
+  flex-direction: row;
 
-/* Video Grid */
-.health-videos {
-  padding: 2rem;
-  text-align: center;
-}
-
-.health-videos h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-  justify-items: center;
-}
-
-.video-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.video-card video {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 30% / 30%;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.video-card p {
-  margin-top: 0.5rem;
-  font-weight: bold;
-  color: #6a1b9a;
-}
-
-/* Home Banner */
-.announcement-banner {
-  background: #f6f0ff;
-  padding: 3rem 1.5rem;
-  margin-top: 3rem;
-}
-
-.announcement-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.announcement-content h2 {
-  font-size: 2rem;
-  color: #4a148c;
-  margin-bottom: 0.5rem;
-}
-
-.announcement-content p {
-  font-size: 1.2rem;
-  color: #6a1b9a;
+  border-top-left-radius: 260px;
+  border-bottom-left-radius: 260px;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
 }

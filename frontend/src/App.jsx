@@ -8,6 +8,7 @@ import FindMyTeeth from "./pages/FindMyTeeth";
 import LetsTalk from "./pages/LetsTalk";
 import SecuritySettings from "./pages/SecuritySettings";
 import Home from "./pages/Home";
+import Health from "./pages/Health";
 import { AuthProvider, useAuth } from "./context/useAuth";
 
 // Protect routes for logged-in users
@@ -35,6 +36,7 @@ function App() {
         <Route path="/find-my-teeth" element={<ProtectedRoute><FindMyTeeth /></ProtectedRoute>} />
         <Route path="/lets-talk" element={<ProtectedRoute><LetsTalk /></ProtectedRoute>} />
         <Route path="/security" element={<ProtectedRoute><SecuritySettings /></ProtectedRoute>} />
+        <Route path="/health" element={<ProtectedRoute><Health /></ProtectedRoute>} />
       </Routes>
     </div>
   );

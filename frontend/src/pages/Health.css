@@ -1,4 +1,3 @@
-/* src/pages/Health.css */
 .health-page {
   font-family: Arial, sans-serif;
   color: #4a148c;
@@ -22,8 +21,9 @@
   margin: 0 auto;
   line-height: 1.6;
 }
-
-/* Health Venn Diagram */
+/* =========================
+   Health Venn Diagram Section
+========================= */
 .health-ven {
   display: flex;
   justify-content: center;
@@ -40,60 +40,118 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.8s ease;
-  overflow: visible;
+  overflow: hidden;
   padding: 0.5rem;
+  position: relative;
+  transition: all 0.8s ease-in-out;
+  min-height: 500px; /* base height */
 }
 
-/* Selected side expands ~2/3 */
+/* Selected side expands ~2/3 width */
 .ven-side.selected {
   flex: 2 2 66%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: 20rem; /* adjust space between icon & message */
+  min-height: 500px; /* adjust selected section height */
 }
 
-/* Collapsed side stays small circle */
+/* Collapsed side stays as circle */
 .ven-side.collapsed {
   flex: 0 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Sun / Moon backgrounds */
-.ven-side.sun {
-  background: #fff3e0;
-}
-
-.ven-side.moon {
-  background: #e1f5fe;
-}
-
-/* Icon Circle */
-.icon-wrapper {
+  width: 500px;  
+  height: 500px; 
   border-radius: 50%;
-  background-color: inherit;
+  overflow: hidden;
+  transition: all 0.8s ease-in-out;
+}
+
+/* Sun / Moon colors */
+.ven-side.sun { background: #ffec8b; }
+.ven-side.moon { background: #5c96b1; }
+
+/* Collapsed circle colors */
+.ven-side.sun.collapsed { background-color: #ffec8b; }
+.ven-side.moon.collapsed { background-color: #5c96b1; }
+
+/* =========================
+   Icon wrapper
+========================= */
+.icon-wrapper {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.6s ease;
+  background-color: inherit; /* inherits background from section */
+  transition: all 0.8s ease-in-out;
 }
 
-/* Message */
-.ven-message {
-  font-size: 1rem;
+/* Inner icon */
+.icon-inner {
+  font-size: 12rem; /* adjust icon size */
+  transition: transform 0.8s ease-in-out;
+}
+
+/* Horizontal icon movement inside wrapper */
+.ven-side.sun.selected .icon-inner {
+  transform: translateX(-150px); /* adjust for Sun */
+}
+
+.ven-side.moon.selected .icon-inner {
+  transform: translateX(-100px); /* adjust for Moon */
+}
+
+.ven-side.sun:not(.selected) .icon-inner,
+.ven-side.moon:not(.selected) .icon-inner {
+  transform: translateX(0); 
+}
+
+/* =========================
+   Message wrappers: independent positioning
+========================= */
+.message-wrapper {
+  display: flex;
+  align-items: center;
   max-width: 400px;
+  transition: all 0.8s ease-in-out;
 }
 
-/* Flex direction for sides */
+/* Sun message specific adjustments */
+.sun-message {
+  margin-left: 2rem;   /* adjust horizontal position */
+  /* You can also use relative positioning: */
+  /* position: relative; left: 20px; top: 0px; */
+}
+
+/* Moon message specific adjustments */
+.moon-message {
+  margin-right: 2rem;  /* adjust horizontal position */
+  transform: translateX(-200px); /* adjust horizontal position */
+}
+
+/* =========================
+   Flex direction + semi-circle/pill shape
+========================= */
 .ven-side.sun.selected {
-  flex-direction: row-reverse;
+  flex-direction: row-reverse; /* icon on right of text */
+  border-top-right-radius: 50% / 50%;
+  border-bottom-right-radius: 50% / 50%;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
 }
 
 .ven-side.moon.selected {
-  flex-direction: row;
+  flex-direction: row-reverse; /* icon on right of text */
+  border-top-left-radius: 50% / 50%;
+  border-bottom-left-radius: 50% / 50%;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 /* Video Grid */
@@ -124,7 +182,7 @@
   width: 180px;
   height: 180px;
   object-fit: cover;
-  border-radius: 30% / 30%; /* squircle shape */
+  border-radius: 30% / 30%;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
@@ -134,7 +192,7 @@
   color: #6a1b9a;
 }
 
-/* Reuse Home page banner style */
+/* Home Banner */
 .announcement-banner {
   background: #f6f0ff;
   padding: 3rem 1.5rem;

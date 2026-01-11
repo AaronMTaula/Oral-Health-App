@@ -1,11 +1,10 @@
 // src/pages/Health.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./Health.css";
 
 const Health = () => {
   const [activeSide, setActiveSide] = useState(null); // 'sun' or 'moon'
   const [venHeight, setVenHeight] = useState(500);
-  const venRef = useRef(null);
 
   useEffect(() => {
     const broche = document.querySelector(".broche-container");
@@ -24,7 +23,7 @@ const Health = () => {
 
   return (
     <div className="health-page">
-      {/* Intro */}
+      {/* Intro Section */}
       <section className="health-intro">
         <h1>What's the big secret to a healthy smile?</h1>
         <p>
@@ -33,50 +32,42 @@ const Health = () => {
         </p>
       </section>
 
-      {/* Icon Venn Section */}
-      <section
-        className="health-ven"
-        ref={venRef}
-        style={{ height: `${venHeight}px` }}
-      >
+      {/* Venn Diagram Section */}
+      <section className="health-ven" style={{ height: `${venHeight}px` }}>
         {/* Sun (left) */}
         <div
-          className={`ven-side sun ${
-            activeSide === "sun" ? "selected" : activeSide === "moon" ? "collapsed" : ""
-          }`}
+          className={`ven-side sun ${activeSide === "sun" ? "selected" : activeSide === "moon" ? "collapsed" : ""}`}
           onClick={() => handleClick("sun")}
+          style={{ height: `${venHeight}px` }}
         >
-          <div
-            className="icon-wrapper"
-            style={{ width: `${venHeight}px`, height: `${venHeight}px`, fontSize: `${venHeight * 0.5}px` }}
-          >
-            ☀️
+          <div className="icon-wrapper">
+            <span className="icon-inner">☀️</span>
           </div>
           {activeSide === "sun" && (
-            <p className="ven-message">
-              Teeth need to be cleaned every morning! No one wants to get a whiff of that morning breath. Brush for two minutes and you'll be good to go! Mouthwash as well if you like.
-            </p>
+            <div className="message-wrapper sun-message">
+              <p>
+                Teeth need to be cleaned every morning! No one wants to get a whiff of that morning breath. Brush for two minutes and you'll be good to go! Mouthwash as well if you like.
+              </p>
+            </div>
           )}
         </div>
 
         {/* Moon (right) */}
         <div
-          className={`ven-side moon ${
-            activeSide === "moon" ? "selected" : activeSide === "sun" ? "collapsed" : ""
-          }`}
+          className={`ven-side moon ${activeSide === "moon" ? "selected" : activeSide === "sun" ? "collapsed" : ""}`}
           onClick={() => handleClick("moon")}
+          style={{ height: `${venHeight}px` }}
         >
-          <div
-            className="icon-wrapper"
-            style={{ width: `${venHeight}px`, height: `${venHeight}px`, fontSize: `${venHeight * 0.5}px` }}
-          >
-            🌙
-          </div>
           {activeSide === "moon" && (
-            <p className="ven-message">
-              Teeth have had a long day and need a good scrub so that left over food doesn't hang around overnight. Get the floss moving at night before or after brushing, finish off with some mouthwash if you like.
-            </p>
+            <div className="message-wrapper moon-message">
+              <p>
+                Teeth have had a long day and need a good scrub so that left over food doesn't hang around overnight. Get the floss moving at night before or after brushing, finish off with some mouthwash if you like.
+              </p>
+            </div>
           )}
+          <div className="icon-wrapper">
+            <span className="icon-inner">🌙</span>
+          </div>
         </div>
       </section>
 

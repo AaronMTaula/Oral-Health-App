@@ -1,5 +1,6 @@
 // src/pages/Health.jsx
 import React, { useState, useEffect } from "react";
+import AppBanner from "../components/Banner.jsx";
 import "./Health.css";
 
 const Health = () => {
@@ -104,34 +105,34 @@ const Health = () => {
       </section>
 
       {/* Video Grid */}
-      <section className="health-videos">
-        <h2>Learn More</h2>
-        <div className="video-grid">
-          <div className="video-card">
-            <video src="video1.mp4" autoPlay loop muted></video>
-            <p>Morning Routine</p>
+        <section className="health-videos">
+          <h2>Instructional Videos</h2>
+                
+          <div className="video-grid">
+            <div className="video-card">
+              <video src="toothbrush.mp4" autoPlay loop muted playsInline />
+              <p>Toothbrush</p>
+            </div>
+                
+            <div className="video-card">
+              <video src="floss.mp4" autoPlay loop muted playsInline />
+              <p>Floss</p>
+            </div>
+                
+            <div className="video-card">
+              <video src="toothpaste.mp4" autoPlay loop muted playsInline />
+              <p>Toothpaste</p>
+            </div>
+                
+            <div className="video-card">
+              <video src="mouthwash.mp4" autoPlay loop muted playsInline />
+              <p>Mouthwash</p>
+            </div>
           </div>
-          <div className="video-card">
-            <video src="video2.mp4" autoPlay loop muted></video>
-            <p>Night Routine</p>
-          </div>
-          <div className="video-card">
-            <video src="video3.mp4" autoPlay loop muted></video>
-            <p>Floss Tips</p>
-          </div>
-        </div>
-      </section>
+        </section>
+            {/* App Banner */}
+      <AppBanner />
 
-      {/* Bottom Banner */}
-      <section className="announcement-banner">
-        <div className="announcement-content">
-          <h2>Small habits. Big smiles.</h2>
-          <p>
-            Consistency is the key to lifelong oral health. Let’s build great
-            routines together.
-          </p>
-        </div>
-      </section>
     </div>
   );
 };

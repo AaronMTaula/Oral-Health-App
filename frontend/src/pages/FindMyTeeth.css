@@ -1,28 +1,144 @@
-/* src/pages/FindMyTeeth.css */
-
-/* Global adjustable image controls */
+/* =========================
+   GLOBAL CONTROLS
+========================= */
 :root {
   --img-width: 100%;
   --img-height: 100%;
   --img-object-fit: cover;
   --img-object-position: center center;
+
+  /* Mouth diagram dots */
+  --dot-size: 18px;
 }
 
-/* --- Container & Title --- */
+/* =========================
+   CONTAINER & TITLE
+========================= */
 .fmt-container {
-  padding: 6rem 2rem 2rem 2rem; /* Increased top padding to avoid navbar overlap */
+  padding: 6rem 2rem 2rem 2rem;
   text-align: center;
 }
 
 .fmt-title {
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
   color: #2a2a2a;
   font-weight: 700;
   letter-spacing: 1px;
 }
 
-/* --- Grid Layout --- */
+/* =========================
+   INTRO TEXT
+========================= */
+.fmt-intro {
+  max-width: 720px;
+  margin: 0 auto 3rem auto;
+  color: #444;
+}
+
+.fmt-intro h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.75rem;
+  color: #2a2a2a;
+}
+
+.fmt-intro p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+}
+
+/* =========================
+   MOUTH DIAGRAM
+========================= */
+.mouth-diagram {
+  position: relative;
+  max-width: 520px;
+  margin: 0 auto 4rem auto;
+}
+
+.mouth-diagram img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- Interactive Dots --- */
+.mouth-dot {
+  position: absolute;
+  width: var(--dot-size);
+  height: var(--dot-size);
+  background: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 5;
+}
+
+.mouth-dot:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 0 0 4px rgba(140, 75, 255, 0.35);
+}
+
+.mouth-dot::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Tooltip for assigned diagnosis */
+.mouth-dot[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 25;
+}
+
+/* --- Floating Info Panel --- */
+.mouth-panel {
+  position: absolute;
+  bottom: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+  width: 260px;
+  text-align: center;
+}
+
+.mouth-panel h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+  color: #2a2a2a;
+}
+
+.mouth-panel p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* =========================
+   GRID LAYOUT
+========================= */
 .fmt-grid {
   display: grid;
   grid-template-columns: repeat(3, 220px);
@@ -31,7 +147,9 @@
   justify-content: center;
 }
 
-/* --- Card Wrapper --- */
+/* =========================
+   CARD WRAPPER
+========================= */
 .fmt-card {
   width: 220px;
   height: 300px;
@@ -46,7 +164,9 @@
   transform: scale(1.03);
 }
 
-/* --- EXPANDED CARD --- */
+/* =========================
+   EXPANDED CARD
+========================= */
 .fmt-card.expanded {
   grid-column: span 3;
   width: 100% !important;
@@ -67,7 +187,9 @@
   padding: 1.5rem;
 }
 
-/* --- Inner Rotating Layer --- */
+/* =========================
+   INNER ROTATION
+========================= */
 .fmt-card-inner {
   position: relative;
   width: 100%;
@@ -80,7 +202,9 @@
   transform: rotateY(180deg);
 }
 
-/* --- Card Faces --- */
+/* =========================
+   CARD FACES
+========================= */
 .fmt-card-front,
 .fmt-card-back {
   position: absolute;
@@ -92,14 +216,13 @@
   overflow: hidden;
 }
 
-/* --- Front of Card (Image) --- */
+/* --- FRONT --- */
 .fmt-card-front {
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 5px;
-  box-sizing: border-box;
 }
 
 .fmt-card-front img {
@@ -109,17 +232,15 @@
   object-position: var(--img-object-position);
   border-radius: 8px;
   border: 5px solid #ffffff;
-  box-sizing: border-box;
   filter: blur(5px);
   transition: filter 0.45s ease;
 }
 
-/* --- Remove blur when first clicked --- */
 .fmt-card.front-unblurred .fmt-card-front img {
   filter: blur(0);
 }
 
-/* --- Back of Card --- */
+/* --- BACK --- */
 .fmt-card-back {
   background: #fafafa;
   padding: 1rem;
@@ -128,17 +249,16 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  padding-bottom: 4rem; /* leave space so button doesn't cover content */
+  padding-bottom: 4rem;
 }
 
+/* =========================
+   TYPOGRAPHY
+========================= */
 .fmt-card-back h2 {
   font-size: 1.2rem;
   margin-bottom: 0.35rem;
   color: #333;
-  font-weight: 600;
 }
 
 .fmt-card-back span {
@@ -153,30 +273,99 @@
   color: #444;
 }
 
-/* --- Read More Button --- */
-.fmt-readmore {
-  background-color: #8c4bff;
-  position: absolute; /* anchored to the card/back container */
-  right: 1rem;
+/* =========================
+   CARD ACTION BUTTONS
+========================= */
+.fmt-actions {
+  position: absolute;
   bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.fmt-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
+  background: #8c4bff;
+  color: #ffffff;
+  font-size: 1.1rem;
   cursor: pointer;
-  color: #fff;
-  font-size: 0.85rem;
-  transition: background 0.3s ease, transform 0.2s ease;
-  z-index: 10;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.fmt-readmore:hover {
-  background-color: #7436d0;
-  transform: scale(1.05);
+.fmt-icon-btn:hover {
+  transform: scale(1.1);
+  background: #7436d0;
 }
 
-/* --- Treatment Section --- */
+.fmt-icon-btn.favourited {
+  background: #ff4b6e;
+}
+
+/* =========================
+   TREATMENT SECTION
+========================= */
 .fmt-treatment {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: #333;
+}
+
+/* =========================
+   DOT SELECTOR, UNDO & CONFIRM
+========================= */
+.dot-selector {
+  position: absolute;
+  z-index: 20;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+  font-size: 0.9rem;
+}
+
+.dot-selector select {
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+/* Undo and Confirm buttons */
+.undo-btn,
+.confirm-btn {
+  position: absolute;
+  bottom: -60px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  background: #8c4bff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  z-index: 15;
+}
+
+.undo-btn:hover,
+.confirm-btn:hover {
+  transform: scale(1.05);
+  background: #7436d0;
+}
+
+.undo-btn {
+  left: 0;
+}
+
+.confirm-btn {
+  right: 0;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

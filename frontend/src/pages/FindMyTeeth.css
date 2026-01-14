@@ -2,78 +2,220 @@
   --dot-size: 18px;
 }
 
-/* Container & Title */
-.fmt-container { padding: 6rem 2rem 2rem; text-align: center; }
-.fmt-title { font-size: 2rem; margin-bottom: 1.2rem; font-weight: 700; }
-
-/* Mouth diagram */
-.mouth-diagram { position: relative; max-width: 520px; margin: 0 auto 4rem; }
-.mouth-diagram img { width: 100%; display: block; }
-
-/* Mouth dots */
-.mouth-dot {
-  position: absolute; width: var(--dot-size); height: var(--dot-size);
-  background: #fff; border-radius: 50%; cursor: pointer;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.15); z-index: 5;
+/* =========================
+   CONTAINER & TITLE
+========================= */
+.fmt-container { 
+  padding: 6rem 2rem 2rem; 
+  text-align: center; 
 }
-.mouth-dot:hover { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 4px rgba(140,75,255,0.35); }
-.mouth-dot::after { content:""; width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
 
-/* Dot info box */
+.fmt-title { 
+  font-size: 2rem; 
+  margin-bottom: 1.2rem; 
+  font-weight: 700; 
+}
+
+/* =========================
+   MOUTH DIAGRAM
+========================= */
+.mouth-diagram { 
+  position: relative; 
+  max-width: 520px; 
+  margin: 0 auto 4rem; 
+}
+
+.mouth-diagram img { 
+  width: 100%; 
+  display: block; 
+}
+
+/* =========================
+   MOUTH DOTS
+========================= */
+.mouth-dot {
+  position: absolute; 
+  width: var(--dot-size); 
+  height: var(--dot-size);
+  background: #fff; 
+  border-radius: 50%; 
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.15); 
+  z-index: 5;
+}
+
+.mouth-dot:hover { 
+  transform: translate(-50%, -50%) scale(1.15); 
+  box-shadow: 0 0 0 4px rgba(140,75,255,0.35); 
+}
+
+.mouth-dot::after { 
+  content:""; 
+  width:6px;
+  height:6px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+/* =========================
+   DOT INFO BOX
+========================= */
 .dot-info-box {
-  position: absolute; background:#fff; border-radius:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.18); padding:1rem; z-index:100;
-  width:450px; min-height:550px; max-height:80vh;
-  display:flex; flex-direction:column; gap:1rem;
+  position: absolute; 
+  background:#fff; 
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.18); 
+  padding:1rem; 
+  z-index:100;
+  width:480px; 
+  min-height:600px; 
+  max-height:80vh;
+  display:flex; 
+  flex-direction:column; 
+  gap:1rem;
   overflow-y:auto;  /* Make the box scrollable */
 }
 
-/* Header */
-.dot-info-header { display:flex; justify-content:space-between; align-items:center; cursor:grab; padding:0.5rem 1rem; background:#f3f0ff; border-radius:16px 16px 0 0; font-weight:600; }
+/* =========================
+   DOT INFO HEADER
+========================= */
+.dot-info-header { 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  cursor:grab; 
+  padding:0.5rem 1rem; 
+  background:#f3f0ff; 
+  border-radius:16px 16px 0 0; 
+  font-weight:600; 
+}
 .dot-info-header:active { cursor:grabbing; }
-.close-btn { width:28px;height:28px;border:none;border-radius:50%;background:#ff4b6e;color:#fff;cursor:pointer; }
 
-/* Info + Card container */
-.info-card-container { display:flex; flex-direction:column; align-items:center; flex:1; gap:1rem; }
-.diagnosis-info { width:100%; text-align:center; }
-.dot-card-wrapper { width:100%; display:flex; justify-content:center; flex:1; }
+.close-btn { 
+  width:28px;
+  height:28px;
+  border:none;
+  border-radius:50%;
+  background:#ff4b6e;
+  color:#fff;
+  cursor:pointer; 
+}
 
-/* Card */
-.fmt-card { width:300px; height:400px; perspective:1000px; cursor:pointer; flex-shrink:0; }
-.fmt-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.8s cubic-bezier(0.22,0.61,0.36,1); }
+/* =========================
+   INFO + CARD CONTAINER
+========================= */
+.info-card-container { 
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  flex:1; 
+  gap:1rem; 
+}
+
+.diagnosis-info { 
+  width:100%; 
+  text-align:center; 
+}
+
+.dot-card-wrapper { 
+  width:100%; 
+  display:flex; 
+  justify-content: space-evenly; /* Spread cards evenly */
+  flex-wrap: wrap; 
+  flex:1; 
+  gap: 1rem; /* spacing between cards */
+}
+
+
+/* =========================
+   MOUTH CARD
+========================= */
+.fmt-card { 
+  width:300px; 
+  height:400px; 
+  perspective:1000px; 
+  cursor:pointer; 
+  flex-shrink:0; 
+}
+
+.fmt-card-inner { 
+  width:100%; 
+  height:100%; 
+  position:relative; 
+  transform-style:preserve-3d; 
+  transition:transform 0.8s cubic-bezier(0.22,0.61,0.36,1); 
+}
+
 .fmt-card.flipped .fmt-card-inner { transform: rotateY(180deg); }
-.fmt-card-front, .fmt-card-back { position:absolute; width:100%; height:100%; border-radius:14px; backface-visibility:hidden; overflow:hidden; }
-.fmt-card-front img { width:100%; height:100%; object-fit:cover; border-radius:8px; border:5px solid #fff; filter:blur(5px); transition:filter 0.45s ease; }
+
+.fmt-card-front, .fmt-card-back { 
+  position:absolute; 
+  width:100%; 
+  height:100%; 
+  border-radius:14px; 
+  backface-visibility:hidden; 
+  overflow:hidden; 
+}
+
+.fmt-card-front img { 
+  width:100%; 
+  height:100%; 
+  object-fit:cover; 
+  border-radius:8px; 
+  border:5px solid #fff; 
+  filter:blur(5px); 
+  transition:filter 0.45s ease; 
+}
+
 .fmt-card.front-unblurred .fmt-card-front img { filter:blur(0); }
 
-.fmt-card-back { background:#fafafa; padding:1rem; transform:rotateY(180deg); display:flex; flex-direction:column; overflow:auto; } /* scrollable */
+.fmt-card-back { 
+  background:#fafafa; 
+  padding:1rem; 
+  transform:rotateY(180deg); 
+  display:flex; 
+  flex-direction:column; 
+  overflow:auto; 
+}
+
 .fmt-card-back h2 { font-size:1.2rem; margin-bottom:0.35rem; color:#333; }
 .fmt-card-back span { font-size:0.95rem; color:#777; }
 .fmt-card-back p { font-size:0.9rem; margin-bottom:0.7rem; line-height:1.35; color:#444; }
 
-/* Actions */
+/* ACTION BUTTONS */
 .fmt-actions { margin-top:auto; display:flex; gap:0.5rem; justify-content:flex-end; }
 .fmt-icon-btn { width:42px;height:42px;border-radius:50%;border:none;background:#8c4bff;color:#fff;cursor:pointer; }
 .fmt-icon-btn:hover { background:#7436d0; transform:scale(1.1); }
 .fmt-icon-btn.favourited { background:#ff4b6e; }
 
-/* Expanded */
+/* EXPANDED CARD */
 .fmt-card.expanded { width:320px; height:450px; }
 
-
-/* Symptom cards row */
+/* =========================
+   SYMPTOM CARDS ROW
+========================= */
+/* Spread 5 cards evenly across the screen */
 .symptom-cards-row {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  justify-content: space-between; 
+  gap: 1rem; 
   margin-top: 2rem;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 1rem;
+  padding: 0 2rem 4rem 2rem; 
+  max-width: 100%; 
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Symptom card */
+
+/* =========================
+   SYMPTOM CARD
+========================= */
 .symptom-card {
   width: 180px;
   height: 250px;
@@ -137,4 +279,32 @@
   text-align: center;
   font-size: 0.95rem;
   color: #444;
+  overflow-y: auto;
 }
+
+/* =========================
+   SCROLLBAR STYLING
+========================= */
+.dot-info-box::-webkit-scrollbar,
+.symptom-cards-row::-webkit-scrollbar,
+.fmt-card-back::-webkit-scrollbar,
+.symptom-card-back::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dot-info-box::-webkit-scrollbar-thumb,
+.symptom-cards-row::-webkit-scrollbar-thumb,
+.fmt-card-back::-webkit-scrollbar-thumb,
+.symptom-card-back::-webkit-scrollbar-thumb {
+  background: rgba(140,75,255,0.4);
+  border-radius: 4px;
+}
+
+.dot-info-box::-webkit-scrollbar-track,
+.symptom-cards-row::-webkit-scrollbar-track,
+.fmt-card-back::-webkit-scrollbar-track,
+.symptom-card-back::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+

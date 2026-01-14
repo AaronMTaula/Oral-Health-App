@@ -1,41 +1,35 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import diagnosesData from "../data/diagnosesData";
 import mouthDiagram from "../images/Diagram Mouth.jpg";
+import coldImg from "../images/cold.jpg";
+import hotImg from "../images/hot.jpg";
+import bleedImg from "../images/bleed.jpg";
+import looseImg from "../images/loose.jpg";
+import sensitiveImg from "../images/sensitive.jpg";
+import AppBanner from "../components/Banner.jsx";
 import "./FindMyTeeth.css";
 
 const FindMyTeeth = () => {
-  /* =========================
-     CORE STATE
-  ========================= */
   const [allDiagnoses, setAllDiagnoses] = useState([...diagnosesData]);
-  const [dots, setDots] = useState([]); // { number, top, left, diagnosisId, boxTop, boxLeft }
+  const [dots, setDots] = useState([]);
   const [pendingDot, setPendingDot] = useState(null);
   const [confirmed, setConfirmed] = useState(false);
   const [activeDot, setActiveDot] = useState(null);
 
-  /* =========================
-     CARD STATE
-  ========================= */
   const [flippedCard, setFlippedCard] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
   const [blurredCard, setBlurredCard] = useState(null);
   const [favourites, setFavourites] = useState([]);
 
-  /* =========================
-     INFO BOX DRAG STATE
-  ========================= */
   const [boxDragPosition, setBoxDragPosition] = useState({ top: 0, left: 0 });
   const draggingRef = useRef(false);
   const dragOffsetRef = useRef({ x: 0, y: 0 });
   const diagramRef = useRef(null);
 
-  /* =========================
-     LOAD SAVED DOTS
-  ========================= */
+  // Load saved dots
   useEffect(() => {
     const saved = localStorage.getItem("fmtAssignments");
     if (!saved) return;
-
     try {
       const parsed = JSON.parse(saved).map((dot) => ({
         ...dot,
@@ -49,30 +43,20 @@ const FindMyTeeth = () => {
     }
   }, [allDiagnoses.length]);
 
-  /* =========================
-     DERIVED DATA
-  ========================= */
   const assignedDiagnosisIds = useMemo(() => dots.map((d) => d.diagnosisId), [dots]);
   const availableDiagnoses = useMemo(
     () => allDiagnoses.filter((d) => !assignedDiagnosisIds.includes(d.id.toString())),
     [allDiagnoses, assignedDiagnosisIds]
   );
 
-  /* =========================
-     DIAGRAM CLICK
-  ========================= */
   const handleDiagramClick = (e) => {
     if (confirmed || pendingDot) return;
     const rect = diagramRef.current.getBoundingClientRect();
     setPendingDot({ top: e.clientY - rect.top, left: e.clientX - rect.left });
   };
 
-  /* =========================
-     ASSIGN DIAGNOSIS
-  ========================= */
   const assignDiagnosisToDot = (diagnosisId) => {
     if (!pendingDot) return;
-
     const newDot = {
       number: dots.length + 1,
       top: pendingDot.top,
@@ -81,16 +65,12 @@ const FindMyTeeth = () => {
       boxTop: null,
       boxLeft: null,
     };
-
     const updatedDots = [...dots, newDot];
     setDots(updatedDots);
     setPendingDot(null);
     localStorage.setItem("fmtAssignments", JSON.stringify(updatedDots));
   };
 
-  /* =========================
-     UNDO & CONFIRM
-  ========================= */
   const undoLastDot = () => {
     const updatedDots = dots.slice(0, -1);
     setDots(updatedDots);
@@ -109,9 +89,6 @@ const FindMyTeeth = () => {
     }
   };
 
-  /* =========================
-     DRAG HANDLERS
-  ========================= */
   const startDrag = (e) => {
     if (!activeDot || e.target.closest(".close-btn")) return;
     draggingRef.current = true;
@@ -132,7 +109,6 @@ const FindMyTeeth = () => {
   const stopDrag = () => {
     if (!activeDot) return;
     draggingRef.current = false;
-
     const updatedDots = dots.map((dot) =>
       dot.number === activeDot.number
         ? { ...dot, boxTop: boxDragPosition.top, boxLeft: boxDragPosition.left }
@@ -151,12 +127,19 @@ const FindMyTeeth = () => {
     };
   });
 
-  /* =========================
-     FILTER DIAGNOSES FOR ACTIVE DOT
-  ========================= */
   const activeDiagnosis = activeDot
     ? allDiagnoses.filter((d) => d.id.toString() === activeDot.diagnosisId.toString())
     : [];
+
+  const symptomCards = [
+    { title: "Cold", desc: "Does it feel cold?", img: coldImg },
+    { title: "Hot", desc: "Is it hot or warmer than normal?", img: hotImg },
+    { title: "Bleed", desc: "Is there blood, does it bleed a lot or a little?", img: bleedImg },
+    { title: "Loose", desc: "Wobble marks around it and movement when hovering", img: looseImg },
+    { title: "Sensitive", desc: "Is it sensitive, sharp pain?", img: sensitiveImg },
+  ];
+
+  const [flippedSymptom, setFlippedSymptom] = useState(null);
 
   return (
     <div className="fmt-container">
@@ -166,7 +149,6 @@ const FindMyTeeth = () => {
       <div className="mouth-diagram" ref={diagramRef} onClick={handleDiagramClick}>
         <img src={mouthDiagram} alt="Mouth diagram" />
 
-        {/* Existing dots */}
         {dots.map((dot) => (
           <div
             key={dot.number}
@@ -180,12 +162,10 @@ const FindMyTeeth = () => {
                 left: dot.boxLeft ?? dot.left,
               });
             }}
-            title={allDiagnoses.find((d) => d.id.toString() === dot.diagnosisId.toString())
-              ?.colloquialName}
+            title={allDiagnoses.find((d) => d.id.toString() === dot.diagnosisId.toString())?.colloquialName}
           />
         ))}
 
-        {/* Pending dot selector */}
         {pendingDot && (
           <div
             className="dot-selector"
@@ -200,27 +180,17 @@ const FindMyTeeth = () => {
           </div>
         )}
 
-        {/* Controls */}
         {!confirmed && (
           <>
             <button className="undo-btn" onClick={undoLastDot}>Undo</button>
-            <button
-              className="confirm-btn"
-              onClick={handleConfirm}
-              disabled={dots.length !== allDiagnoses.length}
-            >
-              Confirm
-            </button>
+            <button className="confirm-btn" onClick={handleConfirm} disabled={dots.length !== allDiagnoses.length}>Confirm</button>
           </>
         )}
       </div>
 
       {/* Dot info box */}
       {activeDot && (
-        <div
-          className="dot-info-box"
-          style={{ top: boxDragPosition.top, left: boxDragPosition.left }}
-        >
+        <div className="dot-info-box" style={{ top: boxDragPosition.top, left: boxDragPosition.left }}>
           <div className="dot-info-header" onMouseDown={startDrag}>
             <span>Diagnosis</span>
             <button className="close-btn" onClick={() => setActiveDot(null)}>×</button>
@@ -273,6 +243,7 @@ const FindMyTeeth = () => {
                             setBlurredCard(diag.id);
                           }}
                         >❓</button>
+                        {/* Heart button only for mouth cards */}
                         <button
                           className={`fmt-icon-btn ${favourites.includes(diag.id) ? "favourited" : ""}`}
                           onClick={(e) => {
@@ -298,7 +269,32 @@ const FindMyTeeth = () => {
           </div>
         </div>
       )}
-      
+
+      {/* SYMPTOM CARDS ROW */}
+      <div className="symptom-cards-row">
+        {symptomCards.map((card) => (
+          <div
+            key={card.title}
+            className={`symptom-card ${flippedSymptom === card.title ? "flipped" : ""}`}
+            onClick={() =>
+              setFlippedSymptom(flippedSymptom === card.title ? null : card.title)
+            }
+          >
+            <div className="symptom-card-inner">
+              <div className="symptom-card-front">
+                <img src={card.img} alt={card.title} />
+                <h3>{card.title}</h3>
+              </div>
+              <div className="symptom-card-back">
+                <p>{card.desc}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* App Banner */}
+      <AppBanner />
     </div>
   );
 };

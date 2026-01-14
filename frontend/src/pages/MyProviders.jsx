@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import "./MyProviders.css";
+import AppBanner from "../components/Banner.jsx";
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 
 /* =========================
@@ -51,7 +52,7 @@ const whatHappens = [
 /* =========================
    MAP CONFIG
 ========================= */
-const mapContainerStyle = { width: "100%", height: "400px" };
+const mapContainerStyle = { width: "100%", height: "100%" };
 const center = { lat: -36.8485, lng: 174.7633 }; // Auckland
 const options = { disableDefaultUI: true, zoomControl: true };
 
@@ -64,31 +65,51 @@ const MyProviders = () => {
   const [expandedWhen, setExpandedWhen] = useState(null);
   const [expandedWhat, setExpandedWhat] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const box1Ref = useRef(null);
-  const [gridRowHeight, setGridRowHeight] = useState("auto");
+  const [places, setPlaces] = useState([]);
 
   const mapRef = useRef(null);
+
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
   });
 
-  useEffect(() => {
-    if (box1Ref.current) {
-      setGridRowHeight(box1Ref.current.scrollHeight + "px");
-    }
-  }, [expandedWhen, whenToGo.length]);
-
-  useEffect(() => {
-    if (!mapRef.current || !window.google) return;
-    new window.google.maps.marker.AdvancedMarkerElement({
-      map: mapRef.current,
-      position: center,
-      title: "Local Dentist",
-    });
-  }, [isLoaded]);
-
   if (!isLoaded) return <p>Loading map...</p>;
+
+  /* =========================
+     HANDLE SEARCH
+  ========================= */
+  const handleSearch = () => {
+    if (!mapRef.current || !searchQuery) return;
+
+    const service = new window.google.maps.places.PlacesService(mapRef.current);
+
+    service.textSearch(
+      { query: `${searchQuery} dentist`, fields: ["name", "geometry", "formatted_address"] },
+      (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          setPlaces(results);
+
+          // Clear old markers
+          mapRef.current.markers?.forEach((m) => m.setMap(null));
+          mapRef.current.markers = [];
+
+          // Add new markers
+          results.forEach((place) => {
+            const marker = new window.google.maps.Marker({
+              map: mapRef.current,
+              position: place.geometry.location,
+              title: place.name,
+            });
+            mapRef.current.markers.push(marker);
+          });
+
+          // Center map on first result
+          if (results[0]) mapRef.current.panTo(results[0].geometry.location);
+        }
+      }
+    );
+  };
 
   return (
     <section className="providers-page">
@@ -102,30 +123,22 @@ const MyProviders = () => {
       </header>
 
       {/* 2x2 GRID */}
-      <div className="providers-grid" style={{ "--grid-row-height": gridRowHeight }}>
+      <div className="providers-grid">
         {/* BOX 1: WHEN */}
-        <div ref={box1Ref} className="providers-box text-box">
+        <div className="providers-box text-box">
           <h2>When do you need to go to the dentist?</h2>
           <div className="bullet-container">
-            {expandedWhen !== null ? (
-              <div className="expanded-bullet fade-slide">
-                <span className="bullet-title">{whenToGo[expandedWhen].title}</span>
-                <p className="bullet-detail">{whenToGo[expandedWhen].detail}</p>
-                <button className="close-btn" onClick={() => setExpandedWhen(null)}>✕ Close</button>
-              </div>
-            ) : (
-              <ul>
-                {whenToGo.map((item, index) => (
-                  <li
-                    key={index}
-                    onMouseEnter={() => setActiveWhenIndex(index % whenImages.length)}
-                    onClick={() => setExpandedWhen(index)}
-                  >
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul>
+              {whenToGo.map((item, index) => (
+                <li
+                  key={index}
+                  onMouseEnter={() => setActiveWhenIndex(index % whenImages.length)}
+                  onClick={() => setExpandedWhen(index)}
+                >
+                  {item.title}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -157,54 +170,66 @@ const MyProviders = () => {
         <div className="providers-box text-box">
           <h2>What will happen at the dentist</h2>
           <div className="bullet-container">
-            {expandedWhat !== null ? (
-              <div className="expanded-bullet fade-slide">
-                <span className="bullet-title">{whatHappens[expandedWhat].title}</span>
-                <p className="bullet-detail">{whatHappens[expandedWhat].detail}</p>
-                <button className="close-btn" onClick={() => setExpandedWhat(null)}>✕ Close</button>
-              </div>
-            ) : (
-              <ul>
-                {whatHappens.map((item, index) => (
-                  <li
-                    key={index}
-                    onMouseEnter={() => setActiveWhatIndex(index % whatImages.length)}
-                    onClick={() => setExpandedWhat(index)}
-                  >
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul>
+              {whatHappens.map((item, index) => (
+                <li
+                  key={index}
+                  onMouseEnter={() => setActiveWhatIndex(index % whatImages.length)}
+                  onClick={() => setExpandedWhat(index)}
+                >
+                  {item.title}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
 
-      {/* GOOGLE MAPS */}
-      <div className="map-full-width">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={12}
-          options={options}
-          onLoad={(map) => (mapRef.current = map)}
-        />
-      </div>
-
-      {/* SEARCH BOX */}
-      <div className="search-box-container">
-        <div className="providers-box search-box">
-          <h2>Find your oral health team</h2>
-          <p>Type your suburb or school below to find the best dental team for you:</p>
+      {/* MAP & SEARCH SECTION */}
+      <section className="map-search-section">
+        {/* LEFT: SEARCH PANEL */}
+        <div className="search-panel">
+          <h2>Find your local dentist</h2>
+          <p>Type your suburb or school below to find the nearest dental practices:</p>
           <input
             type="text"
             placeholder="Enter suburb or school..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
-          {searchQuery && <div className="search-results">Results for "{searchQuery}" (demo placeholder)</div>}
+
+          {/* SEARCH RESULTS */}
+          {places.length > 0 && (
+            <div className="search-results-panel">
+              {places.map((place, index) => (
+                <div
+                  key={index}
+                  className="search-result-item"
+                  onClick={() => mapRef.current.panTo(place.geometry.location)}
+                >
+                  <span className="practice-name">{place.name}</span>
+                  <span className="practice-address">{place.formatted_address}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+
+        {/* RIGHT: GOOGLE MAP */}
+        <div className="map-panel">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+            options={options}
+            onLoad={(map) => (mapRef.current = map)}
+          />
+        </div>
+      </section>
+
+      {/* App Banner */}
+      <AppBanner />
     </section>
   );
 };

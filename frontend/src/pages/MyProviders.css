@@ -1,77 +1,61 @@
-/* =========================
-   GLOBAL BOX-SIZING
-========================= */
+:root {
+  --dot-size: 14px;
+  --bullet-spacing: 0.8rem;
+  --transition-speed: 0.35s;
+  --image-width: 100%;
+  --image-height: 200px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* =========================
-   PAGE LAYOUT
-========================= */
 .providers-page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  padding: 2rem;
 }
 
-/* =========================
-   HEADER
-========================= */
 .providers-header {
   text-align: center;
-  padding: 4rem 2rem 3rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  margin-bottom: 2rem;
 }
 
 .providers-header h1 {
-  font-size: clamp(2.2rem, 3vw, 3rem);
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .providers-header p {
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.6;
 }
 
 /* =========================
-   FULL SCREEN GRID
+   2x2 GRID FOR BULLETS
 ========================= */
 .providers-grid {
-  flex: 1;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* =========================
-   BOXES
-========================= */
 .providers-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  background: #fff;
+  padding: 1rem 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  position: relative;
 }
 
-/* =========================
-   TEXT BOXES (PURPLE BACKGROUND)
-========================= */
-.text-box {
-  background: rgba(217, 123, 254, 0.5); /* #d97bfe @ 50% */
-  padding: 2rem 2.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.text-box h2 {
+.text-box h2,
+.search-box h2 {
   margin-bottom: 1rem;
-  flex-shrink: 0; /* Title stays pinned */
+  font-size: 1.3rem;
 }
 
 .text-box ul {
@@ -81,112 +65,103 @@
 }
 
 .text-box li {
-  padding: 0.65rem 0;
+  margin-bottom: var(--bullet-spacing);
   cursor: pointer;
-  transition: color 0.25s ease, transform 0.2s ease;
+  position: relative;
+  transition: background var(--transition-speed) ease;
 }
 
 .text-box li:hover {
-  color: #ffffff;
-  transform: translateX(4px);
+  background: rgba(0, 120, 215, 0.05);
 }
 
-/* =========================
-   BULLET CONTAINER & EXPANDED ITEM
-========================= */
+.bullet-title {
+  font-weight: bold;
+}
+
 .bullet-container {
-  flex: 1;
-  overflow-y: auto;   /* vertical scroll only */
-  overflow-x: hidden; /* prevent horizontal scroll */
   display: flex;
   flex-direction: column;
 }
 
 .expanded-bullet {
-  opacity: 0;
-  transform: translateY(-10px);
-  animation: fadeSlideIn 0.4s forwards;
   padding-top: 0.5rem;
 }
 
-.bullet-title {
-  font-weight: bold;
-  font-size: 1.05rem;
-}
-
 .bullet-detail {
-  margin-top: 0.5rem;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
-/* Close button */
 .close-btn {
   margin-top: 1rem;
   background: transparent;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
-  color: #fff;
-  padding: 0.2rem 0.5rem;
-  transition: color 0.2s;
+  color: #333;
 }
 
-.close-btn:hover {
-  color: #000;
-}
-
-/* =========================
-   IMAGE BOXES
-========================= */
 .image-box {
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.fade-image {
-  position: absolute;
-  inset: 1.5rem;
-  width: calc(100% - 3rem);
-  height: calc(100% - 3rem);
+.image-box img {
+  width: var(--image-width);
+  height: var(--image-height);
   object-fit: contain;
   opacity: 0;
-  transform: scale(1.03);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity var(--transition-speed) ease;
 }
 
-.fade-image.active {
+.image-box img.active {
   opacity: 1;
-  transform: scale(1);
 }
 
-/* =========================
-   ANIMATIONS
-========================= */
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.map-full-width {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 400px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 0.5rem;
+}
+
+.search-results {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: #555;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
+  .providers-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .image-box img {
+    height: 150px;
+  }
+  .map-full-width {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
   .providers-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
   }
-
-  .providers-box {
-    min-height: 50vh;
-  }
-
-  .text-box {
-    padding: 2rem 1.5rem;
+  .map-full-width {
+    height: 250px;
   }
 }

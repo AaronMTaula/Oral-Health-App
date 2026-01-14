@@ -65,23 +65,22 @@ const MyProviders = () => {
   const [expandedWhat, setExpandedWhat] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const mapRef = useRef(null);
   const box1Ref = useRef(null);
-  const [gridHeight, setGridHeight] = useState("auto");
+  const [gridRowHeight, setGridRowHeight] = useState("auto");
 
+  const mapRef = useRef(null);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   });
 
   useEffect(() => {
     if (box1Ref.current) {
-      setGridHeight(box1Ref.current.scrollHeight + "px");
+      setGridRowHeight(box1Ref.current.scrollHeight + "px");
     }
   }, [expandedWhen, whenToGo.length]);
 
   useEffect(() => {
     if (!mapRef.current || !window.google) return;
-
     new window.google.maps.marker.AdvancedMarkerElement({
       map: mapRef.current,
       position: center,
@@ -97,13 +96,13 @@ const MyProviders = () => {
       <header className="providers-header">
         <h1>Get to know your local dentists!</h1>
         <p>
-          Whether it's on the school dental bus or at your local clinic, it's
-          important that you see a dentist at least every year. For all under 18s, it's free!
+          Whether it’s on the school dental bus or at your local clinic, it’s
+          important that you see a dentist at least every year. For all under 18s, it’s free!
         </p>
       </header>
 
-      {/* 2x2 BULLET GRID */}
-      <div className="providers-grid" style={{ gridTemplateRows: `${gridHeight} ${gridHeight}` }}>
+      {/* 2x2 GRID */}
+      <div className="providers-grid" style={{ "--grid-row-height": gridRowHeight }}>
         {/* BOX 1: WHEN */}
         <div ref={box1Ref} className="providers-box text-box">
           <h2>When do you need to go to the dentist?</h2>
@@ -181,7 +180,7 @@ const MyProviders = () => {
         </div>
       </div>
 
-      {/* GOOGLE MAPS BELOW GRID */}
+      {/* GOOGLE MAPS */}
       <div className="map-full-width">
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
@@ -192,7 +191,7 @@ const MyProviders = () => {
         />
       </div>
 
-      {/* SEARCH BOX BELOW MAP */}
+      {/* SEARCH BOX */}
       <div className="search-box-container">
         <div className="providers-box search-box">
           <h2>Find your oral health team</h2>

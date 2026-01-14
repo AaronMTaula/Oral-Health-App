@@ -1,371 +1,140 @@
-/* =========================
-   GLOBAL CONTROLS
-========================= */
 :root {
-  --img-width: 100%;
-  --img-height: 100%;
-  --img-object-fit: cover;
-  --img-object-position: center center;
-
-  /* Mouth diagram dots */
   --dot-size: 18px;
 }
 
-/* =========================
-   CONTAINER & TITLE
-========================= */
-.fmt-container {
-  padding: 6rem 2rem 2rem 2rem;
-  text-align: center;
-}
+/* Container & Title */
+.fmt-container { padding: 6rem 2rem 2rem; text-align: center; }
+.fmt-title { font-size: 2rem; margin-bottom: 1.2rem; font-weight: 700; }
 
-.fmt-title {
-  font-size: 2rem;
-  margin-bottom: 1.2rem;
-  color: #2a2a2a;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
+/* Mouth diagram */
+.mouth-diagram { position: relative; max-width: 520px; margin: 0 auto 4rem; }
+.mouth-diagram img { width: 100%; display: block; }
 
-/* =========================
-   INTRO TEXT
-========================= */
-.fmt-intro {
-  max-width: 720px;
-  margin: 0 auto 3rem auto;
-  color: #444;
-}
-
-.fmt-intro h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.75rem;
-  color: #2a2a2a;
-}
-
-.fmt-intro p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 0.6rem;
-}
-
-/* =========================
-   MOUTH DIAGRAM
-========================= */
-.mouth-diagram {
-  position: relative;
-  max-width: 520px;
-  margin: 0 auto 4rem auto;
-}
-
-.mouth-diagram img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* --- Interactive Dots --- */
+/* Mouth dots */
 .mouth-dot {
-  position: absolute;
-  width: var(--dot-size);
-  height: var(--dot-size);
-  background: #ffffff;
-  border-radius: 50%;
-  cursor: pointer;
+  position: absolute; width: var(--dot-size); height: var(--dot-size);
+  background: #fff; border-radius: 50%; cursor: pointer;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: 5;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.15); z-index: 5;
+}
+.mouth-dot:hover { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 0 4px rgba(140,75,255,0.35); }
+.mouth-dot::after { content:""; width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+
+/* Dot info box */
+.dot-info-box {
+  position: absolute; background:#fff; border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.18); padding:1rem; z-index:100;
+  width:450px; min-height:550px; max-height:80vh;
+  display:flex; flex-direction:column; gap:1rem;
+  overflow-y:auto;  /* Make the box scrollable */
 }
 
-.mouth-dot:hover {
-  transform: translate(-50%, -50%) scale(1.15);
-  box-shadow: 0 0 0 4px rgba(140, 75, 255, 0.35);
-}
+/* Header */
+.dot-info-header { display:flex; justify-content:space-between; align-items:center; cursor:grab; padding:0.5rem 1rem; background:#f3f0ff; border-radius:16px 16px 0 0; font-weight:600; }
+.dot-info-header:active { cursor:grabbing; }
+.close-btn { width:28px;height:28px;border:none;border-radius:50%;background:#ff4b6e;color:#fff;cursor:pointer; }
 
-.mouth-dot::after {
-  content: "";
-  width: 6px;
-  height: 6px;
-  background: #ffffff;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+/* Info + Card container */
+.info-card-container { display:flex; flex-direction:column; align-items:center; flex:1; gap:1rem; }
+.diagnosis-info { width:100%; text-align:center; }
+.dot-card-wrapper { width:100%; display:flex; justify-content:center; flex:1; }
 
-/* Tooltip for assigned diagnosis */
-.mouth-dot[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: #fff;
-  padding: 3px 6px;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  white-space: nowrap;
-  z-index: 25;
-}
+/* Card */
+.fmt-card { width:300px; height:400px; perspective:1000px; cursor:pointer; flex-shrink:0; }
+.fmt-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.8s cubic-bezier(0.22,0.61,0.36,1); }
+.fmt-card.flipped .fmt-card-inner { transform: rotateY(180deg); }
+.fmt-card-front, .fmt-card-back { position:absolute; width:100%; height:100%; border-radius:14px; backface-visibility:hidden; overflow:hidden; }
+.fmt-card-front img { width:100%; height:100%; object-fit:cover; border-radius:8px; border:5px solid #fff; filter:blur(5px); transition:filter 0.45s ease; }
+.fmt-card.front-unblurred .fmt-card-front img { filter:blur(0); }
 
-/* --- Floating Info Panel --- */
-.mouth-panel {
-  position: absolute;
-  bottom: -90px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #ffffff;
-  padding: 1rem 1.25rem;
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-  z-index: 10;
-  width: 260px;
-  text-align: center;
-}
+.fmt-card-back { background:#fafafa; padding:1rem; transform:rotateY(180deg); display:flex; flex-direction:column; overflow:auto; } /* scrollable */
+.fmt-card-back h2 { font-size:1.2rem; margin-bottom:0.35rem; color:#333; }
+.fmt-card-back span { font-size:0.95rem; color:#777; }
+.fmt-card-back p { font-size:0.9rem; margin-bottom:0.7rem; line-height:1.35; color:#444; }
 
-.mouth-panel h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.4rem;
-  color: #2a2a2a;
-}
+/* Actions */
+.fmt-actions { margin-top:auto; display:flex; gap:0.5rem; justify-content:flex-end; }
+.fmt-icon-btn { width:42px;height:42px;border-radius:50%;border:none;background:#8c4bff;color:#fff;cursor:pointer; }
+.fmt-icon-btn:hover { background:#7436d0; transform:scale(1.1); }
+.fmt-icon-btn.favourited { background:#ff4b6e; }
 
-.mouth-panel p {
-  font-size: 0.9rem;
-  color: #555;
-}
+/* Expanded */
+.fmt-card.expanded { width:320px; height:450px; }
 
-/* =========================
-   GRID LAYOUT
-========================= */
-.fmt-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 220px);
-  column-gap: 2rem;
-  row-gap: 2rem;
+
+/* Symptom cards row */
+.symptom-cards-row {
+  display: flex;
+  gap: 1rem;
   justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 1rem;
 }
 
-/* =========================
-   CARD WRAPPER
-========================= */
-.fmt-card {
-  width: 220px;
-  height: 300px;
+/* Symptom card */
+.symptom-card {
+  width: 180px;
+  height: 250px;
   perspective: 1000px;
   cursor: pointer;
-  transition: transform 0.25s ease, width 0.4s ease, height 0.4s ease;
-  position: relative;
-  margin-top: 2rem;
+  flex-shrink: 0;
 }
 
-.fmt-card:hover {
-  transform: scale(1.03);
-}
-
-/* =========================
-   EXPANDED CARD
-========================= */
-.fmt-card.expanded {
-  grid-column: span 3;
-  width: 100% !important;
-  height: 450px !important;
-  cursor: default;
-  z-index: 5;
-  transform: none !important;
-  margin-top: 5rem;
-  margin-bottom: 5rem;
-}
-
-.fmt-card.expanded .fmt-card-inner {
-  height: 100%;
-}
-
-.fmt-card.expanded .fmt-card-back {
-  font-size: 1rem;
-  padding: 1.5rem;
-}
-
-/* =========================
-   INNER ROTATION
-========================= */
-.fmt-card-inner {
-  position: relative;
+.symptom-card-inner {
   width: 100%;
   height: 100%;
-  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative;
   transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.22,0.61,0.36,1);
 }
 
-.fmt-card.flipped .fmt-card-inner {
+.symptom-card.flipped .symptom-card-inner {
   transform: rotateY(180deg);
 }
 
-/* =========================
-   CARD FACES
-========================= */
-.fmt-card-front,
-.fmt-card-back {
+.symptom-card-front,
+.symptom-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 14px;
+  border-radius: 12px;
   backface-visibility: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   overflow: hidden;
 }
 
-/* --- FRONT --- */
-.fmt-card-front {
-  background: #ffffff;
+.symptom-card-front {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.symptom-card-front img {
+  width: 80%;
+  height: auto;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+.symptom-card-front h3 {
+  font-size: 1rem;
+  color: #333;
+  text-align: center;
+}
+
+.symptom-card-back {
+  background: #fafafa;
+  transform: rotateY(180deg);
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
-}
-
-.fmt-card-front img {
-  width: var(--img-width);
-  height: var(--img-height);
-  object-fit: var(--img-object-fit);
-  object-position: var(--img-object-position);
-  border-radius: 8px;
-  border: 5px solid #ffffff;
-  filter: blur(5px);
-  transition: filter 0.45s ease;
-}
-
-.fmt-card.front-unblurred .fmt-card-front img {
-  filter: blur(0);
-}
-
-/* --- BACK --- */
-.fmt-card-back {
-  background: #fafafa;
-  padding: 1rem;
-  text-align: left;
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding-bottom: 4rem;
-}
-
-/* =========================
-   TYPOGRAPHY
-========================= */
-.fmt-card-back h2 {
-  font-size: 1.2rem;
-  margin-bottom: 0.35rem;
-  color: #333;
-}
-
-.fmt-card-back span {
+  text-align: center;
   font-size: 0.95rem;
-  color: #777;
-}
-
-.fmt-card-back p {
-  font-size: 0.9rem;
-  margin-bottom: 0.7rem;
-  line-height: 1.35;
   color: #444;
-}
-
-/* =========================
-   CARD ACTION BUTTONS
-========================= */
-.fmt-actions {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 0.6rem;
-}
-
-.fmt-icon-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: none;
-  background: #8c4bff;
-  color: #ffffff;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
-}
-
-.fmt-icon-btn:hover {
-  transform: scale(1.1);
-  background: #7436d0;
-}
-
-.fmt-icon-btn.favourited {
-  background: #ff4b6e;
-}
-
-/* =========================
-   TREATMENT SECTION
-========================= */
-.fmt-treatment {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-/* =========================
-   DOT SELECTOR, UNDO & CONFIRM
-========================= */
-.dot-selector {
-  position: absolute;
-  z-index: 20;
-  background: #ffffff;
-  padding: 0.5rem;
-  border-radius: 10px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
-  font-size: 0.9rem;
-}
-
-.dot-selector select {
-  font-size: 0.9rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-}
-
-/* Undo and Confirm buttons */
-.undo-btn,
-.confirm-btn {
-  position: absolute;
-  bottom: -60px;
-  padding: 0.6rem 1.2rem;
-  border-radius: 12px;
-  border: none;
-  background: #8c4bff;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
-  z-index: 15;
-}
-
-.undo-btn:hover,
-.confirm-btn:hover {
-  transform: scale(1.05);
-  background: #7436d0;
-}
-
-.undo-btn {
-  left: 0;
-}
-
-.confirm-btn {
-  right: 0;
-}
-
-.confirm-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./MyProviders.css";
 import AppBanner from "../components/Banner.jsx";
 import { GoogleMap, useLoadScript } from "@react-google-maps/api";
@@ -67,18 +67,29 @@ const MyProviders = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [places, setPlaces] = useState([]);
 
-  const mapRef = useRef(null);
+  const box1Ref = useRef(null);
+  const [gridHeight, setGridHeight] = useState("auto");
 
+  const mapRef = useRef(null);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
 
+  /* =========================
+     GRID HEIGHT FOR EXPANDABLE BULLETS
+  ========================== */
+  useEffect(() => {
+    if (box1Ref.current) {
+      setGridHeight(box1Ref.current.scrollHeight + "px");
+    }
+  }, [expandedWhen, whenToGo.length]);
+
   if (!isLoaded) return <p>Loading map...</p>;
 
   /* =========================
      HANDLE SEARCH
-  ========================= */
+  ========================== */
   const handleSearch = () => {
     if (!mapRef.current || !searchQuery) return;
 
@@ -123,22 +134,30 @@ const MyProviders = () => {
       </header>
 
       {/* 2x2 GRID */}
-      <div className="providers-grid">
+      <div className="providers-grid" style={{ gridTemplateRows: `${gridHeight} ${gridHeight}` }}>
         {/* BOX 1: WHEN */}
-        <div className="providers-box text-box">
+        <div ref={box1Ref} className="providers-box text-box">
           <h2>When do you need to go to the dentist?</h2>
           <div className="bullet-container">
-            <ul>
-              {whenToGo.map((item, index) => (
-                <li
-                  key={index}
-                  onMouseEnter={() => setActiveWhenIndex(index % whenImages.length)}
-                  onClick={() => setExpandedWhen(index)}
-                >
-                  {item.title}
-                </li>
-              ))}
-            </ul>
+            {expandedWhen !== null ? (
+              <div className="expanded-bullet fade-slide">
+                <span className="bullet-title">{whenToGo[expandedWhen].title}</span>
+                <p className="bullet-detail">{whenToGo[expandedWhen].detail}</p>
+                <button className="close-btn" onClick={() => setExpandedWhen(null)}>✕ Close</button>
+              </div>
+            ) : (
+              <ul>
+                {whenToGo.map((item, index) => (
+                  <li
+                    key={index}
+                    onMouseEnter={() => setActiveWhenIndex(index % whenImages.length)}
+                    onClick={() => setExpandedWhen(index)}
+                  >
+                    {item.title}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -170,17 +189,25 @@ const MyProviders = () => {
         <div className="providers-box text-box">
           <h2>What will happen at the dentist</h2>
           <div className="bullet-container">
-            <ul>
-              {whatHappens.map((item, index) => (
-                <li
-                  key={index}
-                  onMouseEnter={() => setActiveWhatIndex(index % whatImages.length)}
-                  onClick={() => setExpandedWhat(index)}
-                >
-                  {item.title}
-                </li>
-              ))}
-            </ul>
+            {expandedWhat !== null ? (
+              <div className="expanded-bullet fade-slide">
+                <span className="bullet-title">{whatHappens[expandedWhat].title}</span>
+                <p className="bullet-detail">{whatHappens[expandedWhat].detail}</p>
+                <button className="close-btn" onClick={() => setExpandedWhat(null)}>✕ Close</button>
+              </div>
+            ) : (
+              <ul>
+                {whatHappens.map((item, index) => (
+                  <li
+                    key={index}
+                    onMouseEnter={() => setActiveWhatIndex(index % whatImages.length)}
+                    onClick={() => setExpandedWhat(index)}
+                  >
+                    {item.title}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
@@ -228,7 +255,7 @@ const MyProviders = () => {
         </div>
       </section>
 
-      {/* App Banner */}
+      {/* APP BANNER */}
       <AppBanner />
     </section>
   );

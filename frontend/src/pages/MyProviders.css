@@ -1,0 +1,120 @@
+/* =========================
+   PAGE LAYOUT
+========================= */
+.providers-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   HEADER
+========================= */
+.providers-header {
+  text-align: center;
+  padding: 4rem 2rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.providers-header h1 {
+  font-size: clamp(2.2rem, 3vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.providers-header p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* =========================
+   FULL SCREEN GRID
+========================= */
+.providers-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+/* =========================
+   BOXES
+========================= */
+.providers-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =========================
+   TEXT BOXES (PURPLE BACKGROUND)
+========================= */
+.text-box {
+  background: rgba(217, 123, 254, 0.5); /* #d97bfe @ 50% */
+  padding: 3rem 3.5rem;
+  overflow-y: auto;
+}
+
+.text-box h2 {
+  margin-bottom: 1.4rem;
+}
+
+.text-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.text-box li {
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.text-box li:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+/* =========================
+   IMAGE BOXES
+========================= */
+.image-box {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.fade-image {
+  position: absolute;
+  inset: 2rem;
+  width: calc(100% - 4rem);
+  height: calc(100% - 4rem);
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-image.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .providers-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .providers-box {
+    min-height: 50vh;
+  }
+
+  .text-box {
+    padding: 2.5rem 2rem;
+  }
+}

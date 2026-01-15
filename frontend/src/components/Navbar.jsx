@@ -25,13 +25,12 @@ const Navbar = () => {
   const leftLinks = [
     { name: 'Home', path: '/' },
     { name: 'Profile', path: '/profile', auth: true },
-    { name: 'My Providers', path: '/my-providers' },
-    { name: 'FMT', path: '/find-my-teeth' }
+    { name: 'My Providers', path: '/my-providers' }
   ];
 
   const rightLinks = [
     { name: "Let's Talk", path: '/lets-talk' },
-    { name: 'Settings', path: '/settings' },
+    { name: 'FMT', path: '/find-my-teeth' },
     { name: 'Health', path: '/health' },
     { name: currentUser ? 'Logout' : 'Login', path: '/auth', action: currentUser ? logout : null }
   ];

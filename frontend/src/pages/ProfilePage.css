@@ -13,15 +13,13 @@
    SIDEBAR
 ========================= */
 .profile-sidebar {
-  background: #6db1ff;
+  background: #17559c;
   color: white;
   padding: 3.5rem 0;
   position: relative;
   overflow: hidden; 
-
   border-radius: 24px;
 }
-
 
 /* Sidebar title */
 .sidebar-title {
@@ -60,56 +58,59 @@
   opacity: 1;
   background: rgba(255, 255, 255, 0.12);
 }
-
 /* =========================
    ACTIVE BUTTON
-   - White button with floating pill effect
 ========================= */
 .sidebar-nav button.active {
-  background: #f4f7fb;     /* Button is white */
-  color: #6db1ff;          /* Text color */
+  background: #f4f7fb;
+  color: #17559c;
   font-weight: 600;
-  opacity: 1;
   position: relative;
   z-index: 2;
-  padding: 1.5rem 6rem;    /* You can adjust horizontal padding here */
+
+  /* Vertical size is now controlled here */
+  padding: 1.5rem 6rem;
 }
 
 /* =========================
-   BLUE BACKGROUND SQUARE (BEHIND PILL)
-   - Gives floating pill effect
-   - Adjust `left` to move horizontally
+   BLUE BACKGROUND (FLOATING BASE)
 ========================= */
 .sidebar-nav button.active::after {
   content: "";
   position: absolute;
-  top: 10.5px;             /* Adjust vertical position if needed */
-  left: 0px;                /* <-- Adjust this to move the blue square */
-  height: 70%;              /* Match active button height */
-  width: 70px;              /* Width of the background square */
-  background: #6db1ff;      /* Same as sidebar background */
-  z-index: 0;               /* Behind the pill */
-  pointer-events: none;     /* Doesn’t block clicks */
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 64px;               /* ← adjust horizontal size here */
+
+  background: #17559c;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* =========================
    WHITE PILL SHAPE
-   - Stays above blue square
-   - Adjust `left` to move horizontally with blue square
+   - Shorter height for stronger curve
 ========================= */
 .sidebar-nav button.active::before {
   content: "";
   position: absolute;
-  top: 12px;             /* Match blue square vertical position */
-  left: 25px;               /* <-- Adjust this to move the pill shape horizontally */
-  height: 65%;             
-  width: 50px;             
-  background: #f4f7fb;     
+  top: 50%;
+  left: 22px;                /* Horizontal alignment */
+  transform: translateY(-50%);
+
+  height: 66%;               /* ↓ SHORTER = more curve */
+  width: 48px;
+
+  background: #f4f7fb;
   border-top-left-radius: 999px;
   border-bottom-left-radius: 999px;
-  z-index: 1;              
+
+  z-index: 1;
   pointer-events: none;
 }
+
 
 /* =========================
    MASK RECTANGLES WITH CURVES
@@ -120,18 +121,16 @@
   position: absolute;
   left: 0;
   width: 100%;
-  height: var(--active-extend, 12px); 
-  background: #6db1ff; 
+  height: var(--active-extend, 12px);
+  background: #17559c;
   z-index: 3;
 }
 
-/* Top mask with bottom-right curve */
 .sidebar-nav button.active .mask-top {
   top: 0;
   border-bottom-right-radius: var(--curve-size, 20px);
 }
 
-/* Bottom mask with top-right curve */
 .sidebar-nav button.active .mask-bottom {
   bottom: 0;
   border-top-right-radius: var(--curve-size, 20px);

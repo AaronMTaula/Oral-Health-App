@@ -61,24 +61,46 @@ const ProfilePage = () => {
 
         <nav className="sidebar-nav">
           {["🦷 My Teeth", "❤️ Saved Cards", "📅 Reminders", "⚙️ Settings"].map(
-            (label, index) => (
-              <button
-                key={label}
-                ref={(el) => (buttonRefs.current[index] = el)}
-                className={activeIndex === index ? "active" : ""}
-                onClick={() => setActiveIndex(index)}
-              >
-                {label}
+            (label, index) => {
+              const isActive = activeIndex === index;
 
-                {/* Top and bottom mask rectangles */}
-                {activeIndex === index && (
-                  <>
-                    <span className="mask-top" />
-                    <span className="mask-bottom" />
-                  </>
-                )}
-              </button>
-            )
+              // dynamically calculate vertical positions for pill & blue background
+              const pillTop =
+                isActive && buttonRefs.current[index]
+                  ? buttonRefs.current[index].offsetTop + 12
+                  : 12;
+              const bgTop =
+                isActive && buttonRefs.current[index]
+                  ? buttonRefs.current[index].offsetTop + 10.5
+                  : 10.5;
+
+              return (
+                <button
+                  key={label}
+                  ref={(el) => (buttonRefs.current[index] = el)}
+                  className={isActive ? "active" : ""}
+                  style={
+                    isActive
+                      ? {
+                          "--pill-top": `${pillTop}px`,
+                          "--bg-top": `${bgTop}px`
+                        }
+                      : {}
+                  }
+                  onClick={() => setActiveIndex(index)}
+                >
+                  {label}
+
+                  {/* Top and bottom mask rectangles */}
+                  {isActive && (
+                    <>
+                      <span className="mask-top" />
+                      <span className="mask-bottom" />
+                    </>
+                  )}
+                </button>
+              );
+            }
           )}
         </nav>
       </aside>

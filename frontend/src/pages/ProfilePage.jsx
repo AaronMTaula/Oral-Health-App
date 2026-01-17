@@ -1,39 +1,35 @@
 // frontend/src/pages/ProfilePage.jsx
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/useAuth';
-import { User, Mail, Smartphone, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import './ProfilePage.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "../context/useAuth";
+import { User, Mail, Heart, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import "./ProfilePage.css";
 
 const ProfilePage = () => {
   const { currentUser, loading: authLoading, token } = useAuth();
   const [userData, setUserData] = useState(null);
   const [apiLoading, setApiLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const buttonRefs = useRef([]);
   const navigate = useNavigate();
 
+  /* =========================
+     FETCH USER
+  ========================= */
   useEffect(() => {
-    if (authLoading || !currentUser) {
-      setUserData(null);
-      setApiLoading(false);
-      return;
-    }
+    if (authLoading || !currentUser) return;
 
     const fetchUserProfile = async () => {
-      setApiLoading(true);
       try {
-        const response = await fetch(`/api/users/me`, {
+        const response = await fetch("/api/users/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
-        if (!response.ok) {
-          throw new Error('User not found or network error.');
-        }
-
+        if (!response.ok) throw new Error("Could not load profile");
         const data = await response.json();
         setUserData(data);
       } catch (err) {
-        console.error('Error fetching user data from backend:', err);
-        setUserData(null);
         setError(err.message);
       } finally {
         setApiLoading(false);
@@ -44,71 +40,115 @@ const ProfilePage = () => {
   }, [currentUser, authLoading, token]);
 
   if (authLoading || apiLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-        <p>Loading profile...</p>
-      </div>
-    );
+    return <div className="profile-loading">Loading your profile…</div>;
   }
 
   if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-        <p>Please log in to view your profile.</p>
-      </div>
-    );
+    return <div className="profile-loading">Please log in to view your profile.</div>;
   }
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-        <p>Error: {error}</p>
-      </div>
-    );
+    return <div className="profile-loading">Error: {error}</div>;
   }
 
-  const ProfileContent = () => (
-    <div className="min-h-screen p-8 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-      <main className="max-w-4xl mx-auto space-y-8">
-        <section className="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border-t-4 border-blue-500">
-          <div className="flex items-center space-x-4 mb-4">
-            <User className="w-8 h-8 text-blue-500" />
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Personal Information</h2>
+  const favourites = userData?.favouriteCards || [];
+
+  return (
+    <div className="profile-dashboard">
+      {/* SIDEBAR */}
+      <aside className="profile-sidebar">
+        <h2 className="sidebar-title">My Health</h2>
+
+        <nav className="sidebar-nav">
+          {["🦷 My Teeth", "❤️ Saved Cards", "📅 Reminders", "⚙️ Settings"].map(
+            (label, index) => (
+              <button
+                key={label}
+                ref={(el) => (buttonRefs.current[index] = el)}
+                className={activeIndex === index ? "active" : ""}
+                onClick={() => setActiveIndex(index)}
+              >
+                {label}
+
+                {/* Top and bottom mask rectangles */}
+                {activeIndex === index && (
+                  <>
+                    <span className="mask-top" />
+                    <span className="mask-bottom" />
+                  </>
+                )}
+              </button>
+            )
+          )}
+        </nav>
+      </aside>
+
+      {/* MAIN CONTENT */}
+      <main className="profile-main">
+        <section className="profile-card">
+          <div className="profile-card-header">
+            <User className="icon-blue" />
+            <h2>About Me</h2>
           </div>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            This is where you can view and manage your personal details.
+
+          <p className="profile-help-text">
+            This is your dental health profile. It helps you keep your smile healthy 🦷
           </p>
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center">
-              <Mail className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-              <p className="text-gray-700 dark:text-gray-300"><strong>Email:</strong> {userData.email || 'Not provided'}</p>
+
+          <div className="profile-details">
+            <div>
+              <Mail size={18} />
+              <span>{userData.email}</span>
             </div>
-            <div className="flex items-center">
-              <Smartphone className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-              <p className="text-gray-700 dark:text-gray-300"><strong>Name:</strong> {userData.name || 'Not provided'}</p>
+            <div>
+              <User size={18} />
+              <span>{userData.name || "Name not added yet"}</span>
             </div>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <button
-              onClick={() => navigate('/security')}
-              className="flex items-center px-4 py-2 text-sm font-semibold rounded-lg shadow-md transition-colors
-                         bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Security Settings
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </button>
           </div>
         </section>
-      </main>
-    </div>
-  );
 
-  return userData ? <ProfileContent /> : (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-      <div className="text-center mt-12">
-        <p className="text-xl">No profile data found.</p>
-        <p className="text-md mt-4">This could mean your user document does not exist in MongoDB yet.</p>
-      </div>
+        <section className="profile-card">
+          <div className="profile-card-header">
+            <Heart className="icon-pink" />
+            <h2>Saved Health Cards</h2>
+          </div>
+
+          {favourites.length === 0 ? (
+            <p className="profile-help-text">
+              You haven’t saved any health cards yet.
+              Explore the health section and tap ❤️ on a card.
+            </p>
+          ) : (
+            <div className="saved-cards-grid">
+              {favourites.map((card) => (
+                <div key={card.id} className="saved-card">
+                  {card.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+
+      {/* RIGHT PANEL */}
+      <aside className="profile-progress">
+        <div className="progress-card">
+          <Shield className="icon-green" />
+          <h3>Your Progress</h3>
+          <ul>
+            <li>⭐ Cards saved: {favourites.length}</li>
+            <li>🪥 Learning healthy habits</li>
+            <li>🎯 Goal: Brush twice daily</li>
+          </ul>
+
+          <button
+            onClick={() => navigate("/security")}
+            className="progress-button"
+          >
+            Account Safety
+          </button>
+        </div>
+      </aside>
     </div>
   );
 };

@@ -1,0 +1,46 @@
+/* =========================
+   Test Playground Styles
+========================= */
+
+.test-page {
+  padding: 4rem;
+  min-height: 100vh;
+  background: #f4f7fb;
+  font-family: "Inter", sans-serif;
+}
+
+.test-page h1 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+}
+
+.test-description {
+  max-width: 640px;
+  margin-bottom: 2.5rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* =========================
+   Sandbox Container
+========================= */
+
+.test-sandbox {
+  min-height: 400px;
+  padding: 2rem;
+  border: 2px dashed #9ca3af;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+/* Optional helper for quick tests */
+.test-box {
+  width: 200px;
+  height: 120px;
+  background: #4f46e5;
+  color: white;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+}

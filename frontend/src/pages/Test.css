@@ -1,3 +1,6 @@
+/* =========================
+   PAGE STYLES
+========================= */
 .test-page {
   padding: 2rem;
   font-family: Arial, sans-serif;
@@ -9,61 +12,76 @@
 
 .test-sandbox {
   display: flex;
-  flex-direction: column;
   gap: 20px;
-  width: 100%;
 }
 
-/* Sidebar */
+/* =========================
+   SIDEBAR
+========================= */
 .sidebar {
+  background: #17559c; /* dark blue */
+  color: white;
+  padding: 3.5rem 1rem;
+  border-radius: 24px;
   width: 220px;
+  position: relative;
+ 
+}
+
+.sidebar:has(.menu-item.active) {
+  width: 200px;
+}
+
+/* Sidebar menu container */
+.sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0.75rem;
   position: relative;
+  z-index: 1;
 }
 
-/* Menu items */
+/* =========================
+   MENU ITEMS
+========================= */
 .menu-item {
   position: relative;
   cursor: pointer;
-  padding: 15px 40px 15px 10px;
-  overflow: hidden;
-  background: #f0f0f0;
-  border-radius: 8px;
+  padding: 0.9rem 2rem;
+  overflow: visible; /* allow pill & polygon to overflow */
+  background: transparent;
+  color: rgb(0, 0, 0);
+  font-size: 1rem;
+  border: none;
+  text-align: left;
+  width: 185px; /* change to move the edge of the polygon cone */
+  transition: opacity 0.25s ease;
 }
 
+.menu-item:hover {
+  opacity: 1;
+}
+
+/* Menu text */
 .menu-text {
   position: relative;
   z-index: 2;
-  display: block;
-  text-align: right;
-  font-weight: 500;
-  color: #333;
 }
 
-/* Left pill */
-.pill-left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 100%;
-  background: #007bff;
-  border-radius: 10px 0 0 10px;
-  z-index: 1;
-}
 
-/* Polygon cone */
+/* =========================
+   POLYGON CONE
+========================= */
 .active-bar-svg {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 0;
 }
 
 .active-bar-path {
-  fill: #3399ff;
+  fill: #ffffff; /* blue */
 }

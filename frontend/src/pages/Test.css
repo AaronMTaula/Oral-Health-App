@@ -1,46 +1,69 @@
-/* =========================
-   Test Playground Styles
-========================= */
-
 .test-page {
-  padding: 4rem;
-  min-height: 100vh;
-  background: #f4f7fb;
-  font-family: "Inter", sans-serif;
-}
-
-.test-page h1 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-  color: #1f2937;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
 }
 
 .test-description {
-  max-width: 640px;
-  margin-bottom: 2.5rem;
-  color: #4b5563;
-  line-height: 1.6;
+  margin-bottom: 2rem;
 }
-
-/* =========================
-   Sandbox Container
-========================= */
 
 .test-sandbox {
-  min-height: 400px;
-  padding: 2rem;
-  border: 2px dashed #9ca3af;
-  border-radius: 16px;
-  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }
 
-/* Optional helper for quick tests */
-.test-box {
-  width: 200px;
-  height: 120px;
-  background: #4f46e5;
-  color: white;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: relative;
+}
+
+/* Menu items */
+.menu-item {
+  position: relative;
+  cursor: pointer;
+  padding: 15px 40px 15px 10px;
+  overflow: hidden;
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.menu-text {
+  position: relative;
+  z-index: 2;
+  display: block;
+  text-align: right;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Left pill */
+.pill-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  background: #007bff;
+  border-radius: 10px 0 0 10px;
+  z-index: 1;
+}
+
+/* Polygon cone */
+.active-bar-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.active-bar-path {
+  fill: #3399ff;
 }

@@ -43,73 +43,77 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   const location = useLocation();
 
+  // Navbar shows on all pages except /auth
+  const showNavbar = location.pathname !== "/auth";
+
   return (
     <div className="App">
-      {location.pathname !== "/auth" && <Navbar />}
+      {/* Navbar */}
+      {showNavbar && <Navbar />}
 
-      <Routes>
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<Home />} />
+      <div style={{ flex: 1 }}>
+        <Routes>
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/" element={<Home />} />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/my-providers"
-          element={
-            <ProtectedRoute>
-              <MyProviders />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/my-providers"
+            element={
+              <ProtectedRoute>
+                <MyProviders />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/find-my-teeth"
-          element={
-            <ProtectedRoute>
-              <FindMyTeeth />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/find-my-teeth"
+            element={
+              <ProtectedRoute>
+                <FindMyTeeth />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/lets-talk"
-          element={
-            <ProtectedRoute>
-              <LetsTalk />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/lets-talk"
+            element={
+              <ProtectedRoute>
+                <LetsTalk />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/security"
-          element={
-            <ProtectedRoute>
-              <SecuritySettings />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/security"
+            element={
+              <ProtectedRoute>
+                <SecuritySettings />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/health"
-          element={
-            <ProtectedRoute>
-              <Health />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/health"
+            element={
+              <ProtectedRoute>
+                <Health />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* 🔬 Sandbox / Playground — DEV ONLY */}
-        {import.meta.env.DEV && (
-          <Route path="/test" element={<Test />} />
-        )}
-      </Routes>
+          {/* 🔬 Sandbox / Playground — DEV ONLY */}
+          {import.meta.env.DEV && <Route path="/test" element={<Test />} />}
+        </Routes>
+      </div>
     </div>
   );
 }

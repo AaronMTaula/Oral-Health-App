@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "./Test.css";
 
 const menuItems = ["Home", "Profile", "Settings", "Logout"];
@@ -28,8 +28,27 @@ const Test = () => {
               >
                 <span className="menu-text">{item}</span>
 
-                {/* Left pill */}
-                <div className="pill-left"></div>
+                {/* Animate mask rectangles */}
+                <AnimatePresence>
+                  {isActive && (
+                    <>
+                      <motion.span
+                        className="mask-top"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        exit={{ scaleX: 0 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                      />
+                      <motion.span
+                        className="mask-bottom"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        exit={{ scaleX: 0 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                      />
+                    </>
+                  )}
+                </AnimatePresence>
 
                 {/* Polygon cone */}
                 <svg
@@ -43,7 +62,7 @@ const Test = () => {
                     animate={{
                       d: isActive
                         ? // Expanded: right → left toward pill
-                          "M100,0 L100,100 L20,80 C0,80 0,20 20,20 Z"
+                          "M100,0 L100,100 L20,80 C5,80 5,20 20,20 Z"
                         : // Collapsed: thin line at right
                           "M100,0 L100,100 L100,90 C100,90 100,5 100,5 Z",
                     }}

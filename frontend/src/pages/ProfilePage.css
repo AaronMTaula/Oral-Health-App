@@ -122,7 +122,7 @@
   left: 0;
   width: 100%;
   height: var(--active-extend, 12px);
-  background: #17559c;
+  background: #767b81;
   z-index: 3;
 }
 

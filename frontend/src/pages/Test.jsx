@@ -43,9 +43,9 @@ const Test = () => {
                     animate={{
                       d: isActive
                         ? // Expanded: right → left toward pill
-                          "M100,5 L100,90 L20,80 C10,80 10,20 20,20 Z"
+                          "M100,0 L100,100 L20,80 C0,80 0,20 20,20 Z"
                         : // Collapsed: thin line at right
-                          "M100,5 L100,90 L100,90 C100,90 100,5 100,5 Z",
+                          "M100,0 L100,100 L100,90 C100,90 100,5 100,5 Z",
                     }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   />

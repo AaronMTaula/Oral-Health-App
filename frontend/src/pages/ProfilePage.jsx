@@ -103,7 +103,7 @@ const ProfilePage = () => {
             }
           )}
         </nav>
-      </aside>
+      </aside> 
 
       {/* MAIN CONTENT */}
       <main className="profile-main">

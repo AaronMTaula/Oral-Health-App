@@ -61,62 +61,78 @@ const ProfilePage = () => {
 
             return (
               <motion.button
-                key={label}
-                ref={(el) => (buttonRefs.current[index] = el)}
-                className={`menu-item ${isActive ? "active" : ""}`}
-                onClick={() => setActiveIndex(index)}
-                layout
-                animate={{
-                  height: isActive ? 200 : 120,
-                  scaleY: isActive ? 1 : 0.88,
-                }}
-                transition={{
-                  layout: { duration: 0.45, ease: "easeInOut" },
-                  scaleY: { duration: 0.3 },
-                }}
-              >
-                <span className="menu-text">{label}</span>
+  key={label}
+  ref={(el) => (buttonRefs.current[index] = el)}
+  className={`menu-item ${isActive ? "active" : ""}`}
+  onClick={() => setActiveIndex(index)}
+  layout
+  animate={{
+    height: isActive ? 200 : 120,
+    scaleY: isActive ? 1 : 0.88,
+    // Move inactive items closer to the active one
+    y: !isActive
+      ? index < activeIndex
+        ? 25 * (activeIndex - index) // items above active move down
+        : -35 * (index - activeIndex) // items below active move up
+      : 0,
+  }}
+  transition={{
+    layout: { duration: 0.45, ease: "easeInOut" },
+    scaleY: { duration: 0.3 },
+    y: { type: "spring", stiffness: 220, damping: 24 }, // smooth vertical movement
+  }}
+>
+  <span
+  className="menu-text"
+  style={{
+    fontWeight: isActive ? 700 : 400,   // bold if active
+    fontSize: isActive ? "1.2rem" : "1rem", // larger font if active
+    color: isActive ? "#0c0c0c" : "#cfc5d2", // highlighted color for active
+  }}
+>
+  {label}
+</span>
 
-                {/* Mask rectangles */}
-                <AnimatePresence>
-                  {isActive && (
-                    <>
-                      <motion.span
-                        className="mask-top"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        exit={{ scaleX: 0 }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                      />
-                      <motion.span
-                        className="mask-bottom"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        exit={{ scaleX: 0 }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                      />
-                    </>
-                  )}
-                </AnimatePresence>
+  {/* Mask rectangles */}
+  <AnimatePresence>
+    {isActive && (
+      <>
+        <motion.span
+          className="mask-top"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          exit={{ scaleX: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        />
+        <motion.span
+          className="mask-bottom"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          exit={{ scaleX: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        />
+      </>
+    )}
+  </AnimatePresence>
 
-                {/* Active polygon */}
-                <svg
-                  className="active-bar-svg"
-                  viewBox={`0 0 ${width} 500`}
-                  preserveAspectRatio="none"
-                >
-                  <motion.path
-                    className="active-bar-path"
-                    initial={false}
-                    animate={{
-                      d: isActive
-                        ? `M${width},0 L${width},500 L70,430 C10,450 0,100 60,80 Z`
-                        : `M${width},0 L${width},500 L${width},480 C${width},480 ${width},20 ${width},20 Z`,
-                    }}
-                    transition={{ duration: 0.45, ease: "easeInOut" }}
-                  />
-                </svg>
-              </motion.button>
+  {/* Active polygon */}
+  <svg
+    className="active-bar-svg"
+    viewBox={`0 0 ${width} 500`}
+    preserveAspectRatio="none"
+  >
+    <motion.path
+      className="active-bar-path"
+      initial={false}
+      animate={{
+        d: isActive
+          ? `M${width},0 L${width},500 L70,430 C10,450 0,100 60,80 Z`
+          : `M${width},0 L${width},500 L${width},480 C${width},480 ${width},20 ${width},20 Z`,
+      }}
+      transition={{ duration: 0.45, ease: "easeInOut" }}
+    />
+  </svg>
+</motion.button>
             );
           })}
         </nav>

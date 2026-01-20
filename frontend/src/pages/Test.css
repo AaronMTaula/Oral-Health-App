@@ -1,3 +1,4 @@
+
 /* =========================
    PAGE STYLES
 ========================= */
@@ -53,7 +54,7 @@
   font-size: 1rem;
   border: none;
   text-align: left;
-  width: 185px; /* controls polygon width too */
+  width: var(--active-bar-width);
   transition: opacity 0.25s ease;
 }
 

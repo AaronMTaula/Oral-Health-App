@@ -1,5 +1,10 @@
+:root {
+  --sidebar-padding-x: 2rem;
+  --active-bar-width: 290px;
+}
+
 /* =========================
-   Profile Dashboard Layout
+   PROFILE DASHBOARD LAYOUT
 ========================= */
 .profile-dashboard {
   display: grid;
@@ -15,10 +20,10 @@
 .profile-sidebar {
   background: #17559c;
   color: white;
-  padding: 3.5rem 0;
-  position: relative;
-  overflow: hidden; 
+  padding: 3.5rem var(--sidebar-padding-x);
   border-radius: 24px;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Sidebar title */
@@ -27,10 +32,10 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
-  padding: 0 2rem;
+  padding-left: 1.5rem;
 }
 
-/* Navigation container */
+/* Sidebar menu container */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -39,101 +44,73 @@
   z-index: 2;
 }
 
-.sidebar-nav button {
+/* =========================
+   MENU ITEMS
+========================= */
+.menu-item {
+  position: relative;
+  cursor: pointer;
+  padding: 1.2rem 2rem 1.2rem 1.5rem;
+  overflow: visible;
   background: transparent;
-  border: none;
-  color: white;
+  color: #ffffff;
   font-size: 1rem;
   text-align: left;
-  padding: 0.9rem 6rem;
-  width: 100%;
-  cursor: pointer;
-  opacity: 0.85;
-  position: relative;
-  z-index: 2;
-  transition: background 0.25s ease, opacity 0.25s ease;
+  border: none;
+  width: 100%; /* full width now handled by polygon */
+
+  transition: opacity 0.25s ease;
 }
 
-.sidebar-nav button:hover {
+.menu-item:hover {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.12);
 }
-/* =========================
-   ACTIVE BUTTON
-========================= */
-.sidebar-nav button.active {
-  background: #f4f7fb;
-  color: #17559c;
-  font-weight: 600;
+
+.menu-text {
   position: relative;
   z-index: 2;
-
-  /* Vertical size is now controlled here */
-  padding: 1.5rem 6rem;
 }
 
 /* =========================
-   BLUE BACKGROUND (FLOATING BASE)
+   ACTIVE BAR (POLYGON)
 ========================= */
-.sidebar-nav button.active::after {
-  content: "";
+.active-bar-svg {
   position: absolute;
-  top: 0;
-  left: 0;
-
+  inset: 0;
+  width: 100%;
   height: 100%;
-  width: 64px;               /* ← adjust horizontal size here */
-
-  background: #17559c;
   z-index: 0;
-  pointer-events: none;
+}
+
+.active-bar-path {
+  fill: #ffffff;
 }
 
 /* =========================
-   WHITE PILL SHAPE
-   - Shorter height for stronger curve
+   MASK RECTANGLES
 ========================= */
-.sidebar-nav button.active::before {
-  content: "";
+.mask-top,
+.mask-bottom {
   position: absolute;
-  top: 50%;
-  left: 22px;                /* Horizontal alignment */
-  transform: translateY(-50%);
-
-  height: 66%;               /* ↓ SHORTER = more curve */
-  width: 48px;
-
-  background: #f4f7fb;
-  border-top-left-radius: 999px;
-  border-bottom-left-radius: 999px;
-
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: #17559c;
   z-index: 1;
   pointer-events: none;
+  transform-origin: right center;
 }
 
-
-/* =========================
-   MASK RECTANGLES WITH CURVES
-========================= */
-.sidebar-nav button.active .mask-top,
-.sidebar-nav button.active .mask-bottom {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: var(--active-extend, 12px);
-  background: #767b81;
-  z-index: 3;
+.mask-top {
+  top: -1px;
+  left: -1px;
+  border-bottom-right-radius: 20px;
 }
 
-.sidebar-nav button.active .mask-top {
-  top: 0;
-  border-bottom-right-radius: var(--curve-size, 20px);
-}
-
-.sidebar-nav button.active .mask-bottom {
-  bottom: 0;
-  border-top-right-radius: var(--curve-size, 20px);
+.mask-bottom {
+  left: -1px;
+  bottom: 0px;
+  border-top-right-radius: 20px;
 }
 
 /* =========================

@@ -49,7 +49,7 @@ const ProfilePage = () => {
   return (
     <div className="profile-dashboard">
       {/* =========================
-          SIDEBAR WITH POLYGON & MASK
+          SIDEBAR
       ========================= */}
       <aside className="profile-sidebar">
         <h2 className="sidebar-title">My Health</h2>
@@ -57,17 +57,27 @@ const ProfilePage = () => {
         <nav className="sidebar-nav">
           {menuItems.map((label, index) => {
             const isActive = activeIndex === index;
+            const width = buttonRefs.current[index]?.offsetWidth || 100;
 
             return (
-              <button
+              <motion.button
                 key={label}
                 ref={(el) => (buttonRefs.current[index] = el)}
                 className={`menu-item ${isActive ? "active" : ""}`}
                 onClick={() => setActiveIndex(index)}
+                layout
+                animate={{
+                  height: isActive ? 200 : 120,
+                  scaleY: isActive ? 1 : 0.88,
+                }}
+                transition={{
+                  layout: { duration: 0.45, ease: "easeInOut" },
+                  scaleY: { duration: 0.3 },
+                }}
               >
                 <span className="menu-text">{label}</span>
 
-                {/* Animate mask rectangles */}
+                {/* Mask rectangles */}
                 <AnimatePresence>
                   {isActive && (
                     <>
@@ -89,10 +99,10 @@ const ProfilePage = () => {
                   )}
                 </AnimatePresence>
 
-                {/* Polygon cone that fills the menu item width */}
+                {/* Active polygon */}
                 <svg
                   className="active-bar-svg"
-                  viewBox={`0 0 ${buttonRefs.current[index]?.offsetWidth || 100} 100`}
+                  viewBox={`0 0 ${width} 500`}
                   preserveAspectRatio="none"
                 >
                   <motion.path
@@ -100,13 +110,13 @@ const ProfilePage = () => {
                     initial={false}
                     animate={{
                       d: isActive
-                        ? `M${buttonRefs.current[index]?.offsetWidth || 100},0 L${buttonRefs.current[index]?.offsetWidth || 100},100 L20,80 C5,80 5,20 20,20 Z`
-                        : `M${buttonRefs.current[index]?.offsetWidth || 100},0 L${buttonRefs.current[index]?.offsetWidth || 100},100 L${buttonRefs.current[index]?.offsetWidth || 100},90 C${buttonRefs.current[index]?.offsetWidth || 100},90 ${buttonRefs.current[index]?.offsetWidth || 100},5 ${buttonRefs.current[index]?.offsetWidth || 100},5 Z`,
+                        ? `M${width},0 L${width},500 L70,430 C10,450 0,100 60,80 Z`
+                        : `M${width},0 L${width},500 L${width},480 C${width},480 ${width},20 ${width},20 Z`,
                     }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    transition={{ duration: 0.45, ease: "easeInOut" }}
                   />
                 </svg>
-              </button>
+              </motion.button>
             );
           })}
         </nav>
@@ -146,8 +156,7 @@ const ProfilePage = () => {
 
           {favourites.length === 0 ? (
             <p className="profile-help-text">
-              You haven’t saved any health cards yet. Explore the health section and tap ❤️ on a
-              card.
+              You haven’t saved any health cards yet.
             </p>
           ) : (
             <div className="saved-cards-grid">

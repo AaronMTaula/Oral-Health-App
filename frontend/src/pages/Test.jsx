@@ -50,23 +50,32 @@ const Test = () => {
                   )}
                 </AnimatePresence>
 
-                {/* Polygon cone */}
+                {/* Polygon cone with 3D gradient and shadow */}
                 <svg
                   className="active-bar-svg"
-                  viewBox="0 0 100 100"
+                  viewBox="0 0 100 150"
                   preserveAspectRatio="none"
                 >
+                  <defs>
+                    <linearGradient id={`activeBarGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                      <stop offset="100%" stopColor="#dfe6f3" stopOpacity="1" />
+                    </linearGradient>
+                  </defs>
+
                   <motion.path
                     className="active-bar-path"
                     initial={false}
                     animate={{
                       d: isActive
-                        ? // Expanded: right → left toward pill
-                          "M100,0 L100,100 L20,80 C5,80 5,20 20,20 Z"
-                        : // Collapsed: thin line at right
-                          "M100,0 L100,100 L100,90 C100,90 100,5 100,5 Z",
+                        ? // Expanded polygon
+                          "M100,0 L100,140 L40,120 C5,120 5,10 40,10 Z"
+                        : // Collapsed thin line
+                          "M100,0 L100,140 L100,130 C100,130 100,5 100,5 Z",
                     }}
                     transition={{ duration: 0.5, ease: "easeInOut" }}
+                    fill={`url(#activeBarGradient-${index})`}
+                    style={{ filter: "drop-shadow(0 3px 6px rgba(0,0,0,0.12))" }}
                   />
                 </svg>
               </div>

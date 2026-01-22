@@ -109,44 +109,80 @@ const ProfileCard = () => {
 // =========================
 const ProgressCard = () => {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const todayIndex = new Date().getDay() - 1; // 0 = Monday
-  const todayProgress = 0.5; // 50% for demo, can be dynamic
 
-  const isDotFilled = (index, todayIndex) => index < todayIndex;
+  const now = new Date();
+  const todayIndex = (now.getDay() + 6) % 7; // converts Sunday=0 → 6
+
+  const minutesNow = now.getHours() * 60 + now.getMinutes();
+
+  // Time constants
+  const DOT_END = 7 * 60;          // 07:00 → 420
+  const DAY_END = 24 * 60 - 1;     // 23:59 → 1439
+
+  // Dot progress (00:00 → 07:00)
+  const dotProgress =
+    minutesNow <= DOT_END
+      ? minutesNow / DOT_END
+      : 1;
+
+  // Bar progress (07:01 → 23:59)
+  const barProgress =
+    minutesNow <= DOT_END
+      ? 0
+      : (minutesNow - DOT_END) / (DAY_END - DOT_END);
 
   return (
     <section className="test-card" style={{ paddingBottom: "2.4rem" }}>
       <h3>Weekly Progress</h3>
+
       <div className="checkpoint-bar">
-        {days.map((day, index) => (
-          <div className="checkpoint" key={day}>
-            <div
-              className={`checkpoint-dot ${
-                isDotFilled(index, todayIndex) ? "filled" : ""
-              }`}
-            >
-              <span className="checkpoint-number">
-                {index < todayIndex ? 3 : index === todayIndex ? 1 : 0}
-              </span>
-            </div>
-            {index < days.length - 1 && (
-              <div className="checkpoint-line">
-                <div
-                  className="checkpoint-line-fill"
-                  style={{
-                    width:
-                      index < todayIndex
-                        ? "100%"
-                        : index === todayIndex
-                        ? `${todayProgress * 100}%`
-                        : "0%",
-                  }}
-                />
+        {days.map((day, index) => {
+          const isPast = index < todayIndex;
+          const isToday = index === todayIndex;
+
+          return (
+            <div className="checkpoint" key={day}>
+              {/* DOT */}
+              <div
+                className={`checkpoint-dot ${
+                  isPast || (isToday && dotProgress === 1) ? "filled" : ""
+                }`}
+                style={
+                  isToday && dotProgress < 1
+                    ? {
+                        background: `conic-gradient(
+                          #4caf50 ${dotProgress * 360}deg,
+                          #ddd 0deg
+                        )`,
+                      }
+                    : undefined
+                }
+              >
+                <span className="checkpoint-number">
+                  {isPast ? 3 : isToday ? Math.ceil(dotProgress * 3) : 0}
+                </span>
               </div>
-            )}
-            <span className="checkpoint-label">{day}</span>
-          </div>
-        ))}
+
+              {/* BAR */}
+              {index < days.length - 1 && (
+                <div className="checkpoint-line">
+                  <div
+                    className="checkpoint-line-fill"
+                    style={{
+                      width: isPast
+                        ? "100%"
+                        : isToday
+                        ? `${Math.min(barProgress * 100, 100)}%`
+                        : "0%",
+                    }}
+                  />
+                </div>
+              )}
+
+              <span className="checkpoint-label">{day}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

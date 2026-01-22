@@ -61,78 +61,68 @@ const ProfilePage = () => {
 
             return (
               <motion.button
-  key={label}
-  ref={(el) => (buttonRefs.current[index] = el)}
-  className={`menu-item ${isActive ? "active" : ""}`}
-  onClick={() => setActiveIndex(index)}
-  layout
-  animate={{
-    height: isActive ? 200 : 120,
-    scaleY: isActive ? 1 : 0.88,
-    // Move inactive items closer to the active one
-    y: !isActive
-      ? index < activeIndex
-        ? 25 * (activeIndex - index) // items above active move down
-        : -35 * (index - activeIndex) // items below active move up
-      : 0,
-  }}
-  transition={{
-    layout: { duration: 0.45, ease: "easeInOut" },
-    scaleY: { duration: 0.3 },
-    y: { type: "spring", stiffness: 220, damping: 24 }, // smooth vertical movement
-  }}
->
-  <span
-  className="menu-text"
-  style={{
-    fontWeight: isActive ? 700 : 400,   // bold if active
-    fontSize: isActive ? "1.2rem" : "1rem", // larger font if active
-    color: isActive ? "#0c0c0c" : "#cfc5d2", // highlighted color for active
-  }}
->
-  {label}
-</span>
+                key={label}
+                ref={(el) => (buttonRefs.current[index] = el)}
+                className={`menu-item ${isActive ? "active" : ""}`}
+                onClick={() => setActiveIndex(index)}
+                layout
+                animate={{
+                  height: isActive ? 220 : 150,
+                  scaleY: isActive ? [0.95, 1.15, 1] : 0.8,
+                  y: (() => {
+                    if (isActive) return 0;
+                    const distance = index - activeIndex;
+                    const maxMove = -20;
+                    return distance * maxMove;
+                  })(),
+                }}
+                transition={{
+                  layout: { duration: 0.45, ease: "easeInOut" },
+                  scaleY: { type: "spring", stiffness: 220, damping: 24 },
+                  y: { type: "spring", stiffness: 180, damping: 18 },
+                }}
+              >
+                <span className="menu-text">{label}</span>
 
-  {/* Mask rectangles */}
-  <AnimatePresence>
-    {isActive && (
-      <>
-        <motion.span
-          className="mask-top"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          exit={{ scaleX: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        />
-        <motion.span
-          className="mask-bottom"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          exit={{ scaleX: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        />
-      </>
-    )}
-  </AnimatePresence>
+                <AnimatePresence>
+                  {isActive && (
+                    <>
+                      <motion.span className="mask-top" />
+                      <motion.span className="mask-bottom" />
+                    </>
+                  )}
+                </AnimatePresence>
 
-  {/* Active polygon */}
-  <svg
-    className="active-bar-svg"
-    viewBox={`0 0 ${width} 500`}
-    preserveAspectRatio="none"
-  >
-    <motion.path
-      className="active-bar-path"
-      initial={false}
-      animate={{
-        d: isActive
-          ? `M${width},0 L${width},500 L70,430 C10,450 0,100 60,80 Z`
-          : `M${width},0 L${width},500 L${width},480 C${width},480 ${width},20 ${width},20 Z`,
-      }}
-      transition={{ duration: 0.45, ease: "easeInOut" }}
-    />
-  </svg>
-</motion.button>
+                {/* 🔧 Active bar SVG fully visible */}
+                <svg
+                  className="active-bar-svg"
+                  viewBox={`-120 0 ${width + 120} 500`}
+                  preserveAspectRatio="none"
+                >
+                  <motion.path
+                    className="active-bar-path"
+                    initial={false}
+                    animate={{
+                      d: isActive
+                        ? `
+                          M${width},0
+                          L${width},500
+                          L70,412
+                          C0,385 0,80 90,79
+                          Z
+                        `
+                        : `
+                          M${width},0
+                          L${width},500
+                          L${width},480
+                          C${width},480 ${width},20 ${width},20
+                          Z
+                        `,
+                    }}
+                    transition={{ duration: 0.45, ease: "easeInOut" }}
+                  />
+                </svg>
+              </motion.button>
             );
           })}
         </nav>
@@ -147,20 +137,12 @@ const ProfilePage = () => {
             <User className="icon-blue" />
             <h2>About Me</h2>
           </div>
-
           <p className="profile-help-text">
             This is your dental health profile. It helps you keep your smile healthy 🦷
           </p>
-
           <div className="profile-details">
-            <div>
-              <Mail size={18} />
-              <span>{userData.email}</span>
-            </div>
-            <div>
-              <User size={18} />
-              <span>{userData.name || "Name not added yet"}</span>
-            </div>
+            <div><Mail size={18} /> {userData.email}</div>
+            <div><User size={18} /> {userData.name || "Name not added yet"}</div>
           </div>
         </section>
 
@@ -169,7 +151,6 @@ const ProfilePage = () => {
             <Heart className="icon-pink" />
             <h2>Saved Health Cards</h2>
           </div>
-
           {favourites.length === 0 ? (
             <p className="profile-help-text">
               You haven’t saved any health cards yet.
@@ -177,9 +158,7 @@ const ProfilePage = () => {
           ) : (
             <div className="saved-cards-grid">
               {favourites.map((card) => (
-                <div key={card.id} className="saved-card">
-                  {card.title}
-                </div>
+                <div key={card.id} className="saved-card">{card.title}</div>
               ))}
             </div>
           )}
@@ -193,12 +172,6 @@ const ProfilePage = () => {
         <div className="progress-card">
           <Shield className="icon-green" />
           <h3>Your Progress</h3>
-          <ul>
-            <li>⭐ Cards saved: {favourites.length}</li>
-            <li>🪥 Learning healthy habits</li>
-            <li>🎯 Goal: Brush twice daily</li>
-          </ul>
-
           <button onClick={() => navigate("/security")} className="progress-button">
             Account Safety
           </button>

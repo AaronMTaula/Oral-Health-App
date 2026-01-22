@@ -1,6 +1,58 @@
 /* =========================
    Global Styles
    ========================= */
+/* ===== Add your custom font here ===== */
+@font-face {
+  font-family: 'DiscotecaRounded';
+  src: url('../assets/fonts/DiscotecaRounded_Free_For_Personal_Use.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Optional: bold/italic variants */
+@font-face {
+  font-family: 'DiscotecaRounded';
+  src: url('../assets/fonts/DiscotecaRounded_Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DiscotecaRounded';
+  src: url('../assets/fonts/DiscotecaRounded_Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* =========================
+   Root variables
+   ========================= */
+:root {
+  --navbar-bg: #e08fff; 
+  --navbar-offset: 250px;
+  --main-font: 'DiscotecaRounded', 'Segoe UI', Arial, sans-serif; /* optional variable */
+}
+
+/* =========================
+   Global element styles
+   ========================= */
+body {
+  font-family: var(--main-font);
+  background: #f8f8f8;
+  margin: 0;
+  padding: 0;
+  transition: margin-top 0.4s ease;
+}
+
+main {
+  max-width: 100%;
+  margin: 2rem auto;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 16px rgba(0,83,155,0.08);
+}
+
 
 :root {
   --navbar-bg: #e08fff; 

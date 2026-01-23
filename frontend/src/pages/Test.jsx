@@ -105,7 +105,6 @@ const ProgressCard = ({ completedToday = 0 }) => {
   const now = new Date();
   const todayIndex = (now.getDay() + 6) % 7;
   const minutesNow = now.getHours() * 60 + now.getMinutes();
-
   const DOT_END = 7 * 60;
   const DAY_END = 24 * 60 - 1;
 
@@ -175,14 +174,14 @@ const ProgressCard = ({ completedToday = 0 }) => {
 // =========================
 // GOALS CARD
 // =========================
-const GoalsCard = ({ historySetter, onGoalCompleted }) => {
-  const [dailyGoals, setDailyGoals] = useState([
-    { text: "Brush Teeth", timeframe: "Day", timeOfDay: "Morning", status: "pending", createdAt: new Date(0) },
-    { text: "Brush Teeth", timeframe: "Day", timeOfDay: "Evening", status: "pending", createdAt: new Date(0) },
-    { text: "Floss Teeth", timeframe: "Day", timeOfDay: "Evening", status: "pending", createdAt: new Date(0) },
-  ]);
-
-  const [customGoals, setCustomGoals] = useState([]);
+const GoalsCard = ({
+  dailyGoals,
+  setDailyGoals,
+  customGoals,
+  setCustomGoals,
+  historySetter,
+  onGoalCompleted,
+}) => {
   const [newGoalText, setNewGoalText] = useState("");
   const [newGoalTimeframe, setNewGoalTimeframe] = useState("Day");
   const [newGoalTimeOfDay, setNewGoalTimeOfDay] = useState("Morning");
@@ -193,20 +192,26 @@ const GoalsCard = ({ historySetter, onGoalCompleted }) => {
     type === "daily" ? setDailyGoals(goals) : setCustomGoals(goals);
   };
 
-  const confirmGoal = (index, confirmed, type) => {
-    const goals = type === "daily" ? [...dailyGoals] : [...customGoals];
+const confirmGoal = (index, confirmed, type) => {
+  const goals = type === "daily" ? [...dailyGoals] : [...customGoals];
 
-    if (confirmed) {
-      const goal = { ...goals[index], status: "done", completedAt: new Date() };
-      goals.splice(index, 1);
-      historySetter(goal);
-      onGoalCompleted?.();
-    } else {
-      goals[index].status = "pending";
-    }
+  if (confirmed) {
+    // Push goal to history regardless of timeframe
+    const goal = {
+      ...goals[index],
+      status: "done",
+      completedAt: new Date(),
+      type, // keep original type: "daily" or "custom"
+    };
+    goals.splice(index, 1);
+    historySetter(goal); // send to history always
+    onGoalCompleted?.();
+  } else {
+    goals[index].status = "pending";
+  }
 
-    type === "daily" ? setDailyGoals(goals) : setCustomGoals(goals);
-  };
+  type === "daily" ? setDailyGoals(goals) : setCustomGoals(goals);
+};
 
   const addCustomGoal = () => {
     if (!newGoalText) return;
@@ -219,6 +224,7 @@ const GoalsCard = ({ historySetter, onGoalCompleted }) => {
         timeOfDay: newGoalTimeOfDay,
         status: "pending",
         createdAt: new Date(),
+        type: "custom", // important: mark custom goals as custom even if timeframe is "Day"
       },
     ]);
 
@@ -237,11 +243,24 @@ const GoalsCard = ({ historySetter, onGoalCompleted }) => {
       <div className="goal-actions">
         {goal.status === "confirm" ? (
           <div className="confirm-actions">
-            <button className="confirm-yes" onClick={() => confirmGoal(index, true, type)}>✔</button>
-            <button className="confirm-no" onClick={() => confirmGoal(index, false, type)}>✖</button>
+            <button
+              className="confirm-yes"
+              onClick={() => confirmGoal(index, true, type)}
+            >
+              ✔
+            </button>
+            <button
+              className="confirm-no"
+              onClick={() => confirmGoal(index, false, type)}
+            >
+              ✖
+            </button>
           </div>
         ) : (
-          <input type="checkbox" onChange={() => toggleGoalCheckbox(index, type)} />
+          <input
+            type="checkbox"
+            onChange={() => toggleGoalCheckbox(index, type)}
+          />
         )}
       </div>
     </div>
@@ -249,26 +268,42 @@ const GoalsCard = ({ historySetter, onGoalCompleted }) => {
 
   return (
     <div className="test-card">
-      <div className="section-header"><h2>Goals</h2></div>
+      <div className="section-header">
+        <h2>Goals</h2>
+      </div>
 
       <div className="daily-goals-card">
-        <div className="section-header small"><h2>Daily Goals</h2></div>
+        <div className="section-header small">
+          <h2>Daily Goals</h2>
+        </div>
         {dailyGoals.map((goal, index) => renderGoal(goal, index, "daily"))}
       </div>
 
       <div className="goals-list">
-        <div className="section-header small"><h2>Custom Goals</h2></div>
+        <div className="section-header small">
+          <h2>Custom Goals</h2>
+        </div>
         {customGoals.map((goal, index) => renderGoal(goal, index, "custom"))}
       </div>
 
       <div className="add-goal">
-        <input value={newGoalText} onChange={(e) => setNewGoalText(e.target.value)} />
-        <select value={newGoalTimeframe} onChange={(e) => setNewGoalTimeframe(e.target.value)}>
+        <input
+          value={newGoalText}
+          onChange={(e) => setNewGoalText(e.target.value)}
+          placeholder="New Goal"
+        />
+        <select
+          value={newGoalTimeframe}
+          onChange={(e) => setNewGoalTimeframe(e.target.value)}
+        >
           <option value="Day">Day</option>
           <option value="Week">Week</option>
           <option value="Month">Month</option>
         </select>
-        <select value={newGoalTimeOfDay} onChange={(e) => setNewGoalTimeOfDay(e.target.value)}>
+        <select
+          value={newGoalTimeOfDay}
+          onChange={(e) => setNewGoalTimeOfDay(e.target.value)}
+        >
           <option value="Morning">Morning</option>
           <option value="Afternoon">Afternoon</option>
           <option value="Evening">Evening</option>
@@ -279,31 +314,52 @@ const GoalsCard = ({ historySetter, onGoalCompleted }) => {
     </div>
   );
 };
-
 // =========================
 // HISTORY CARD
 // =========================
-const HistoryCard = ({ history, setHistory, restoreToGoals }) => {
+const HistoryCard = ({
+  history,
+  setHistory,
+  setDailyGoals,
+  setCustomGoals,
+  setCompletedToday,
+}) => {
   const [tab, setTab] = useState("Daily");
 
   const handleRestore = (goal) => {
-    if (window.confirm("Restore this goal?")) {
-      restoreToGoals(goal);
-      setHistory(history.filter((g) => g !== goal));
+    if (!window.confirm("Restore this goal?")) return;
+
+    if (goal.type === "daily") {
+      setDailyGoals((prev) => [
+        ...prev,
+        { ...goal, status: "pending", completedAt: null },
+      ]);
+    } else if (goal.type === "custom") {
+      setCustomGoals((prev) => [
+        ...prev,
+        { ...goal, status: "pending", completedAt: null },
+      ]);
     }
+
+    if (goal.completedAt) {
+      setCompletedToday((prev) => Math.max(prev - 1, 0));
+    }
+
+    // Remove goal from history using functional update
+    setHistory((prev) => prev.filter((g) => g !== goal));
   };
 
   const filteredHistory = history.filter((goal) => {
-    if (tab === "Daily") return goal.timeframe === "Day";
-    if (tab === "Weekly") return goal.timeframe === "Week";
-    if (tab === "Monthly") return goal.timeframe === "Month";
-    return false;
-  });
+  if (tab === "Daily") return goal.type === "daily" || (goal.type === "custom" && goal.timeframe === "Day");
+  if (tab === "Weekly") return goal.timeframe === "Week";
+  if (tab === "Monthly") return goal.timeframe === "Month";
+  return false;
+});
+
 
   return (
     <div className="test-card">
       <h3>History</h3>
-
       <div className="history-tabs">
         {["Daily", "Weekly", "Monthly"].map((t) => (
           <button
@@ -348,16 +404,35 @@ const HistoryCard = ({ history, setHistory, restoreToGoals }) => {
 // MAIN PAGE
 // =========================
 const TestPage = () => {
+  const [dailyGoals, setDailyGoals] = useState([
+    {
+      text: "Brush Teeth",
+      timeframe: "Day",
+      timeOfDay: "Morning",
+      status: "pending",
+      createdAt: new Date(0),
+      type: "daily",
+    },
+    {
+      text: "Brush Teeth",
+      timeframe: "Day",
+      timeOfDay: "Evening",
+      status: "pending",
+      createdAt: new Date(0),
+      type: "daily",
+    },
+    {
+      text: "Floss Teeth",
+      timeframe: "Day",
+      timeOfDay: "Evening",
+      status: "pending",
+      createdAt: new Date(0),
+      type: "daily",
+    },
+  ]);
+  const [customGoals, setCustomGoals] = useState([]);
   const [history, setHistory] = useState([]);
   const [completedToday, setCompletedToday] = useState(0);
-  const [dailyGoals, setDailyGoals] = useState([]);
-
-  const restoreToGoals = (goal) => {
-    setDailyGoals((prev) => [
-      ...prev,
-      { ...goal, status: "pending", completedAt: null },
-    ]);
-  };
 
   return (
     <div className="test-page">
@@ -365,7 +440,13 @@ const TestPage = () => {
         <ProfileCard />
         <ProgressCard completedToday={completedToday} />
         <GoalsCard
-          historySetter={(goal) => setHistory([...history, goal])}
+          dailyGoals={dailyGoals}
+          setDailyGoals={setDailyGoals}
+          customGoals={customGoals}
+          setCustomGoals={setCustomGoals}
+          historySetter={(goal) =>
+            setHistory((prevHistory) => [...prevHistory, goal])
+          }
           onGoalCompleted={() =>
             setCompletedToday((prev) => Math.min(prev + 1, 3))
           }
@@ -373,7 +454,9 @@ const TestPage = () => {
         <HistoryCard
           history={history}
           setHistory={setHistory}
-          restoreToGoals={restoreToGoals}
+          setDailyGoals={setDailyGoals}
+          setCustomGoals={setCustomGoals}
+          setCompletedToday={setCompletedToday}
         />
       </div>
     </div>

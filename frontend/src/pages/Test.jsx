@@ -28,12 +28,10 @@ const ProfileCard = () => {
 
   const handleSave = () => {
     setEditing(false);
-    // save logic here
   };
 
   return (
     <div className="test-card profile-card">
-      {/* LEFT COLUMN */}
       <div className="profile-left">
         <div className="profile-avatar">
           <img
@@ -45,7 +43,6 @@ const ProfileCard = () => {
           />
         </div>
 
-        {/* NAME (single render) */}
         {editing ? (
           <input
             type="text"
@@ -59,7 +56,6 @@ const ProfileCard = () => {
           <h2 className="profile-name">{profile.name}</h2>
         )}
 
-        {/* UPLOAD BUTTON (editing only) */}
         {editing && (
           <input
             type="file"
@@ -69,7 +65,6 @@ const ProfileCard = () => {
         )}
       </div>
 
-      {/* RIGHT COLUMN */}
       <div className="profile-info">
         {["email", "school", "dob", "contact"].map((field) => (
           <div key={field} className="profile-row">
@@ -89,7 +84,6 @@ const ProfileCard = () => {
         ))}
       </div>
 
-      {/* EDIT / SAVE BUTTON */}
       <button
         className="save-profile-button"
         onClick={() => {
@@ -103,29 +97,19 @@ const ProfileCard = () => {
   );
 };
 
-
 // =========================
 // PROGRESS CARD
 // =========================
-const ProgressCard = () => {
+const ProgressCard = ({ completedToday = 0 }) => {
   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
   const now = new Date();
-  const todayIndex = (now.getDay() + 6) % 7; // converts Sunday=0 → 6
-
+  const todayIndex = (now.getDay() + 6) % 7;
   const minutesNow = now.getHours() * 60 + now.getMinutes();
 
-  // Time constants
-  const DOT_END = 7 * 60;          // 07:00 → 420
-  const DAY_END = 24 * 60 - 1;     // 23:59 → 1439
+  const DOT_END = 7 * 60;
+  const DAY_END = 24 * 60 - 1;
 
-  // Dot progress (00:00 → 07:00)
-  const dotProgress =
-    minutesNow <= DOT_END
-      ? minutesNow / DOT_END
-      : 1;
-
-  // Bar progress (07:01 → 23:59)
+  const dotProgress = minutesNow <= DOT_END ? minutesNow / DOT_END : 1;
   const barProgress =
     minutesNow <= DOT_END
       ? 0
@@ -142,10 +126,11 @@ const ProgressCard = () => {
 
           return (
             <div className="checkpoint" key={day}>
-              {/* DOT */}
               <div
                 className={`checkpoint-dot ${
-                  isPast || (isToday && dotProgress === 1) ? "filled" : ""
+                  isPast || (isToday && (dotProgress === 1 || completedToday > 0))
+                    ? "filled"
+                    : ""
                 }`}
                 style={
                   isToday && dotProgress < 1
@@ -159,11 +144,10 @@ const ProgressCard = () => {
                 }
               >
                 <span className="checkpoint-number">
-                  {isPast ? 3 : isToday ? Math.ceil(dotProgress * 3) : 0}
+                  {isPast ? 3 : isToday ? Math.min(3, completedToday) : 0}
                 </span>
               </div>
 
-              {/* BAR */}
               {index < days.length - 1 && (
                 <div className="checkpoint-line">
                   <div
@@ -191,16 +175,17 @@ const ProgressCard = () => {
 // =========================
 // GOALS CARD
 // =========================
-const GoalsCard = ({ historySetter }) => {
+const GoalsCard = ({ historySetter, onGoalCompleted }) => {
   const [dailyGoals, setDailyGoals] = useState([
-    { text: "Brush your teeth", timeframe: "Morning", status: "pending", createdAt: new Date(0) },
-    { text: "Floss your teeth", timeframe: "Evening", status: "pending", createdAt: new Date(0) },
-    { text: "Brush your teeth", timeframe: "Morning", status: "pending", createdAt: new Date(0) },
+    { text: "Brush Teeth", timeframe: "Day", timeOfDay: "Morning", status: "pending", createdAt: new Date(0) },
+    { text: "Brush Teeth", timeframe: "Day", timeOfDay: "Evening", status: "pending", createdAt: new Date(0) },
+    { text: "Floss Teeth", timeframe: "Day", timeOfDay: "Evening", status: "pending", createdAt: new Date(0) },
   ]);
 
   const [customGoals, setCustomGoals] = useState([]);
   const [newGoalText, setNewGoalText] = useState("");
   const [newGoalTimeframe, setNewGoalTimeframe] = useState("Day");
+  const [newGoalTimeOfDay, setNewGoalTimeOfDay] = useState("Morning");
 
   const toggleGoalCheckbox = (index, type) => {
     const goals = type === "daily" ? [...dailyGoals] : [...customGoals];
@@ -210,124 +195,84 @@ const GoalsCard = ({ historySetter }) => {
 
   const confirmGoal = (index, confirmed, type) => {
     const goals = type === "daily" ? [...dailyGoals] : [...customGoals];
+
     if (confirmed) {
       const goal = { ...goals[index], status: "done", completedAt: new Date() };
       goals.splice(index, 1);
-
-      // Move to history in correct tab
       historySetter(goal);
+      onGoalCompleted?.();
     } else {
       goals[index].status = "pending";
     }
+
     type === "daily" ? setDailyGoals(goals) : setCustomGoals(goals);
   };
 
   const addCustomGoal = () => {
     if (!newGoalText) return;
+
     setCustomGoals([
       ...customGoals,
       {
         text: newGoalText,
         timeframe: newGoalTimeframe,
+        timeOfDay: newGoalTimeOfDay,
         status: "pending",
         createdAt: new Date(),
       },
     ]);
+
     setNewGoalText("");
   };
 
+  const renderGoal = (goal, index, type) => (
+    <div key={index} className="goal-item">
+      <span className="goal-text">{goal.text}</span>
+
+      <div className="goal-tags">
+        <span className="timeframe">{goal.timeframe}</span>
+        {goal.timeOfDay && <span className="time-of-day">{goal.timeOfDay}</span>}
+      </div>
+
+      <div className="goal-actions">
+        {goal.status === "confirm" ? (
+          <div className="confirm-actions">
+            <button className="confirm-yes" onClick={() => confirmGoal(index, true, type)}>✔</button>
+            <button className="confirm-no" onClick={() => confirmGoal(index, false, type)}>✖</button>
+          </div>
+        ) : (
+          <input type="checkbox" onChange={() => toggleGoalCheckbox(index, type)} />
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="test-card">
-      <h3>Goals</h3>
+      <div className="section-header"><h2>Goals</h2></div>
 
       <div className="daily-goals-card">
-        <h4>Daily Goals</h4>
-        {dailyGoals.map((goal, index) => (
-          <div key={index} className="goal-item">
-            {goal.status === "confirm" ? (
-              <>
-                <span>{goal.text}</span>
-                <div className="confirm-actions">
-                  <button
-                    className="confirm-yes"
-                    onClick={() => confirmGoal(index, true, "daily")}
-                  >
-                    ✔
-                  </button>
-                  <button
-                    className="confirm-no"
-                    onClick={() => confirmGoal(index, false, "daily")}
-                  >
-                    ✖
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <input
-                  type="checkbox"
-                  checked={goal.status === "done"}
-                  onChange={() => toggleGoalCheckbox(index, "daily")}
-                />
-                <span>{goal.text}</span>
-                <span className="timeframe">{goal.timeframe}</span>
-              </>
-            )}
-          </div>
-        ))}
+        <div className="section-header small"><h2>Daily Goals</h2></div>
+        {dailyGoals.map((goal, index) => renderGoal(goal, index, "daily"))}
       </div>
 
       <div className="goals-list">
-        <h4>Custom Goals</h4>
-        {customGoals.map((goal, index) => (
-          <div key={index} className="goal-item">
-            {goal.status === "confirm" ? (
-              <>
-                <span>{goal.text}</span>
-                <div className="confirm-actions">
-                  <button
-                    className="confirm-yes"
-                    onClick={() => confirmGoal(index, true, "custom")}
-                  >
-                    ✔
-                  </button>
-                  <button
-                    className="confirm-no"
-                    onClick={() => confirmGoal(index, false, "custom")}
-                  >
-                    ✖
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <input
-                  type="checkbox"
-                  checked={goal.status === "done"}
-                  onChange={() => toggleGoalCheckbox(index, "custom")}
-                />
-                <span>{goal.text}</span>
-                <span className="timeframe">{goal.timeframe}</span>
-              </>
-            )}
-          </div>
-        ))}
+        <div className="section-header small"><h2>Custom Goals</h2></div>
+        {customGoals.map((goal, index) => renderGoal(goal, index, "custom"))}
       </div>
 
       <div className="add-goal">
-        <input
-          type="text"
-          placeholder="New Goal"
-          value={newGoalText}
-          onChange={(e) => setNewGoalText(e.target.value)}
-        />
-        <select
-          value={newGoalTimeframe}
-          onChange={(e) => setNewGoalTimeframe(e.target.value)}
-        >
+        <input value={newGoalText} onChange={(e) => setNewGoalText(e.target.value)} />
+        <select value={newGoalTimeframe} onChange={(e) => setNewGoalTimeframe(e.target.value)}>
           <option value="Day">Day</option>
           <option value="Week">Week</option>
           <option value="Month">Month</option>
+        </select>
+        <select value={newGoalTimeOfDay} onChange={(e) => setNewGoalTimeOfDay(e.target.value)}>
+          <option value="Morning">Morning</option>
+          <option value="Afternoon">Afternoon</option>
+          <option value="Evening">Evening</option>
+          <option value="Night">Night</option>
         </select>
         <button onClick={addCustomGoal}>Add</button>
       </div>
@@ -343,16 +288,22 @@ const HistoryCard = ({ history, setHistory, restoreToGoals }) => {
 
   const handleRestore = (goal) => {
     if (window.confirm("Restore this goal?")) {
-      // Move back to goals
       restoreToGoals(goal);
-      // Remove from history
       setHistory(history.filter((g) => g !== goal));
     }
   };
 
+  const filteredHistory = history.filter((goal) => {
+    if (tab === "Daily") return goal.timeframe === "Day";
+    if (tab === "Weekly") return goal.timeframe === "Week";
+    if (tab === "Monthly") return goal.timeframe === "Month";
+    return false;
+  });
+
   return (
     <div className="test-card">
       <h3>History</h3>
+
       <div className="history-tabs">
         {["Daily", "Weekly", "Monthly"].map((t) => (
           <button
@@ -364,24 +315,30 @@ const HistoryCard = ({ history, setHistory, restoreToGoals }) => {
           </button>
         ))}
       </div>
+
       <div className="history-list">
-        {history
-          .filter((goal) => {
-            if (tab === "Daily") return goal.timeframe === "Morning" || goal.timeframe === "Day";
-            if (tab === "Weekly") return goal.timeframe === "Week";
-            if (tab === "Monthly") return goal.timeframe === "Month";
-          })
-          .map((goal, index) => (
+        {filteredHistory.length === 0 ? (
+          <p className="empty-history">No completed goals yet.</p>
+        ) : (
+          filteredHistory.map((goal, index) => (
             <div key={index} className="history-goal">
-              <span>{goal.text}</span>
+              <div className="history-goal-info">
+                <span className="history-text">{goal.text}</span>
+                <div className="history-tags">
+                  <span className="tag">{goal.timeframe}</span>
+                  {goal.timeOfDay && <span className="tag">{goal.timeOfDay}</span>}
+                </div>
+              </div>
               <button
                 className="restore-goal"
                 onClick={() => handleRestore(goal)}
+                title="Restore goal"
               >
                 ⟳
               </button>
             </div>
-          ))}
+          ))
+        )}
       </div>
     </div>
   );
@@ -392,19 +349,27 @@ const HistoryCard = ({ history, setHistory, restoreToGoals }) => {
 // =========================
 const TestPage = () => {
   const [history, setHistory] = useState([]);
+  const [completedToday, setCompletedToday] = useState(0);
+  const [dailyGoals, setDailyGoals] = useState([]);
 
   const restoreToGoals = (goal) => {
-    // Based on timeframe, restore to correct list in GoalsCard
-    console.log("Restore:", goal);
-    // Implementation can use a callback to GoalsCard if managing state globally
+    setDailyGoals((prev) => [
+      ...prev,
+      { ...goal, status: "pending", completedAt: null },
+    ]);
   };
 
   return (
     <div className="test-page">
       <div className="test-profile-main">
         <ProfileCard />
-        <ProgressCard />
-        <GoalsCard historySetter={(goal) => setHistory([...history, goal])} />
+        <ProgressCard completedToday={completedToday} />
+        <GoalsCard
+          historySetter={(goal) => setHistory([...history, goal])}
+          onGoalCompleted={() =>
+            setCompletedToday((prev) => Math.min(prev + 1, 3))
+          }
+        />
         <HistoryCard
           history={history}
           setHistory={setHistory}

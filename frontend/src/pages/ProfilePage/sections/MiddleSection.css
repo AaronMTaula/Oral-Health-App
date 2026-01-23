@@ -66,7 +66,6 @@
   margin-bottom: 30px;
 }
 
-
 .profile-row {
   display: flex;
   flex-direction: column;
@@ -89,7 +88,7 @@
 }
 
 .save-profile-button {
-  margin: 0px auto;
+  margin: 0 auto;
   display: block;
   background: #4f6df5;
   color: white;
@@ -100,12 +99,12 @@
   position: absolute;
   bottom: 20px;
   left: 50%;
-
+  transform: translateX(-50%);
 }
+
 /* =========================
    PROGRESS CARD
 ========================= */
-
 .checkpoint-bar {
   display: flex;
   align-items: center;
@@ -165,7 +164,6 @@
 /* =========================
    GOALS CARD
 ========================= */
-
 .section-header {
   background: #eef3ff;
   padding: 10px 18px;
@@ -329,7 +327,7 @@
 }
 
 .crop-preview img {
-  width: 250px; /* slightly bigger for movement */
+  width: 250px;
   height: 250px;
   object-fit: cover;
   transform: translate(0px, 0px);

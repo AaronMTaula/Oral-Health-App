@@ -1,0 +1,25 @@
+/* =========================
+   Profile Dashboard Layout
+========================= */
+.profile-dashboard {
+  display: grid;
+  grid-template-columns: 500px 1fr 500px; /* Left / Middle / Right */
+  min-height: 100vh;
+  background: #f4f7fb;
+  font-family: 'DiscotecaRounded', 'Segoe UI', Arial, sans-serif;
+  color: #000000;
+  gap: 2rem;
+}
+
+/* =========================
+   Loading State
+========================= */
+.profile-loading {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #333;
+}

@@ -9,7 +9,7 @@ import {
 
 import Navbar from "./components/Navbar";
 import AuthPage from "./pages/AuthPage";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import MyProviders from "./pages/MyProviders";
 import FindMyTeeth from "./pages/FindMyTeeth";
 import LetsTalk from "./pages/LetsTalk";

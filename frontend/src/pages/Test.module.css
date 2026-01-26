@@ -5,209 +5,149 @@
 /* =========================
    LAYOUT
 ========================= */
-.profile-dashboard {
-  display: grid;
-  grid-template-columns: 320px 1fr 300px;
+.profileDashboard {
   min-height: 100vh;
   background: #f4f7fb;
-  font-family: "Inter", sans-serif;
 }
 
 /* =========================
-   SIDEBAR
+   RIGHT SIDEBAR
 ========================= */
-.profile-sidebar {
+.profileSidebar {
+  position: fixed;
+  top: 300px;
+  right: 0;
+
+  width: 360px;
+  height: calc(100vh - 64px);
+
   background: #17559c;
+  padding: 4rem var(--sidebar-padding-x);
   color: white;
-  padding: 6rem var(--sidebar-padding-x);
-  border-radius: 24px;
-  position: relative;
+
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+
+  z-index: 20;
   overflow: visible;
 }
 
-.sidebar-title {
+.rightSidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   TITLE
+========================= */
+.sidebarTitle {
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
-  padding-left: 5.5rem;
-  color: white;
+  text-align: right;
+  padding-right: 5.5rem;
 }
 
 /* =========================
-   MENU CONTAINER
+   NAV
 ========================= */
-.sidebar-nav {
+.sidebarNav {
   display: flex;
   flex-direction: column;
-  gap: 2.75rem;
-  justify-content: center;
-  height: 500px;
+  gap: 4rem;
   position: relative;
-  z-index: 2;
 }
 
 /* =========================
-   MENU ITEMS
+   MENU ITEM
 ========================= */
-.menu-item {
+.menuItem {
   position: relative;
-  width: 100%;
+  height: 120px;
   border: none;
   background: transparent;
   cursor: pointer;
 
   display: flex;
   align-items: center;
-  padding: 1.2rem 2rem 1.2rem 6.5rem;
+  justify-content: flex-end;
 
+  padding-right: 6.5rem;
   overflow: visible;
-  transform-origin: center;
 }
 
-.menu-text {
-  position: relative;
+.menuItem.active {
   z-index: 2;
-  color: #311538;
-  font-size: 1rem;
 }
 
 /* =========================
-   ACTIVE BAR
+   TEXT
 ========================= */
-.active-bar-svg {
+.menuText {
+  position: relative;
+  z-index: 2;
+  font-size: 1.1rem;
+  color: #cfc5d2;
+}
+
+.menuItem.active .menuText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0c0c0c;
+}
+
+/* =========================
+   ACTIVE BAR (FLIPPED CORRECTLY)
+========================= */
+.activeBarSvg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  transform: translateX(16px);
+
+  transform: scaleX(-1) translateX(16px);
+  transform-origin: center;
   z-index: 0;
 }
 
-.active-bar-path {
-  fill: #ffffff;
+.activeBarPath {
+  fill: #f4f7fb;
 }
 
 /* =========================
-   MASK RECTANGLES
+   MASKS (RIGHT SIDE)
 ========================= */
-.mask-top,
-.mask-bottom {
+.maskTop,
+.maskBottom {
   position: absolute;
-  left: 16px;
+  right: 16px;
   width: 100%;
   height: 18px;
   background: #17559c;
-  pointer-events: none;
   z-index: 1;
-  transform-origin: right center;
+  pointer-events: none;
+  transform-origin: left center;
 }
 
-.mask-top {
+.maskTop {
   top: 0;
-  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
 }
 
-.mask-bottom {
+.maskBottom {
   bottom: 0;
-  border-top-right-radius: 40px;
+  border-top-left-radius: 40px;
 }
 
 /* =========================
-   MAIN CONTENT
+   RESPONSIVE
 ========================= */
-.profile-main {
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-.profile-card {
-  background: white;
-  border-radius: 18px;
-  padding: 1.75rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
-}
-
-.profile-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.profile-help-text {
-  margin: 0.75rem 0 1.25rem;
-  color: #555;
-}
-
-.profile-details div {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
-}
-
-/* =========================
-   SAVED CARDS
-========================= */
-.saved-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
-}
-
-.saved-card {
-  background: #f1f3ff;
-  padding: 0.75rem;
-  border-radius: 12px;
-  text-align: center;
-}
-
-/* =========================
-   RIGHT PANEL
-========================= */
-.profile-progress {
-  padding: 2.5rem 1.75rem;
-}
-
-.progress-card {
-  background: white;
-  border-radius: 18px;
-  padding: 1.75rem;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
-}
-
-.progress-button {
-  width: 100%;
-  padding: 0.75rem;
-  border-radius: 14px;
-  border: none;
-  background: #5b5fc7;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.progress-button:hover {
-  background: #4a4eb6;
-}
-
-/* =========================
-   ICON COLORS
-========================= */
-.icon-blue { color: #4a90e2; }
-.icon-pink { color: #e255a1; }
-.icon-green { color: #2ecc71; }
-
-/* =========================
-   LOADING
-========================= */
-.profile-loading {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+@media (max-width: 900px) {
+  .profileSidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
 }

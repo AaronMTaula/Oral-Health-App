@@ -140,6 +140,94 @@
   border-top-left-radius: 40px;
 }
 
+.providersList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+.providersList li {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+}
+
+
+/* =========================
+   PROVIDER CARD
+========================= */
+.providerCard {
+  margin-top: 1.75rem;
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.expandArrow {
+  cursor: pointer;
+  font-size: 0.85rem;
+  user-select: none;
+  line-height: 1.2;
+}
+
+.providerBody {
+  flex: 1;
+  overflow: hidden;
+}
+
+.providerHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.providerName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.providerRating {
+  font-size: 0.85rem;
+  color: #ffd700;
+}
+
+/* Expanded */
+.providerExpanded {
+  overflow: hidden;
+}
+
+.providerMeta {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: #e1e1e1;
+}
+
+.serviceTags {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.serviceTag {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================
+   REMINDERS
+========================= */
+.remindersPlaceholder {
+  margin-top: 1.75rem;
+  font-size: 0.85rem;
+  color: #e0e0e0;
+}
+
 /* =========================
    RESPONSIVE
 ========================= */

@@ -4,23 +4,40 @@ import styles from "./Test.module.css";
 
 const menuItems = ["Providers", "Reminders"];
 
-// Single provider (focused scope)
-const provider = {
-  name: "Smile Dental Clinic",
-  rating: 4.7,
-  reviews: 123,
-  distance: "1.2 km",
-  address: "123 Main Street",
-  services: ["Clean", "Removal", "Crown", "CheckUp"],
-};
+// Providers (static for now)
+const providers = [
+  {
+    name: "Smile Dental Clinic",
+    rating: 4.6,
+    reviews: 124,
+    distance: "1.2 km",
+    address: "123 Queen Street",
+    services: ["Clean", "Removal", "Crown", "CheckUp"],
+  },
+  {
+    name: "Bright Smile Dental",
+    rating: 4.4,
+    reviews: 98,
+    distance: "2.1 km",
+    address: "45 Victoria Road",
+    services: ["Clean", "Whitening", "CheckUp"],
+  },
+  {
+    name: "Happy Teeth Dentistry",
+    rating: 4.8,
+    reviews: 212,
+    distance: "2.9 km",
+    address: "78 Dominion Ave",
+    services: ["Clean", "Crown", "Implant"],
+  },
+];
 
 const Test = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [expanded, setExpanded] = useState(true);
   const [buttonWidths, setButtonWidths] = useState([]);
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const buttonRefs = useRef([]);
 
-  // Measure widths once (important for SVG correctness)
   useEffect(() => {
     const widths = buttonRefs.current.map((btn) => btn?.offsetWidth || 100);
     setButtonWidths(widths);
@@ -38,9 +55,7 @@ const Test = () => {
 
             return (
               <motion.div key={label}>
-                {/* =========================
-                   MENU BUTTON (UNCHANGED)
-                ========================= */}
+                {/* MENU BUTTON */}
                 <motion.button
                   ref={(el) => (buttonRefs.current[index] = el)}
                   className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
@@ -53,20 +68,8 @@ const Test = () => {
                   <AnimatePresence>
                     {isActive && (
                       <>
-                        <motion.span
-                          className={styles.maskTop}
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          exit={{ scaleX: 0 }}
-                          transition={{ duration: 0.45, ease: "easeInOut" }}
-                        />
-                        <motion.span
-                          className={styles.maskBottom}
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          exit={{ scaleX: 0 }}
-                          transition={{ duration: 0.45, ease: "easeInOut" }}
-                        />
+                        <motion.span className={styles.maskTop} />
+                        <motion.span className={styles.maskBottom} />
                       </>
                     )}
                   </AnimatePresence>
@@ -89,67 +92,69 @@ const Test = () => {
                   </svg>
                 </motion.button>
 
-                {/* =========================
-                   PROVIDER CONTENT
-                ========================= */}
+                {/* PROVIDERS */}
                 {isActive && label === "Providers" && (
-                  <motion.div
-                    className={styles.providerCard}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 12 }}
-                  >
-                    <div
-                      className={styles.expandArrow}
-                      onClick={() => setExpanded((v) => !v)}
-                    >
-                      {expanded ? "▼" : "▶"}
-                    </div>
+                  <>
+                    {providers.map((provider, i) => {
+                      const isExpanded = expandedIndex === i;
 
-                    <div className={styles.providerBody}>
-                      <div className={styles.providerHeader}>
-                        <div className={styles.providerName}>
-                          {provider.name}
-                        </div>
-                        <div className={styles.providerRating}>
-                          ⭐ {provider.rating} ({provider.reviews})
-                        </div>
-                      </div>
-
-                      <AnimatePresence initial={false}>
-                        {expanded && (
-                          <motion.div
-                            key="expanded"
-                            className={styles.providerExpanded}
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.35, ease: "easeInOut" }}
+                      return (
+                        <div key={provider.name} className={styles.providerCard}>
+                          <button
+                            className={`${styles.expandToggle} ${
+                              isExpanded ? styles.expanded : ""
+                            }`}
+                            onClick={() =>
+                              setExpandedIndex(isExpanded ? null : i)
+                            }
                           >
-                            <div className={styles.providerMeta}>
-                              {provider.distance} — {provider.address}
+                            ▾
+                          </button>
+
+                          <div className={styles.providerContent}>
+                            <h3 className={styles.providerName}>
+                              {provider.name}
+                            </h3>
+
+                            <div className={styles.rating}>
+                              ⭐ {provider.rating} ({provider.reviews})
                             </div>
 
-                            <div className={styles.serviceTags}>
-                              {provider.services.map((s) => (
-                                <span key={s} className={styles.serviceTag}>
-                                  {s}
-                                </span>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.div>
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                >
+                                  <div className={styles.meta}>
+                                    {provider.distance} • {provider.address}
+                                  </div>
+
+                                  <div className={styles.tags}>
+                                    {provider.services.map((service) => (
+                                      <span
+                                        key={service}
+                                        className={styles.tag}
+                                      >
+                                        {service}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
 
-                {/* =========================
-                   REMINDERS PLACEHOLDER
-                ========================= */}
+                {/* REMINDERS */}
                 {isActive && label === "Reminders" && (
                   <div className={styles.remindersPlaceholder}>
-                    Reminders coming soon
+                    No reminders yet.
                   </div>
                 )}
               </motion.div>

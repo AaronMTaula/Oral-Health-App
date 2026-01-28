@@ -1,0 +1,6 @@
+/* Basic setup for the Test page */
+.testDashboard {
+  min-height: 100vh;
+  background: #f4f7fb;
+  padding: 2rem;
+}

@@ -1,0 +1,10 @@
+.pill-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25px;        /* width of pill */
+  height: 100%;       /* full menu item height */
+  background-color: #007bff;
+  border-radius: 12px 0 0 12px;  /* quarter ellipse */
+  z-index: 1;
+}

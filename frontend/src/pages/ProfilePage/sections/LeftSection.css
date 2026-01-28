@@ -1,0 +1,157 @@
+:root {
+  --sidebar-padding-x: 1rem;
+}
+
+/* =========================
+   SIDEBAR CONTAINER
+========================= */
+.profile-sidebar {
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  width: 320px;
+  min-width: 320px;
+  height: 100vh;
+
+  background: #17559c;
+  color: white;
+  padding: 4rem var(--sidebar-padding-x);
+
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+
+  overflow: visible;
+  z-index: 10;
+}
+
+/* =========================
+   SIDEBAR TITLE
+========================= */
+.sidebar-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  padding-left: 5.5rem;
+  color: white;
+}
+
+/* =========================
+   MENU CONTAINER
+========================= */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+
+  /* keep gap as the spacing controller */
+  gap: 3.75rem;
+
+  justify-content: flex-start;
+  height: 500px;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+   MENU ITEMS (SARDINE MODE)
+========================= */
+.menu-item {
+  position: relative;
+  width: 100%;
+  height: 42px;                 /* 🔑 hard vertical size */
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  /* zero vertical padding */
+  padding: 0 0 0 6.5rem;
+
+  overflow: visible;
+  transform: none;              /* no movement */
+}
+
+.menu-item.active {
+  z-index: 2;
+}
+
+/* =========================
+   TEXT
+========================= */
+.menu-text {
+  position: relative;
+  z-index: 2;
+
+  font-size: 1rem;
+  line-height: 1;               /* 🔑 tight vertical packing */
+  color: #311538;
+}
+
+.menu-item.active .menu-text {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0c0c0c;
+}
+
+/* =========================
+   ACTIVE BAR (UNCHANGED)
+========================= */
+.active-bar-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translateX(16px);
+  z-index: 0;
+}
+
+.active-bar-path {
+  fill: #ffffff;
+}
+
+/* =========================
+   MASK RECTANGLES (UNCHANGED)
+========================= */
+.mask-top,
+.mask-bottom {
+  position: absolute;
+  left: 16px;
+  width: 100%;
+  height: 18px;
+  background: #17559c;
+  pointer-events: none;
+  z-index: 1;
+  transform-origin: right center;
+}
+
+.mask-top {
+  top: 0;
+  border-bottom-right-radius: 40px;
+}
+
+.mask-bottom {
+  bottom: 0;
+  border-top-right-radius: 40px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .profile-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .sidebar-nav {
+    height: 25rem;
+    gap: 0.5rem;
+  }
+}

@@ -30,8 +30,8 @@ const LeftSection = ({ activeIndex: initialIndex = 0, onSelect }) => {
               onClick={() => handleClick(index)}
               layout
               animate={{
-                height: isActive ? 200 : 120,
-                scaleY: isActive ? 1 : 0.88,
+                height: isActive ? 250 : 150,
+                scaleY: isActive ? 1 : 0.98,
                 y: !isActive
                   ? index < activeIndex
                     ? 25 * (activeIndex - index)

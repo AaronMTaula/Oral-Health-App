@@ -403,7 +403,7 @@ const HistoryCard = ({
 // =========================
 // MAIN PAGE
 // =========================
-const TestPage = () => {
+const MiddleSection = () => {
   const [dailyGoals, setDailyGoals] = useState([
     {
       text: "Brush Teeth",
@@ -463,4 +463,4 @@ const TestPage = () => {
   );
 };
 
-export default TestPage;
+export default MiddleSection;

@@ -41,13 +41,13 @@ const ProfilePage = () => {
   return (
     <div className="profile-dashboard">
       {/* LEFT SECTION / SIDEBAR */}
-      <LeftSection />
+      <LeftSection className="leftSidebar" />
 
       {/* MIDDLE SECTION / MAIN CONTENT */}
       <MiddleSection userData={userData} />
 
-      {/* RIGHT SECTION / PROGRESS */}
-      <RightSection />
+      {/* RIGHT SECTION / FIXED SIDEBAR */}
+      <RightSection className="rightSidebar" />
     </div>
   );
 };

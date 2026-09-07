@@ -12,7 +12,6 @@ export default function LoginForm({ onLoginSuccess, onLoginError, onSwitchToSign
 
     try {
       const userData = await loginUser({ email, password });
-      console.log("Login success:", userData);
       onLoginSuccess(userData.user, userData.token);
     } catch (err) {
       console.error("Login failed:", err.message);

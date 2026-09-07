@@ -100,7 +100,10 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
       user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email },
     });
   } catch (err) {
-    console.error('Firebase login failed:', err);
+    console.error('Firebase login failed:', {
+      code: err.code || 'unknown',
+      name: err.name || 'Error',
+    });
     res.status(401).json({ error: 'Invalid Firebase token' });
   }
 });
@@ -134,7 +137,10 @@ router.post('/signup', authLimiter, async (req, res) => {
       user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email },
     });
   } catch (err) {
-    console.error('Firebase signup failed:', err);
+    console.error('Firebase signup failed:', {
+      code: err.code || 'unknown',
+      name: err.name || 'Error',
+    });
     res.status(401).json({ error: 'Invalid Firebase token' });
   }
 });

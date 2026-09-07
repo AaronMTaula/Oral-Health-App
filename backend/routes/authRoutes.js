@@ -38,7 +38,7 @@ const buildJwt = (uid, email, tokenVersion) =>
 
 const syncFirebaseUser = async (decoded) => {
   const { uid, email, name } = decoded;
-  let user = await User.findOne({ $or: [{ email }, { firebaseUid: uid }] });
+  let user = await User.findOne({ firebaseUid: uid });
 
   if (!user) {
     const randomPassword = crypto.randomBytes(32).toString('hex');
@@ -59,9 +59,7 @@ const syncFirebaseUser = async (decoded) => {
     const randomPassword = crypto.randomBytes(32).toString('hex');
     user.password = await bcrypt.hash(randomPassword, 10);
   }
-  if (!user.firebaseUid) user.firebaseUid = uid;
   if (!user.name && name) user.name = name;
-  if (user.email !== email) user.email = email;
   await user.save();
 
   return user;
@@ -108,7 +106,9 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
-    res.status(401).json({ error: 'Invalid Firebase token' });
+    res.status(stage === 'firebase-token-verification' ? 401 : 500).json({
+      error: stage === 'firebase-token-verification' ? 'Invalid Firebase token' : 'Authentication service unavailable',
+    });
   }
 });
 
@@ -149,7 +149,9 @@ router.post('/signup', authLimiter, async (req, res) => {
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
-    res.status(401).json({ error: 'Invalid Firebase token' });
+    res.status(stage === 'firebase-token-verification' ? 401 : 500).json({
+      error: stage === 'firebase-token-verification' ? 'Invalid Firebase token' : 'Authentication service unavailable',
+    });
   }
 });
 

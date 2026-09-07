@@ -1,9 +1,9 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
 const path = require("path");
+const connectDB = require("./config/db");
 
 dotenv.config();
 
@@ -84,11 +84,12 @@ app.use(helmet(securityHeaders));
 if (!process.env.MONGO_URI) {
   throw new Error('MONGO_URI environment variable is not set');
 }
-mongoose.connect(process.env.MONGO_URI)
-
-  .then(() => console.log("✅ MongoDB connected successfully!"))
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+connectDB().catch((err) => {
+    console.error("❌ MongoDB connection error:", {
+      name: err.name || "Error",
+      code: err.code || "unknown",
+      codeName: err.codeName || "unknown",
+    });
     process.exit(1);
   });
 

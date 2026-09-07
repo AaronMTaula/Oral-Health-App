@@ -153,3 +153,12 @@ test('frontend no longer references dead legacy login routes', async () => {
   const legacyRoutePattern = /['\"]\s*:\s*['\"]\s*http:\/\/localhost:5000\/api\/auth\/(login|register|createUser)(?:['\"/?]|$)|['\"]\s*\/api\/auth\/(login|register|createUser)(?:['\"/?]|$)/i;
   assert.equal(legacyRoutePattern.test(content), false, 'Frontend should not call dead legacy auth routes');
 });
+
+test('Firebase synchronization is keyed by immutable Firebase UID', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const authRoutes = fs.readFileSync(path.join(__dirname, '..', 'routes', 'authRoutes.js'), 'utf8');
+
+  assert.match(authRoutes, /User\.findOne\(\{ firebaseUid: uid \}\)/);
+  assert.doesNotMatch(authRoutes, /User\.findOne\(\{\s*\$or:\s*\[\{ email/);
+});

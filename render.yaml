@@ -12,6 +12,8 @@ services:
         sync: false
       - key: MONGO_URI
         sync: false
+      - key: MONGO_DB_NAME
+        value: oral-health-app
       - key: JWT_SECRET
         sync: false
       - key: FIREBASE_PROJECT_ID

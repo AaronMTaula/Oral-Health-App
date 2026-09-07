@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 const path = require("path");
 
@@ -32,11 +33,50 @@ const corsOptions = {
   },
 };
 
+const isProduction = process.env.NODE_ENV === "production";
+const securityHeaders = {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      baseUri: ["'self'"],
+      connectSrc: [
+        "'self'",
+        ...allowedOrigins,
+        "https://*.onrender.com",
+        "https://*.firebaseio.com",
+        "wss://*.firebaseio.com",
+        "https://identitytoolkit.googleapis.com",
+        "https://securetoken.googleapis.com",
+        "https://www.googleapis.com",
+        "https://*.googleapis.com",
+      ],
+      fontSrc: ["'self'", "https:", "data:"],
+      formAction: ["'self'", "https://*.firebaseapp.com"],
+      frameAncestors: ["'self'"],
+      frameSrc: ["'self'", "https://*.firebaseapp.com", "https://*.web.app", "https://accounts.google.com"],
+      imgSrc: ["'self'", "data:", "blob:", "https:"],
+      objectSrc: ["'none'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://apis.google.com", "https://www.gstatic.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      upgradeInsecureRequests: isProduction ? [] : null,
+    },
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  strictTransportSecurity: {
+    maxAge: isProduction ? 31536000 : 0,
+    includeSubDomains: isProduction,
+    preload: isProduction,
+  },
+  xContentTypeOptions: true,
+  xFrameOptions: { action: "deny" },
+};
+
 // ===============================
 // Middleware
 // ===============================
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "100kb" }));
+app.use(helmet(securityHeaders));
 
 // ===============================
 // Database Connection

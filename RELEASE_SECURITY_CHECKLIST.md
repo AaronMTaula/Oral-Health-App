@@ -21,7 +21,7 @@ Complete the items in order. Each item is complete only when all of its requirem
 - [ ] If TLS terminates at a reverse proxy, configure Express proxy handling correctly and verify HTTPS redirect logic cannot be bypassed through spoofed headers.
 - [ ] Verify cookies, if introduced later, use `Secure`, `HttpOnly`, and an appropriate `SameSite` policy.
 - [ ] Verify no production configuration, API URL, documentation, or browser network request uses plain HTTP except local development.
-- [ ] Confirm security headers are supplied by the edge or application, including at least `Strict-Transport-Security`, `X-Content-Type-Options`, and a suitable `Content-Security-Policy`.
+- [x] Confirm security headers are supplied by the application, including `Strict-Transport-Security`, `X-Content-Type-Options`, `Content-Security-Policy`, `X-Frame-Options`, and `Referrer-Policy`. Helmet is configured in `backend/app.js`; local development sends HSTS with `max-age=0`, while production sends one-year HSTS.
 
 ## 3. JWT validation and revocation
 

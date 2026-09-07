@@ -90,8 +90,10 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
 
   if (!idToken) return res.status(400).json({ error: 'No Firebase ID token provided' });
 
+  let stage = 'firebase-token-verification';
   try {
     const decoded = await admin.auth().verifyIdToken(idToken);
+    stage = 'mongo-user-sync';
     const user = await syncFirebaseUser(decoded);
     const token = buildJwt(decoded.uid, decoded.email, user.tokenVersion);
 
@@ -101,7 +103,9 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
     });
   } catch (err) {
     console.error('Firebase login failed:', {
+      stage,
       code: err.code || 'unknown',
+      codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
     res.status(401).json({ error: 'Invalid Firebase token' });
@@ -126,8 +130,10 @@ router.post('/signup', authLimiter, async (req, res) => {
 
   if (!idToken) return res.status(400).json({ error: 'No Firebase ID token provided' });
 
+  let stage = 'firebase-token-verification';
   try {
     const decoded = await admin.auth().verifyIdToken(idToken);
+    stage = 'mongo-user-sync';
     const user = await syncFirebaseUser(decoded);
     const token = buildJwt(decoded.uid, decoded.email, user.tokenVersion);
 
@@ -138,7 +144,9 @@ router.post('/signup', authLimiter, async (req, res) => {
     });
   } catch (err) {
     console.error('Firebase signup failed:', {
+      stage,
       code: err.code || 'unknown',
+      codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
     res.status(401).json({ error: 'Invalid Firebase token' });

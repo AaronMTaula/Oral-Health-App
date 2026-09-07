@@ -15,6 +15,7 @@ async function fetchJson(path, opts = {}) {
   return {
     status: res.status,
     ok: res.ok,
+    headers: res.headers,
     text,
     json: (() => { try { return JSON.parse(text); } catch { return null; } })(),
   };
@@ -39,6 +40,24 @@ test('backend health endpoint is available', async () => {
   const res = await fetchJson('/api/health');
   assert.equal(res.status, 200);
   assert.match(res.text, /running/i);
+  assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(res.headers.get('x-frame-options'), 'DENY');
+  assert.equal(res.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+
+  const hsts = res.headers.get('strict-transport-security');
+  assert.match(hsts || '', /max-age=\d+/);
+  if (process.env.NODE_ENV === 'production') {
+    assert.match(hsts, /max-age=31536000/);
+  } else {
+    assert.match(hsts, /max-age=0/);
+  }
+
+  const csp = res.headers.get('content-security-policy') || '';
+  assert.match(csp, /default-src 'self'/);
+  assert.match(csp, /connect-src[^;]*https:\/\/identitytoolkit\.googleapis\.com/);
+  assert.match(csp, /connect-src[^;]*https:\/\/securetoken\.googleapis\.com/);
+  assert.match(csp, /connect-src[^;]*https:\/\/\*\.onrender\.com/);
+  assert.match(csp, /frame-src[^;]*https:\/\/\*\.firebaseapp\.com/);
 });
 
 test('legacy auth endpoints are explicitly disabled', async () => {

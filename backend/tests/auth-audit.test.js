@@ -1,9 +1,11 @@
 const test = require('node:test');
+const { after, before } = require('node:test');
 const assert = require('node:assert/strict');
-const http = require('node:http');
-const { once } = require('node:events');
+const path = require('node:path');
+const { spawn } = require('node:child_process');
 
 const BASE_URL = 'http://localhost:5000';
+let backendProcess;
 
 async function fetchJson(path, opts = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -34,6 +36,18 @@ async function waitForServer() {
 
   throw new Error('Backend did not become ready in time');
 }
+
+before(async () => {
+  backendProcess = spawn(process.execPath, ['app.js'], {
+    cwd: path.join(__dirname, '..'),
+    stdio: 'ignore',
+  });
+  await waitForServer();
+});
+
+after(() => {
+  if (backendProcess && !backendProcess.killed) backendProcess.kill();
+});
 
 test('backend health endpoint is available', async () => {
   await waitForServer();

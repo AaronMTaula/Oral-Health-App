@@ -1,5 +1,6 @@
 // backend/utils/firebase.js
 const admin = require("firebase-admin");
+const { getAuth } = require("firebase-admin/auth");
 
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -7,9 +8,11 @@ const serviceAccount = {
   private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"), // Convert \n to actual line breaks
 };
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+const firebaseApp = admin.initializeApp({
+  credential: admin.cert(serviceAccount),
 });
 
 console.log("✅ Firebase initialized!");
-module.exports = admin;
+module.exports = {
+  auth: () => getAuth(firebaseApp),
+};

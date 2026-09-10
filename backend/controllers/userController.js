@@ -19,7 +19,7 @@ exports.loginUser = async (_req, res) => {
 // Get current user profile
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.user.email }).select("-password");
+    const user = await User.findOne({ firebaseUid: req.user.uid }).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
   } catch (err) {
@@ -34,15 +34,16 @@ exports.updateUser = async (req, res) => {
     const targetUser = await User.findById(req.params.id);
     if (!targetUser) return res.status(404).json({ error: "User not found" });
 
-    // req.user comes from the verified JWT (set by authMiddleware) — never trust
-    // req.params.id alone. Both Firebase-issued and legacy JWT payloads include
-    // email, so it's the one reliable field to compare across both token shapes.
-    if (targetUser.email !== req.user.email) {
+    // Ownership must be tied to the authenticated Firebase UID, not a mutable email.
+    if (targetUser.firebaseUid !== req.user.uid) {
       return res.status(403).json({ error: "Not authorized to modify this user" });
     }
 
     const { name, email, password } = req.body;
-    const update = { name, email };
+    const update = {};
+
+    if (typeof name !== "undefined") update.name = name;
+    if (typeof email !== "undefined") update.email = email;
     if (password) update.password = await bcrypt.hash(password, 10);
 
     const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).select("-password");
@@ -59,7 +60,7 @@ exports.deleteUser = async (req, res) => {
     const targetUser = await User.findById(req.params.id);
     if (!targetUser) return res.status(404).json({ error: "User not found" });
 
-    if (targetUser.email !== req.user.email) {
+    if (targetUser.firebaseUid !== req.user.uid) {
       return res.status(403).json({ error: "Not authorized to delete this user" });
     }
 

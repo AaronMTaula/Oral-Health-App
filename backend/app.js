@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require("fs");
 const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
@@ -109,17 +110,22 @@ app.get("/api/health", (req, res) => {
 // ===============================
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../frontend/dist");
+  const hasFrontendBuild = fs.existsSync(frontendPath) && fs.existsSync(path.join(frontendPath, "index.html"));
 
-  // Serve static files
-  app.use(express.static(frontendPath));
+  if (hasFrontendBuild) {
+    // Serve static files when the frontend bundle exists in this deployment.
+    app.use(express.static(frontendPath));
 
-  // React Router catch-all (safe for Node 22)
-  app.use((req, res, next) => {
-    if (req.method === "GET" && !req.path.startsWith("/api")) {
-      return res.sendFile(path.join(frontendPath, "index.html"));
-    }
-    next();
-  });
+    // React Router catch-all (safe for Node 22)
+    app.use((req, res, next) => {
+      if (req.method === "GET" && !req.path.startsWith("/api")) {
+        return res.sendFile(path.join(frontendPath, "index.html"));
+      }
+      next();
+    });
+  } else {
+    console.warn("Frontend build artifact not found in backend deployment; skipping static frontend hosting. API-only backend is expected on Render.");
+  }
 }
 
 // ===============================

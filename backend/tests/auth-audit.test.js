@@ -176,3 +176,12 @@ test('Firebase synchronization is keyed by immutable Firebase UID', () => {
   assert.match(authRoutes, /User\.findOne\(\{ firebaseUid: uid \}\)/);
   assert.doesNotMatch(authRoutes, /User\.findOne\(\{\s*\$or:\s*\[\{ email/);
 });
+
+test('user ownership checks are based on Firebase UID, not mutable email', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const userController = fs.readFileSync(path.join(__dirname, '..', 'controllers', 'userController.js'), 'utf8');
+
+  assert.match(userController, /firebaseUid\s*!==\s*req\.user\.uid|firebaseUid\s*!==\s*req\.user\.uid/i);
+  assert.doesNotMatch(userController, /targetUser\.email\s*!==\s*req\.user\.email|targetUser\.email\s*!==\s*req\.user\.email/i);
+});

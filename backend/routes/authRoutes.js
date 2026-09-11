@@ -37,21 +37,58 @@ const buildJwt = (uid, email, tokenVersion) =>
   });
 
 const syncFirebaseUser = async (decoded) => {
-  const { uid, email, name } = decoded;
+  const uid = decoded?.uid;
+  const email = decoded?.email || `${uid}@firebase.local`;
+  const name = decoded?.name || 'New User';
+
+  if (!uid) {
+    throw new Error('Missing Firebase uid');
+  }
+
   let user = await User.findOne({ firebaseUid: uid });
 
   if (!user) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      if (existingUser.firebaseUid && existingUser.firebaseUid !== uid) {
+        const error = new Error('Firebase email is already linked to another account');
+        error.code = 'FIREBASE_EMAIL_CONFLICT';
+        throw error;
+      }
+      existingUser.firebaseUid = uid;
+      existingUser.name = existingUser.name || name;
+      if (!existingUser.password) {
+        const randomPassword = crypto.randomBytes(32).toString('hex');
+        existingUser.password = await bcrypt.hash(randomPassword, 10);
+      }
+      try {
+        await existingUser.save();
+      } catch (err) {
+        if (err?.code !== 11000) throw err;
+        user = await User.findOne({ firebaseUid: uid });
+        if (!user) throw err;
+        return user;
+      }
+      return existingUser;
+    }
+
     const randomPassword = crypto.randomBytes(32).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     user = new User({
-      name: name || 'New User',
+      name,
       email,
       password: hashedPassword,
       firebaseUid: uid,
     });
 
-    await user.save();
+    try {
+      await user.save();
+    } catch (err) {
+      if (err?.code !== 11000) throw err;
+      user = await User.findOne({ firebaseUid: uid });
+      if (!user) throw err;
+    }
     return user;
   }
 
@@ -60,6 +97,7 @@ const syncFirebaseUser = async (decoded) => {
     user.password = await bcrypt.hash(randomPassword, 10);
   }
   if (!user.name && name) user.name = name;
+  if (!user.email && email) user.email = email;
   await user.save();
 
   return user;
@@ -93,7 +131,7 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
     const decoded = await admin.auth().verifyIdToken(idToken);
     stage = 'mongo-user-sync';
     const user = await syncFirebaseUser(decoded);
-    const token = buildJwt(decoded.uid, decoded.email, user.tokenVersion);
+    const token = buildJwt(user.firebaseUid, user.email, user.tokenVersion);
 
     res.json({
       token,
@@ -106,8 +144,17 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
-    res.status(stage === 'firebase-token-verification' ? 401 : 500).json({
-      error: stage === 'firebase-token-verification' ? 'Invalid Firebase token' : 'Authentication service unavailable',
+    const status = stage === 'firebase-token-verification'
+      ? 401
+      : err.code === 'FIREBASE_EMAIL_CONFLICT'
+        ? 409
+        : 500;
+    res.status(status).json({
+      error: stage === 'firebase-token-verification'
+        ? 'Invalid Firebase token'
+        : err.code === 'FIREBASE_EMAIL_CONFLICT'
+          ? 'Firebase account cannot be linked to this email'
+          : 'Authentication service unavailable',
     });
   }
 });
@@ -135,7 +182,7 @@ router.post('/signup', authLimiter, async (req, res) => {
     const decoded = await admin.auth().verifyIdToken(idToken);
     stage = 'mongo-user-sync';
     const user = await syncFirebaseUser(decoded);
-    const token = buildJwt(decoded.uid, decoded.email, user.tokenVersion);
+    const token = buildJwt(user.firebaseUid, user.email, user.tokenVersion);
 
     res.status(201).json({
       message: 'User created',
@@ -149,8 +196,17 @@ router.post('/signup', authLimiter, async (req, res) => {
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
     });
-    res.status(stage === 'firebase-token-verification' ? 401 : 500).json({
-      error: stage === 'firebase-token-verification' ? 'Invalid Firebase token' : 'Authentication service unavailable',
+    const status = stage === 'firebase-token-verification'
+      ? 401
+      : err.code === 'FIREBASE_EMAIL_CONFLICT'
+        ? 409
+        : 500;
+    res.status(status).json({
+      error: stage === 'firebase-token-verification'
+        ? 'Invalid Firebase token'
+        : err.code === 'FIREBASE_EMAIL_CONFLICT'
+          ? 'Firebase account cannot be linked to this email'
+          : 'Authentication service unavailable',
     });
   }
 });

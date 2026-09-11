@@ -143,6 +143,7 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
       code: err.code || 'unknown',
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
+      message: err.message || 'No error message',
     });
     const status = stage === 'firebase-token-verification'
       ? 401
@@ -195,6 +196,7 @@ router.post('/signup', authLimiter, async (req, res) => {
       code: err.code || 'unknown',
       codeName: err.codeName || 'unknown',
       name: err.name || 'Error',
+      message: err.message || 'No error message',
     });
     const status = stage === 'firebase-token-verification'
       ? 401

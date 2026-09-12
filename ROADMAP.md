@@ -35,14 +35,25 @@ Status Legend:
 ### 🌐 Global / Layout (`frontend/src/components/`)
 - [ ] **Announcement Banner Component**:
   - Sits below navbar when unscrolled (under the curve mask in empty space), pushing content downward without overlap.
-  - Sticky positioning when scrolled so it follows below the navbar.
+  - Sticky positioning when scrolled so it attaches directly below the fixed navbar.
+  - Dismissible: Includes a close `(X)` button allowing users to hide the banner.
 - [ ] **Navbar Refinements**:
   - Image logo SVG sized to fit container perfectly without changing visual aspect ratio.
   - Reduce empty space below `CurveMask` so it does not block content below or behind it.
   - Slim top border of `CurveMask` above navbar for increased Tabloid Hero visibility while preserving a thin separation border.
-  - Fix NavLinks responsive path following to prevent links overlapping each other or being clipped by the logo.
+  - **NavLinks Curve Alignment**: NavLinks dynamically follow the exact curve shape of the navbar (iterative CSS/SVG path calculation).
   - Position Language & Login/Logout buttons flush on top of the navbar curve ("sit on the curve") dynamically on window resize.
-  - Language selector displaying associated country flags (e.g. 🇬🇧 English, 🇳🇿 Te Reo Māori, etc.).
+  - **Auckland Top 10 Flag Language Selector**: Language selector displaying country flags for top 10 Auckland demographics:
+    - 🇳🇿 English (NZ)
+    - 🇳🇿 Te Reo Māori
+    - 🇼🇸 Gagana Sāmoa
+    - 🇹🇴 Lea Faka-Tonga
+    - 🇨🇳 Mandarin (中文)
+    - 🇮🇳 Hindi (हिन्दी)
+    - 🇵🇭 Tagalog
+    - 🇳🇺 Vagahau Niuē
+    - 🇨🇰 Cook Islands Māori
+    - 🇫🇯 Fijian
 
 ---
 
@@ -68,10 +79,12 @@ Status Legend:
 ### 🦷 4. Find My Teeth (`frontend/src/pages/FindMyTeeth.jsx`)
 - [ ] **Announcement Banner Content**:
   > *"Cheese! Have a look around the different parts of the mouth below to find a match to your smile. Add these features to your account to keep track of your smile."*
-- [ ] **Permanent Diagram Mode**:
+- [ ] **Permanent Museum Diagram Mode & Admin Controls**:
   - Remove "Undo" and "Confirm" temporary placement controls.
-  - Lock label positions permanently like a museum diagram.
-  - Restrict condition editing/placement configuration to logged-in Admin accounts only.
+  - Lock label positions permanently as a museum-style reference for regular patients.
+  - **Admin View Toggle**: Logged-in Admins (`role: "admin"`) get a view toggle to switch between Regular Patient View and Admin View.
+  - **Admin Position Manager**: In Admin View, admins can set, adjust, and save the coordinates/descriptions of labels on the mouth diagram.
+  - **MongoDB Storage**: Condition pin coordinates & descriptions stored in a MongoDB collection so saved Admin edits apply universally to all users without code redeployments.
 - [ ] **Condition Content & Descriptions**:
   - **Decay**: Appearance (black/brown/grey spots, cavities, dark gum areas), sensitivity, filled with fillings. Urgency to see dentist/OHT.
   - **Chipped tooth**: Causes (hard foods, sports/fall, grinding). Examination for filling & prevention.
@@ -110,10 +123,12 @@ Status Legend:
   > *"Have any questions? Comments? Queries or concerns? Let us know."*
 - [ ] **Prominent Disclaimer Header**:
   > *"The information provided on this website is for general educational purposes only and is not a substitute for professional dental advice, diagnosis, or treatment. Questions and answers here are meant to help you learn, not to diagnose dental problems or recommend specific treatments. Every mouth is different. If you have dental pain, swelling, bleeding, injury, or any other concern, always see a qualified dentist or dental professional. Never ignore, delay, or replace professional dental care because of something you read on this website. If you think you may have a dental emergency, contact a dentist or emergency service right away."*
-- [ ] **Email-Style Communication Section**:
+- [ ] **Email-Style Communication & Provider Inquiry**:
   - Simplified email UI interface for user inquiries.
-  - Login required to access and submit queries.
-  - **Family CC Field**: Require user to CC a family member's email address to ensure transparent communication records for minors/patients.
+  - Login required to access and send messages.
+  - **Provider Selection**: User can select their recipient provider (e.g. Ata'ata Dental Team, School Dental Clinic, Community Dental Center).
+  - **Mandatory Family CC Field**: Requires standard email format validation for a family member's email address. Sending is blocked until a valid email is entered.
+  - **Real Email Dispatch**: Integrates with email service (Nodemailer / SendGrid) to send real emails to the provider and CC the family member.
 
 ---
 

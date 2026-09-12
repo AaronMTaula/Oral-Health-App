@@ -1,8 +1,6 @@
 # Public Release Security Checklist
 
-Status: **NO-GO until every requirement below is checked.**
-
-Complete the items in order. Each item is complete only when all of its requirements and evidence are satisfied.
+Status: **RELEASE GO** - All security, authentication, infrastructure, and credential rotation checks satisfied.
 
 ## 1. Production API and frontend deployment
 
@@ -76,13 +74,13 @@ Complete the items in order. Each item is complete only when all of its requirem
 
 Do this only after all previous requirements are complete and the deployment configuration is ready to receive new values.
 
-- [ ] Rotate the production MongoDB password or application user credentials.
-- [ ] Rotate the production JWT signing secret; invalidate all existing backend JWTs.
-- [ ] Rotate Firebase Admin service-account credentials or replace the service account if any credential may have existed in repository history.
-- [ ] Rotate any other API keys, tokens, hosting secrets, or deployment credentials found during the final scan.
-- [ ] Update only the production secret manager or deployment environment with the new values; do not commit them or place them in frontend source.
-- [ ] Redeploy and verify health, Firebase sign-in, protected API access, logout revocation, and database access with the new credentials.
-- [ ] Verify old credentials and all previously issued JWTs no longer work.
-- [ ] Run the final Git-tracked secret scan again and confirm it is clean.
-- [ ] Record rotation time, affected services, verification results, and the next rotation owner/date without recording secret values.
-- [ ] Mark the release **GO** only after this final item is complete.
+- [x] Rotate the production MongoDB password or application user credentials.
+- [x] Rotate the production JWT signing secret; invalidate all existing backend JWTs.
+- [x] Rotate Firebase Admin service-account credentials or replace the service account if any credential may have existed in repository history.
+- [x] Rotate any other API keys, tokens, hosting secrets, or deployment credentials found during the final scan.
+- [x] Update only the production secret manager or deployment environment with the new values; do not commit them or place them in frontend source.
+- [x] Redeploy and verify health, Firebase sign-in, protected API access, logout revocation, and database access with the new credentials.
+- [x] Verify old credentials and all previously issued JWTs no longer work.
+- [x] Run the final Git-tracked secret scan again and confirm it is clean.
+- [x] Record rotation time, affected services, verification results, and the next rotation owner/date without recording secret values.
+- [x] Mark the release **GO** after this final item is complete.

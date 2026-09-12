@@ -85,8 +85,6 @@ const MyProviders = () => {
     }
   }, [expandedWhen, whenToGo.length]);
 
-  if (!isLoaded) return <p>Loading map...</p>;
-
   /* =========================
      HANDLE SEARCH
   ========================== */
@@ -134,7 +132,7 @@ const MyProviders = () => {
       </header>
 
       {/* 2x2 GRID */}
-      <div className="providers-grid" style={{ gridTemplateRows: `${gridHeight} ${gridHeight}` }}>
+      <div className="providers-grid">
         {/* BOX 1: WHEN */}
         <div ref={box1Ref} className="providers-box text-box">
           <h2>When do you need to go to the dentist?</h2>
@@ -245,13 +243,19 @@ const MyProviders = () => {
 
         {/* RIGHT: GOOGLE MAP */}
         <div className="map-panel">
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={center}
-            zoom={12}
-            options={options}
-            onLoad={(map) => (mapRef.current = map)}
-          />
+          {isLoaded ? (
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={center}
+              zoom={12}
+              options={options}
+              onLoad={(map) => (mapRef.current = map)}
+            />
+          ) : (
+            <div className="map-fallback" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', background: '#e5e7eb', color: '#6b7280', fontWeight: '500' }}>
+              📍 Loading interactive dentist map...
+            </div>
+          )}
         </div>
       </section>
 

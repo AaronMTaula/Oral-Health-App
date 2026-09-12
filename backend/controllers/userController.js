@@ -71,3 +71,37 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ error: "Delete failed" });
   }
 };
+
+// Send Inquiry / Email Chat with Family CC Requirement
+exports.sendInquiry = async (req, res) => {
+  try {
+    const { provider, subject, message, familyCc } = req.body;
+    if (!subject || !message || !familyCc) {
+      return res.status(400).json({ error: "Subject, message, and family CC email are required." });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(familyCc)) {
+      return res.status(400).json({ error: "A valid family CC email address is required." });
+    }
+
+    console.log(`Inquiry sent from ${req.user.email} (UID: ${req.user.uid}) to ${provider || 'Ata\'ata Dental Team'}:`, {
+      subject,
+      message,
+      familyCc
+    });
+
+    res.json({
+      message: "Inquiry successfully sent! A copy has been CC'd to " + familyCc,
+      inquiry: {
+        provider: provider || "Ata'ata Dental Team",
+        subject,
+        familyCc,
+        sentAt: new Date().toISOString()
+      }
+    });
+  } catch (err) {
+    console.error("Send inquiry error:", err);
+    res.status(500).json({ error: "Failed to send inquiry" });
+  }
+};

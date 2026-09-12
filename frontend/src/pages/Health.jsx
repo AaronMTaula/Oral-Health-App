@@ -1,30 +1,14 @@
 // src/pages/Health.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppBanner from "../components/Banner.jsx";
 import "./Health.css";
 
 const Health = () => {
   const [activeSide, setActiveSide] = useState(null); // "sun" | "moon" | null
-  const [sunX, setSunX] = useState(400); // Sun initial non-selected
-  const [moonX, setMoonX] = useState(0);  // Moon initial non-selected
 
   const toggleSide = (side) => {
     setActiveSide(activeSide === side ? null : side);
   };
-
-  // Update positions whenever activeSide changes
-  useEffect(() => {
-    if (activeSide === "sun") {
-      setSunX(450);   // Sun selected
-      setMoonX(0);  // Moon collapsed
-    } else if (activeSide === "moon") {
-      setSunX(0);   // Sun collapsed
-      setMoonX(-410); // Moon selected
-    } else {
-      setSunX(200);   // Sun non-selected
-      setMoonX(-220);    // Moon non-selected
-    }
-  }, [activeSide]);
 
   return (
     <div className="health-page">
@@ -51,12 +35,7 @@ const Health = () => {
           onClick={() => toggleSide("sun")}
         >
           <div className="icon-wrapper">
-            <span
-              className="icon-inner"
-              style={{ transform: `translateX(${sunX}px)` }}
-            >
-              ☀️
-            </span>
+            <span className="icon-inner">☀️</span>
           </div>
 
           <div
@@ -83,12 +62,7 @@ const Health = () => {
           onClick={() => toggleSide("moon")}
         >
           <div className="icon-wrapper">
-            <span
-              className="icon-inner"
-              style={{ transform: `translateX(${moonX}px)` }}
-            >
-              🌙
-            </span>
+            <span className="icon-inner">🌙</span>
           </div>
 
           <div

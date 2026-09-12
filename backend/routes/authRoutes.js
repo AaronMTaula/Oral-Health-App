@@ -135,7 +135,7 @@ router.post('/login-firebase', authLimiter, async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email },
+      user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email, role: user.role || 'patient' },
     });
   } catch (err) {
     console.error('Firebase login failed:', {
@@ -188,7 +188,7 @@ router.post('/signup', authLimiter, async (req, res) => {
     res.status(201).json({
       message: 'User created',
       token,
-      user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email },
+      user: { id: user._id, uid: decoded.uid, name: user.name, email: user.email, role: user.role || 'patient' },
     });
   } catch (err) {
     console.error('Firebase signup failed:', {

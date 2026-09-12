@@ -17,9 +17,9 @@
  */
 .auth-form-container {
     background: #fff;
-    padding: 150px 2rem 2rem 2rem; /* Adjusted padding-top for the 450px logo */
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 110px 2rem 2rem 2rem; /* Adjusted padding-top to fit 200px navbar-proportioned logo */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -29,9 +29,6 @@
 
 /*
  * The logo is absolutely positioned relative to the form container.
- * `top: 0` places the top of the logo at the top edge of the form.
- * `left: 50%` centers it horizontally.
- * `transform: translate(-50%, -50%)` centers the logo's center on the form's top edge.
  */
 .logo-container {
     position: absolute;
@@ -43,12 +40,13 @@
 }
 
 /*
- * The logo's size has been increased to 450px to reduce negative space.
- * The black border has been re-added for visualization.
+ * Sized to 200px x 200px to match the navbar logo scale.
  */
 .auth-logo {
-    width: 450px;
-    height: 100%;
+    width: 200px;
+    height: 200px;
+    max-width: 200px;
+    object-fit: contain;
 }
 
 /* The app-name styles have been completely removed. */

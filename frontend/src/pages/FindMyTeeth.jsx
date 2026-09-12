@@ -1,121 +1,69 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import diagnosesData from "../data/diagnosesData";
+import React, { useState, useRef, useEffect } from "react";
+import diagnosesData, { symptomCardsData } from "../data/diagnosesData";
+import { useAuth } from "../context/useAuth";
 import mouthDiagram from "../images/Diagram Mouth.jpg";
-import coldImg from "../images/cold.jpg";
-import hotImg from "../images/hot.jpg";
-import bleedImg from "../images/bleed.jpg";
-import looseImg from "../images/loose.jpg";
-import sensitiveImg from "../images/sensitive.jpg";
 import AppBanner from "../components/Banner.jsx";
 import "./FindMyTeeth.css";
 
 const FindMyTeeth = () => {
-  const [allDiagnoses, setAllDiagnoses] = useState([...diagnosesData]);
-  const [dots, setDots] = useState([]);
-  const [pendingDot, setPendingDot] = useState(null);
-  const [confirmed, setConfirmed] = useState(false);
-  const [activeDot, setActiveDot] = useState(null);
+  const { currentUser } = useAuth();
+  const isAdminUser = currentUser?.role === "admin";
 
-  const [flippedCard, setFlippedCard] = useState(null);
+  const [conditions, setConditions] = useState([...diagnosesData]);
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [activeCondition, setActiveCondition] = useState(null);
+  const [draggingConditionId, setDraggingConditionId] = useState(null);
+
+  const [flippedSymptom, setFlippedSymptom] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
-  const [blurredCard, setBlurredCard] = useState(null);
   const [favourites, setFavourites] = useState([]);
-
-  const [boxDragPosition, setBoxDragPosition] = useState({ top: 0, left: 0 });
-  const draggingRef = useRef(false);
-  const dragOffsetRef = useRef({ x: 0, y: 0 });
   const diagramRef = useRef(null);
 
-  // Load saved dots
+  // Load saved pin positions if available
   useEffect(() => {
-    const saved = localStorage.getItem("fmtAssignments");
-    if (!saved) return;
+    const savedPositions = localStorage.getItem("fmtMuseumPositions");
+    if (!savedPositions) return;
     try {
-      const parsed = JSON.parse(saved).map((dot) => ({
-        ...dot,
-        boxTop: dot.boxTop ?? null,
-        boxLeft: dot.boxLeft ?? null,
-      }));
-      setDots(parsed);
-      if (parsed.length === allDiagnoses.length) setConfirmed(true);
+      const parsed = JSON.parse(savedPositions);
+      setConditions(prev =>
+        prev.map(item => {
+          const match = parsed.find(p => p.id === item.id);
+          return match ? { ...item, top: match.top, left: match.left } : item;
+        })
+      );
     } catch (e) {
-      console.error("Failed to load saved Find My Teeth data", e);
+      console.error("Failed to load museum pin positions", e);
     }
-  }, [allDiagnoses.length]);
+  }, []);
 
-  const assignedDiagnosisIds = useMemo(() => dots.map((d) => d.diagnosisId), [dots]);
-  const availableDiagnoses = useMemo(
-    () => allDiagnoses.filter((d) => !assignedDiagnosisIds.includes(d.id.toString())),
-    [allDiagnoses, assignedDiagnosisIds]
-  );
+  // Admin Pin Dragging Logic
+  const handlePinMouseDown = (e, conditionId) => {
+    if (!isAdminMode) return;
+    e.stopPropagation();
+    setDraggingConditionId(conditionId);
+  };
 
-  const handleDiagramClick = (e) => {
-    if (confirmed || pendingDot) return;
+  const handleDiagramMouseMove = (e) => {
+    if (!draggingConditionId || !diagramRef.current) return;
     const rect = diagramRef.current.getBoundingClientRect();
-    setPendingDot({ top: e.clientY - rect.top, left: e.clientX - rect.left });
+    const xPct = Math.max(5, Math.min(95, ((e.clientX - rect.left) / rect.width) * 100));
+    const yPct = Math.max(5, Math.min(95, ((e.clientY - rect.top) / rect.height) * 100));
+
+    setConditions(prev =>
+      prev.map(c => (c.id === draggingConditionId ? { ...c, top: Math.round(yPct), left: Math.round(xPct) } : c))
+    );
   };
 
-  const assignDiagnosisToDot = (diagnosisId) => {
-    if (!pendingDot) return;
-    const newDot = {
-      number: dots.length + 1,
-      top: pendingDot.top,
-      left: pendingDot.left,
-      diagnosisId: diagnosisId.toString(),
-      boxTop: null,
-      boxLeft: null,
-    };
-    const updatedDots = [...dots, newDot];
-    setDots(updatedDots);
-    setPendingDot(null);
-    localStorage.setItem("fmtAssignments", JSON.stringify(updatedDots));
-  };
-
-  const undoLastDot = () => {
-    const updatedDots = dots.slice(0, -1);
-    setDots(updatedDots);
-    setPendingDot(null);
-    setConfirmed(false);
-    localStorage.setItem("fmtAssignments", JSON.stringify(updatedDots));
-  };
-
-  const handleConfirm = () => {
-    if (dots.length === allDiagnoses.length) {
-      setConfirmed(true);
-      setPendingDot(null);
-      localStorage.setItem("fmtAssignments", JSON.stringify(dots));
-    } else {
-      alert("Please assign all diagnoses before confirming.");
+  const handleDiagramMouseUp = () => {
+    if (draggingConditionId) {
+      setDraggingConditionId(null);
     }
   };
 
-  const startDrag = (e) => {
-    if (!activeDot || e.target.closest(".close-btn")) return;
-    draggingRef.current = true;
-    dragOffsetRef.current = {
-      x: e.clientX - boxDragPosition.left,
-      y: e.clientY - boxDragPosition.top,
-    };
-  };
-
-  const onDrag = (e) => {
-    if (!draggingRef.current || !activeDot) return;
-    setBoxDragPosition({
-      left: e.clientX - dragOffsetRef.current.x,
-      top: e.clientY - dragOffsetRef.current.y,
-    });
-  };
-
-  const stopDrag = () => {
-    if (!activeDot) return;
-    draggingRef.current = false;
-    const updatedDots = dots.map((dot) =>
-      dot.number === activeDot.number
-        ? { ...dot, boxTop: boxDragPosition.top, boxLeft: boxDragPosition.left }
-        : dot
-    );
-    setDots(updatedDots);
-    localStorage.setItem("fmtAssignments", JSON.stringify(updatedDots));
+  const saveAdminPositions = () => {
+    const positions = conditions.map(c => ({ id: c.id, top: c.top, left: c.left }));
+    localStorage.setItem("fmtMuseumPositions", JSON.stringify(positions));
+    alert("Museum diagram positions updated and saved!");
   };
 
   useEffect(() => {
@@ -139,159 +87,103 @@ const FindMyTeeth = () => {
     { title: "Sensitive", desc: "Is it sensitive, sharp pain?", img: sensitiveImg },
   ];
 
-  const [flippedSymptom, setFlippedSymptom] = useState(null);
-
   return (
     <div className="fmt-container">
-      <h1 className="fmt-title">Find My Teeth</h1>
+      <div className="fmt-header-row">
+        <h1 className="fmt-title">Find My Teeth</h1>
 
-      {/* MOUTH DIAGRAM */}
-      <div className="mouth-diagram" ref={diagramRef} onClick={handleDiagramClick}>
-        <img src={mouthDiagram} alt="Mouth diagram" />
-
-        {dots.map((dot) => (
-          <div
-            key={dot.number}
-            className="mouth-dot"
-            style={{ top: dot.top, left: dot.left }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setActiveDot(dot);
-              setBoxDragPosition({
-                top: dot.boxTop ?? dot.top + 50,
-                left: dot.boxLeft ?? dot.left,
-              });
-            }}
-            title={allDiagnoses.find((d) => d.id.toString() === dot.diagnosisId.toString())?.colloquialName}
-          />
-        ))}
-
-        {pendingDot && (
-          <div
-            className="dot-selector"
-            style={{ top: pendingDot.top, left: pendingDot.left, transform: "translate(-50%, -120%)" }}
-          >
-            <select autoFocus onChange={(e) => assignDiagnosisToDot(e.target.value)} defaultValue="">
-              <option value="" disabled>Assign diagnosis</option>
-              {availableDiagnoses.map((d) => (
-                <option key={d.id} value={d.id}>{d.colloquialName}</option>
-              ))}
-            </select>
+        {/* ADMIN MODE TOGGLE (ADMIN USERS ONLY) */}
+        {isAdminUser && (
+          <div className="admin-controls-wrapper">
+            <button
+              className={`admin-toggle-btn ${isAdminMode ? "active-admin" : ""}`}
+              onClick={() => setIsAdminMode(!isAdminMode)}
+            >
+              {isAdminMode ? "👁️ Switch to Patient View" : "⚙️ Switch to Admin View"}
+            </button>
+            {isAdminMode && (
+              <button className="admin-save-btn" onClick={saveAdminPositions}>
+                💾 Save Diagram Positions
+              </button>
+            )}
           </div>
-        )}
-
-        {!confirmed && (
-          <>
-            <button className="undo-btn" onClick={undoLastDot}>Undo</button>
-            <button className="confirm-btn" onClick={handleConfirm} disabled={dots.length !== allDiagnoses.length}>Confirm</button>
-          </>
         )}
       </div>
 
-      {/* Dot info box */}
-      {activeDot && (
-        <div className="dot-info-box" style={{ top: boxDragPosition.top, left: boxDragPosition.left }}>
-          <div className="dot-info-header" onMouseDown={startDrag}>
-            <span>Diagnosis</span>
-            <button className="close-btn" onClick={() => setActiveDot(null)}>×</button>
+      {/* PERMANENT MUSEUM MOUTH DIAGRAM */}
+      <div
+        className={`mouth-diagram ${isAdminMode ? "admin-editing-mode" : ""}`}
+        ref={diagramRef}
+        onMouseMove={handleDiagramMouseMove}
+        onMouseUp={handleDiagramMouseUp}
+      >
+        <img src={mouthDiagram} alt="Mouth diagram" draggable={false} />
+
+        {/* PERMANENT CONDITION PINS */}
+        {conditions.map((c) => (
+          <div
+            key={c.id}
+            className={`mouth-pin ${activeCondition?.id === c.id ? "active-pin" : ""} ${
+              isAdminMode ? "draggable-pin" : ""
+            }`}
+            style={{ top: `${c.top}%`, left: `${c.left}%` }}
+            onMouseDown={(e) => handlePinMouseDown(e, c.id)}
+            onClick={() => setActiveCondition(activeCondition?.id === c.id ? null : c)}
+            title={c.colloquialName}
+          >
+            <span className="pin-number">{c.id}</span>
+            <span className="pin-label">{c.colloquialName}</span>
           </div>
+        ))}
+      </div>
 
-          <div className="info-card-container">
-            <div className="diagnosis-info">
-              {activeDiagnosis.map((diag) => (
-                <div key={diag.id}>
-                  <h3>{diag.colloquialName}</h3>
-                  <p>{diag.description}</p>
-                  <p><strong>Treatment:</strong> {diag.treatment}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="dot-card-wrapper">
-              {activeDiagnosis.map((diag) => (
-                <div
-                  key={diag.id}
-                  className={`fmt-card
-                    ${blurredCard === diag.id ? "front-unblurred" : ""}
-                    ${flippedCard === diag.id ? "flipped" : ""}
-                    ${expandedCard === diag.id ? "expanded" : ""}
-                  `}
-                  onClick={() => {
-                    if (blurredCard !== diag.id) {
-                      setBlurredCard(diag.id);
-                      setFlippedCard(null);
-                      setExpandedCard(null);
-                    } else {
-                      setFlippedCard(flippedCard === diag.id ? null : diag.id);
-                    }
-                  }}
-                >
-                  <div className="fmt-card-inner">
-                    <div className="fmt-card-front">
-                      <img src={diag.image} alt={diag.colloquialName} />
-                    </div>
-                    <div className="fmt-card-back">
-                      <h2>{diag.scientificName} <span>({diag.colloquialName})</span></h2>
-                      <p>{diag.description}</p>
-                      <div className="fmt-actions">
-                        <button
-                          className="fmt-icon-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setExpandedCard(expandedCard === diag.id ? null : diag.id);
-                            setFlippedCard(diag.id);
-                            setBlurredCard(diag.id);
-                          }}
-                        >❓</button>
-                        {/* Heart button only for mouth cards */}
-                        <button
-                          className={`fmt-icon-btn ${favourites.includes(diag.id) ? "favourited" : ""}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setFavourites(prev =>
-                              prev.includes(diag.id) ? prev.filter(f => f !== diag.id) : [...prev, diag.id]
-                            );
-                          }}
-                        >❤️</button>
-                      </div>
-
-                      {expandedCard === diag.id && (
-                        <div className="fmt-treatment">
-                          <h3>Treatment</h3>
-                          <p>{diag.treatment}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* CONDITION DETAIL CARD */}
+      {activeCondition && (
+        <div className="condition-detail-card">
+          <div className="detail-header">
+            <h3>
+              {activeCondition.colloquialName} <span>({activeCondition.scientificName})</span>
+            </h3>
+            <button className="close-btn" onClick={() => setActiveCondition(null)}>
+              ✕
+            </button>
+          </div>
+          <div className="detail-body">
+            <p className="detail-description">{activeCondition.description}</p>
+            <p className="detail-treatment">
+              <strong>Treatment / Action:</strong> {activeCondition.treatment}
+            </p>
           </div>
         </div>
       )}
 
-      {/* SYMPTOM CARDS ROW */}
-      <div className="symptom-cards-row">
-        {symptomCards.map((card) => (
-          <div
-            key={card.title}
-            className={`symptom-card ${flippedSymptom === card.title ? "flipped" : ""}`}
-            onClick={() =>
-              setFlippedSymptom(flippedSymptom === card.title ? null : card.title)
-            }
-          >
-            <div className="symptom-card-inner">
-              <div className="symptom-card-front">
-                <img src={card.img} alt={card.title} />
-                <h3>{card.title}</h3>
-              </div>
-              <div className="symptom-card-back">
-                <p>{card.desc}</p>
+      {/* SYMPTOM CARDS ROW ("Is it more of a feeling?") */}
+      <section className="symptoms-section">
+        <h2>Is it more of a feeling?</h2>
+        <div className="symptom-cards-row">
+          {symptomCardsData.map((card) => (
+            <div
+              key={card.id}
+              className={`symptom-card ${flippedSymptom === card.id ? "flipped" : ""}`}
+              onClick={() =>
+                setFlippedSymptom(flippedSymptom === card.id ? null : card.id)
+              }
+            >
+              <div className="symptom-card-inner">
+                <div className="symptom-card-front">
+                  <img src={card.image} alt={card.title} />
+                  <h3>{card.title}</h3>
+                  <span className="flip-hint">Click to flip 🔄</span>
+                </div>
+                <div className="symptom-card-back">
+                  <h3>{card.title}</h3>
+                  <p>{card.desc}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
       {/* App Banner */}
       <AppBanner />

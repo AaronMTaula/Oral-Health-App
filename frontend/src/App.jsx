@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import AnnouncementBanner from "./components/AnnouncementBanner/AnnouncementBanner";
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage/ProfilePage.jsx"));
@@ -49,8 +50,13 @@ function App() {
 
   return (
     <div className="App">
-      {/* Navbar */}
-      {showNavbar && <Navbar />}
+      {/* Navbar & Announcement Banner */}
+      {showNavbar && (
+        <>
+          <Navbar />
+          <AnnouncementBanner />
+        </>
+      )}
 
       <div style={{ flex: 1 }}>
         <Suspense fallback={<div>Loading...</div>}>

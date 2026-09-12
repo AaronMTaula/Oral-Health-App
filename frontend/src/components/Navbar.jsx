@@ -48,7 +48,20 @@ const Navbar = () => {
     { name: currentUser ? 'Logout' : 'Login', path: '/auth', action: currentUser ? logout : null }
   ];
 
-  const languages = ['English', 'Spanish', 'French', 'German'];
+  const languages = [
+    { name: 'English (NZ)', flag: '🇳🇿', code: 'en' },
+    { name: 'Te Reo Māori', flag: '🇳🇿', code: 'mi' },
+    { name: 'Gagana Sāmoa', flag: '🇼🇸', code: 'sm' },
+    { name: 'Lea Faka-Tonga', flag: '🇹🇴', code: 'to' },
+    { name: 'Mandarin (中文)', flag: '🇨🇳', code: 'zh' },
+    { name: 'Hindi (हिन्दी)', flag: '🇮🇳', code: 'hi' },
+    { name: 'Tagalog', flag: '🇵🇭', code: 'tl' },
+    { name: 'Vagahau Niuē', flag: '🇳🇺', code: 'niu' },
+    { name: 'Cook Islands Māori', flag: '🇨🇰', code: 'rar' },
+    { name: 'Fijian', flag: '🇫🇯', code: 'fj' }
+  ];
+
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
 
   const [navbarColor, setNavbarColor] = useState(routeColors[location.pathname] || '#e08fff');
 
@@ -78,8 +91,8 @@ const Navbar = () => {
   };
 
   const handleLanguageSelect = (lang) => {
+    setSelectedLanguage(lang);
     setLanguageDropdown(false);
-    console.log('Selected language:', lang);
   };
 
 // Increase this value to lower links; decrease it to raise them.
@@ -277,7 +290,7 @@ const NAV_EDGE_LINK_OFFSET = 70;
             }
             className={`nav-link${link.isDropdown ? ' edge-nav-link' : ''}`}
           >
-            {link.isDropdown ? '🇳🇿' : link.name}
+            {link.isDropdown ? `${selectedLanguage.flag} ${selectedLanguage.name}` : link.name}
           </a>
 
           {link.isDropdown && (
@@ -288,7 +301,8 @@ const NAV_EDGE_LINK_OFFSET = 70;
                   className="dropdown-item"
                   onClick={() => handleLanguageSelect(lang)}
                 >
-                  {lang}
+                  <span style={{ marginRight: '8px' }}>{lang.flag}</span>
+                  <span>{lang.name}</span>
                 </div>
               ))}
             </div>

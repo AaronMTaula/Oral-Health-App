@@ -17,6 +17,7 @@ const authLimiter = rateLimit({
 // Legacy email/password routes intentionally disabled.
 // Firebase auth flows through /api/auth/* and the app uses JWTs issued by that flow.
 router.get("/me", authMiddleware, userController.getProfile);
+router.post("/inquiry", authMiddleware, userController.sendInquiry);
 router.put("/:id", authMiddleware, userController.updateUser);
 router.delete("/:id", authMiddleware, userController.deleteUser);
 

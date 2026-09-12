@@ -1,0 +1,63 @@
+.announcement-banner {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe8a1 100%);
+  border-bottom: 2px solid #ffe066;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 990;
+  margin-top: 0;
+  transition: all 0.3s ease;
+}
+
+.announcement-banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.announcement-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.announcement-text {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #5c4300;
+  line-height: 1.4;
+  text-align: center;
+  flex: 1;
+}
+
+.announcement-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #856404;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  border-radius: 50%;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.announcement-close-btn:hover {
+  background-color: rgba(133, 100, 4, 0.15);
+  color: #3d2b00;
+}
+
+@media (max-width: 768px) {
+  .announcement-banner-content {
+    padding: 0.6rem 1rem;
+  }
+  .announcement-text {
+    font-size: 0.85rem;
+  }
+}

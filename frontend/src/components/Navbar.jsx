@@ -23,7 +23,8 @@ const routeColors = {
 
 const NAVBAR_VERTICAL_SHIFT = 90;
 const NAV_EDGE_HORIZONTAL_OFFSET = 16;
-const MASK_VERTICAL_OFFSET =-47; // higher
+// Slim top border above the navbar curve (small gap so TabloidHero is visible and doesn't touch navbar)
+const MASK_VERTICAL_OFFSET = -8; 
 const MASK_COLOR = '#f8f8f8';
 
 const Navbar = () => {

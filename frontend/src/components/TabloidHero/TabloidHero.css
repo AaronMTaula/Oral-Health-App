@@ -2,9 +2,9 @@
   position: relative;
   width: 100%;
   height: auto;
-  min-height: 220px;
+  min-height: 240px;
   display: block;
-  z-index: 1;
+  z-index: 10;
   pointer-events: none;
   overflow: visible;
   transform-origin: top center;
@@ -26,13 +26,16 @@
 .tabloid-hero-side-image--left { left: 1rem; }
 .tabloid-hero-side-image--right { right: 1rem; }
 
+/* ========================================================
+   ATA SVG CONTAINERS & WRAPPERS
+   ======================================================== */
 .ata-container {
   position: absolute;
   top: 0px;
   left: 0;
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   overflow: visible;
   box-sizing: border-box;
   pointer-events: none;
@@ -40,30 +43,35 @@
 
 .ata-left-container {
   left: 0;
-  width: calc(var(--ata-center-x, 50%) - var(--ata-offset-x, 6rem));
+  width: calc(var(--ata-center-x, 50%) - var(--ata-offset-x, 7rem));
   justify-content: flex-end;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
   padding-left: 1rem;
 }
 
 .ata-right-container {
-  left: calc(var(--ata-center-x, 50%) + var(--ata-offset-x, 6rem));
-  width: calc(100% - (var(--ata-center-x, 50%) + var(--ata-offset-x, 6rem)));
+  left: calc(var(--ata-center-x, 50%) + var(--ata-offset-x, 7rem));
+  width: calc(100% - (var(--ata-center-x, 50%) + var(--ata-offset-x, 7rem)));
   justify-content: flex-start;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
   padding-right: 1rem;
 }
 
-.ata-letter {
-  font-size: clamp(8rem, 12vw, 15rem);
-  font-weight: 900;
-  line-height: 1;
-  color: black;
-  text-transform: uppercase;
-  font-family: 'Franklin Gothic Heavy', 'Arial Black', sans-serif;
-  text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
-  display: inline-block;
-  white-space: nowrap;
+.ata-letter-wrapper {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
   transition: transform 0.2s ease;
   pointer-events: none;
+}
+
+.ata-svg-item {
+  width: clamp(5.5rem, 9vw, 11rem);
+  height: var(--tabloid-letter-height, 160px);
+  fill: #000000;
+  filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.12));
+  display: block;
+  overflow: visible;
 }
 
 .ata-left  { text-align: right; }

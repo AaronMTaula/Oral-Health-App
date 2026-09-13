@@ -17,7 +17,8 @@ Status Legend:
 | F-03a | Invisible Curve Engine | Global Navbar | High | 🔴 Proposed | Single source of truth math curve for all navbar assets |
 | F-03b | Logo Center Peak Alignment | Global Navbar | High | 🔴 Proposed | Center logo at peak of invisible curve (unaltered logo style) |
 | F-03c | Curved Navbar Ribbon Fill | Global Navbar | Medium | 🔴 Proposed | Render color fill arch along invisible curve path |
-| F-03d | Slim CurveMask Baseline | Global Navbar | Medium | 🔴 Proposed | Lower mask baseline so TabloidHero remains unclipped |
+| F-03d1 | CurveMask Height & Scrolled Screen Coverage | Global Navbar | High | 🔴 Proposed | Reduce totalHeight from 450px and adjust scrolled height to prevent covering half the screen |
+| F-03d2 | CurveMask Top Border Thickness & Offset | Global Navbar | High | 🔴 Proposed | Adjust verticalOffset and path curve so mask is slim and doesn't obscure content above |
 | F-03e | NavLinks Trajectory Tracking | Global Navbar | High | 🔴 Proposed | Align links along invisible curve without overlap |
 | F-03f | Flush End-Bump Edge Buttons | Global Navbar | Medium | 🔴 Proposed | Language & Login/Logout buttons sitting flush on curve ends |
 | F-04 | Language Selector with Flags | Global Navbar | Medium | 🔴 Proposed | Add country flags next to/within language options |
@@ -46,7 +47,9 @@ Status Legend:
   - **1. Invisible Curve Engine (`navbarCurve.js`)**: Single source of truth mathematical curve formula $Y(x, \text{width})$ providing exact coordinates and angles for all navbar elements across screen resolutions.
   - **2. Logo Peak Positioning (`LogoSpinner.jsx`)**: Logo center anchored at the peak ($x = 50\%$) of the invisible curve without changing the original logo dimensions or CSS style.
   - **3. Ribbon Background Arch (`Navbar.jsx`)**: Independent SVG fill layer following the invisible curve trajectory.
-  - **4. Slim CurveMask Baseline (`CurveMask.jsx`)**: Positioned below the ribbon with reduced top border height so `TabloidHero` content remains 100% visible and unclipped.
+  - **4. CurveMask Breakdown**:
+    - **4a. Scrolled Screen Coverage & Total Height (`CurveMask.jsx` / `CurveMask.css`)**: In `CurveMask.jsx`, `totalHeight` is currently hardcoded as `ribbonHeight + 200` (450px) and filled down to the bottom. When scrolled (`top: 0`), this 450px solid block covers almost half the viewport height. We will shrink the bottom extension or change the mask to only cover the ribbon cutout area rather than a massive bottom rectangle.
+    - **4b. Top Border Thickness & Separation (`CurveMask.jsx`)**: Fine-tune `verticalOffset` and stroke/curve height so the mask has a slim, elegant separation border without cutting into the `TabloidHero` above or the page below.
   - **5. NavLinks Curve Alignment (`Navbar.jsx`)**: Left and Right NavLinks dynamically tracking points along the curve trajectory without colliding with each other or the logo.
   - **6. Flush Edge Buttons (`Navbar.jsx`)**: Language and Login/Logout buttons anchored flush on top of the curve end bumps.
   - **7. Auckland Top 10 Flag Language Selector**: Country flags for top 10 Auckland demographics (NZ, Māori, Sāmoa, Tonga, Mandarin, Hindi, Tagalog, Niue, Cook Islands Māori, Fijian).

@@ -6,6 +6,10 @@ const dotenv = require("dotenv");
 const path = require("path");
 const connectDB = require("./config/db");
 
+const envLocalPath = path.join(__dirname, ".env.local");
+if (fs.existsSync(envLocalPath)) {
+  dotenv.config({ path: envLocalPath });
+}
 dotenv.config();
 
 const userRoutes = require("./routes/userRoutes");

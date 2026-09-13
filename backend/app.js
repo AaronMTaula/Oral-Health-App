@@ -86,7 +86,7 @@ app.use(helmet(securityHeaders));
 // ===============================
 // Database Connection
 // ===============================
-if (!process.env.MONGO_URI) {
+if (!process.env.MONGO_URI && process.env.NODE_ENV === "production") {
   throw new Error('MONGO_URI environment variable is not set');
 }
 connectDB().catch((err) => {

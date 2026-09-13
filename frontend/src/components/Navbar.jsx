@@ -5,6 +5,7 @@ import { useAuth } from '../context/useAuth';
 import AtaataLogoImg from '../Logo/Ataata.svg';
 import TabloidHero from './TabloidHero/TabloidHero';
 import CurveMask from './CurveMask/CurveMask';
+import NavbarRibbon from './NavbarRibbon/NavbarRibbon';
 import LogoSpinner from './LogoSpinner';
 import '../index.css';
 import './Navbar.css';
@@ -189,34 +190,6 @@ const NAV_EDGE_LINK_OFFSET = 70;
         .navbar-wrapper { position: relative; z-index: 1000; }
         .spacer { height: 0px; width: 100%; }
 
-        .ribbon-container, .green-container {
-          position: fixed;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100vw;
-          overflow: hidden;
-          z-index: 50;
-          transition: top 0.6s ease;
-        }
-        .ribbon-container { height: 250px; top: ${NAVBAR_VERTICAL_SHIFT}px; }
-        .green-container { height: 120px; top: ${NAVBAR_VERTICAL_SHIFT + 80}px; }
-        .ribbon-container.scrolled, .green-container.scrolled { top: 0; }
-
-        .svg-arch {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  transition: all 0.3s ease-in-out;
-}
-
-.svg-arch * {
-  pointer-events: none;
-}
-
         .logo-container {
           position: fixed;
           top: ${NAVBAR_VERTICAL_SHIFT + 30}px;
@@ -252,26 +225,12 @@ const NAV_EDGE_LINK_OFFSET = 70;
 
       {/* ================= Navbar Wrapper ================= */}
 <div className="navbar-wrapper">
-  {/* Ribbon background */}
-  <div className={`ribbon-container ${isScrolled ? 'scrolled' : ''}`}>
-    <svg className="svg-arch" viewBox="0 0 1000 650" preserveAspectRatio="none">
-      <path
-        fill={navbarColor}
-        d={
-          isScrolled
-            ? 'M 0 0 Q 500 0 1000 0 L 1000 350 Q 500 300 0 350 Z'
-            : 'M 0 400 Q 500 0 1100 450 L1100 700 Q 500 200 0 650 Z'
-        }
-      />
-    </svg>
-  </div>
-
-  {/* Green container */}
-  <div className={`green-container ${isScrolled ? 'scrolled' : ''}`}>
-    <svg className="svg-arch" viewBox="0 0 1000 250" preserveAspectRatio="none">
-      <path fill="transparent" d="M0,250 Q500,30 1000,250 L1000,250 L0,250 Z" />
-    </svg>
-  </div>
+  {/* Ribbon background arch & secondary container (Extracted Component) */}
+  <NavbarRibbon
+    isScrolled={isScrolled}
+    navbarColor={navbarColor}
+    verticalShift={NAVBAR_VERTICAL_SHIFT}
+  />
 
   {/* Nav Links */}
   <div className="nav-links">

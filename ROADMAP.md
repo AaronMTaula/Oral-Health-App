@@ -14,7 +14,12 @@ Status Legend:
 |---|---|---|---|---|---|
 | F-01 | Announcement Banner | Global / Layout | High | 🔴 Proposed | Sticky banner under curve mask with page-specific messaging |
 | F-02 | Logo Size Alignment | Auth & Navbar | Medium | 🔴 Proposed | Match form logo dimensions to logged-in navbar logo |
-| F-03 | Navbar Curve Mask Adjustments | Global Navbar | High | � In Progress | Slim top curve border, lower mask baseline, fix logo fit & link alignment |
+| F-03a | Invisible Curve Engine | Global Navbar | High | 🔴 Proposed | Single source of truth math curve for all navbar assets |
+| F-03b | Logo Center Peak Alignment | Global Navbar | High | 🔴 Proposed | Center logo at peak of invisible curve (unaltered logo style) |
+| F-03c | Curved Navbar Ribbon Fill | Global Navbar | Medium | 🔴 Proposed | Render color fill arch along invisible curve path |
+| F-03d | Slim CurveMask Baseline | Global Navbar | Medium | 🔴 Proposed | Lower mask baseline so TabloidHero remains unclipped |
+| F-03e | NavLinks Trajectory Tracking | Global Navbar | High | 🔴 Proposed | Align links along invisible curve without overlap |
+| F-03f | Flush End-Bump Edge Buttons | Global Navbar | Medium | 🔴 Proposed | Language & Login/Logout buttons sitting flush on curve ends |
 | F-04 | Language Selector with Flags | Global Navbar | Medium | 🔴 Proposed | Add country flags next to/within language options |
 | F-05 | Vector Sticker Assets | Home Page | Low | 🔴 Proposed | Slots for custom Adobe Illustrator SVG/vector stickers |
 | F-06 | Real-World Science/News Feed | Home Page | Medium | 🔴 Proposed | Social section linking to dental studies & news articles |
@@ -37,23 +42,14 @@ Status Legend:
   - Sits below navbar when unscrolled (under the curve mask in empty space), pushing content downward without overlap.
   - Sticky positioning when scrolled so it attaches directly below the fixed navbar.
   - Dismissible: Includes a close `(X)` button allowing users to hide the banner.
-- [ ] **Navbar Refinements**:
-  - Image logo SVG sized to fit container perfectly without changing visual aspect ratio.
-  - Reduce empty space below `CurveMask` so it does not block content below or behind it.
-  - Slim top border of `CurveMask` above navbar for increased Tabloid Hero visibility while preserving a thin separation border.
-  - **NavLinks Curve Alignment**: NavLinks dynamically follow the exact curve shape of the navbar (iterative CSS/SVG path calculation).
-  - Position Language & Login/Logout buttons flush on top of the navbar curve ("sit on the curve") dynamically on window resize.
-  - **Auckland Top 10 Flag Language Selector**: Language selector displaying country flags for top 10 Auckland demographics:
-    - 🇳🇿 English (NZ)
-    - 🇳🇿 Te Reo Māori
-    - 🇼🇸 Gagana Sāmoa
-    - 🇹🇴 Lea Faka-Tonga
-    - 🇨🇳 Mandarin (中文)
-    - 🇮🇳 Hindi (हिन्दी)
-    - 🇵🇭 Tagalog
-    - 🇳🇺 Vagahau Niuē
-    - 🇨🇰 Cook Islands Māori
-    - 🇫🇯 Fijian
+- [ ] **Navbar Component Architectural Breakdown**:
+  - **1. Invisible Curve Engine (`navbarCurve.js`)**: Single source of truth mathematical curve formula $Y(x, \text{width})$ providing exact coordinates and angles for all navbar elements across screen resolutions.
+  - **2. Logo Peak Positioning (`LogoSpinner.jsx`)**: Logo center anchored at the peak ($x = 50\%$) of the invisible curve without changing the original logo dimensions or CSS style.
+  - **3. Ribbon Background Arch (`Navbar.jsx`)**: Independent SVG fill layer following the invisible curve trajectory.
+  - **4. Slim CurveMask Baseline (`CurveMask.jsx`)**: Positioned below the ribbon with reduced top border height so `TabloidHero` content remains 100% visible and unclipped.
+  - **5. NavLinks Curve Alignment (`Navbar.jsx`)**: Left and Right NavLinks dynamically tracking points along the curve trajectory without colliding with each other or the logo.
+  - **6. Flush Edge Buttons (`Navbar.jsx`)**: Language and Login/Logout buttons anchored flush on top of the curve end bumps.
+  - **7. Auckland Top 10 Flag Language Selector**: Country flags for top 10 Auckland demographics (NZ, Māori, Sāmoa, Tonga, Mandarin, Hindi, Tagalog, Niue, Cook Islands Māori, Fijian).
 
 ---
 

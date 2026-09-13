@@ -23,7 +23,7 @@ const routeColors = {
 
 const NAVBAR_VERTICAL_SHIFT = 90;
 const NAV_EDGE_HORIZONTAL_OFFSET = 16;
-const MASK_VERTICAL_OFFSET = 10; // lowered so curve mask is slimmer and does not overlap hero
+const MASK_VERTICAL_OFFSET =-47; // higher
 const MASK_COLOR = '#f8f8f8';
 
 const Navbar = () => {

@@ -14,7 +14,7 @@ Status Legend:
 |---|---|---|---|---|---|
 | F-01 | Announcement Banner | Global / Layout | High | 🔴 Proposed | Sticky banner under curve mask with page-specific messaging |
 | F-02 | Logo Size Alignment | Auth & Navbar | Medium | 🔴 Proposed | Match form logo dimensions to logged-in navbar logo |
-| F-03 | Navbar Curve Mask Adjustments | Global Navbar | High | 🔴 Proposed | Reduce gap below, slim top curve border, fix link alignment & button stickiness |
+| F-03 | Navbar Curve Mask Adjustments | Global Navbar | High | � In Progress | Slim top curve border, lower mask baseline, fix logo fit & link alignment |
 | F-04 | Language Selector with Flags | Global Navbar | Medium | 🔴 Proposed | Add country flags next to/within language options |
 | F-05 | Vector Sticker Assets | Home Page | Low | 🔴 Proposed | Slots for custom Adobe Illustrator SVG/vector stickers |
 | F-06 | Real-World Science/News Feed | Home Page | Medium | 🔴 Proposed | Social section linking to dental studies & news articles |
